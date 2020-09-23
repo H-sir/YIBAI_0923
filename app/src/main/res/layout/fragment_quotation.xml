@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/include_fragment_product_content_layout" />
+
+    <RelativeLayout
+        android:id="@+id/noDataLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/noQuotationImageView"
+            android:layout_width="250dp"
+            android:layout_height="193dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="95dp"
+            android:contentDescription="@null"
+            android:src="@mipmap/no_quotation" />
+
+        <TextView
+            android:id="@+id/noProductsTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="305dp"
+            android:gravity="center"
+            android:text="@string/no_products_have_been_added_yet"
+            android:textColor="@color/prompt_low_text_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/lookProductButton"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/noProductsTextView"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/background_look_product"
+            android:gravity="center"
+            android:text="@string/look_at_the_product"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/tradeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tradePrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="￥1230.0"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/action_button_content_margin" />
+
+            <TextView
+                android:id="@+id/gateNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="高手"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/gateNameSelectImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/un_selected_img" />
+
+            <TextView
+                android:id="@+id/gateNameSelect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="选用"
+                android:textColor="#707070"
+                android:textSize="@dimen/action_button_content_margin" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <com.ybw.yibai.common.widget.nestlistview.NestFullListView
+        android:id="@+id/gateSkuPicListView"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_below="@+id/tradeName"
+        android:fillViewport="true"
+        android:padding="5dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/gateSkuPicListView"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_below="@+id/gateSkuPicListView"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="库存："
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+
+            <TextView
+                android:id="@+id/stockMarket"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/gateSkuPicListView"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新时间："
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+
+            <TextView
+                android:id="@+id/uptime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/default_color" />
+</LinearLayout>
+

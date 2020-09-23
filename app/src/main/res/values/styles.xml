@@ -1,0 +1,66 @@
+<resources>
+    <!-- 应用程序的Base主题 -->
+    <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@android:color/white</item>
+        <item name="colorAccent">@android:color/white</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+    </style>
+
+    <!-- 自定义WelComeActivity标题栏的主题 -->
+    <style name="WelComeActivityTitleTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="colorAccent">@android:color/transparent</item>
+
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <!-- Activity透明的主题 -->
+    <style name="TranslucentTheme" parent="@android:style/Theme.NoTitleBar">
+        <!-- 透明 -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- 背景颜色及和透明程度 -->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- Activity以Dialog的形式显示的样式 -->
+    <style name="TipDialogTheme" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- 自定义Dialog背景全透明无边框theme -->
+    <style name="CustomDialogTheme" parent="android:style/Theme.Dialog">
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">false</item>
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <!-- PopupWindow 弹出窗口和关闭窗口时的动画 -->
+    <style name="PopupWindow_Anim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/popup_window_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/popup_window_exit_anim</item>
+    </style>
+
+    <style name="OAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>

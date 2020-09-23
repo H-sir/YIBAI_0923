@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="30dp"
+    android:layout_height="wrap_content">
+
+    <com.ybw.yibai.common.widget.RectangleView
+        android:id="@+id/rectangleView"
+        android:layout_width="30dp"
+        android:layout_height="30dp" />
+
+    <View
+        android:id="@id/view"
+        android:layout_width="30dp"
+        android:layout_height="2dp"
+        android:layout_below="@+id/rectangleView"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimary" />
+</RelativeLayout>

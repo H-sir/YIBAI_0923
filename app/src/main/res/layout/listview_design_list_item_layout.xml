@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/prompt_high_text_color" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/designName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2020052202"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/action_button_content_margin" />
+
+        <TextView
+            android:id="@+id/designStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="正在编辑"
+            android:textColor="@color/pickerview_timebtn_nor"
+            android:textSize="@dimen/action_button_content_margin" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@color/prompt_high_text_color" />
+
+    <com.ybw.yibai.common.widget.horizontal.adatper.HorizontalScrollListView
+        android:id="@+id/designListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@color/white_fifty_percent_color"
+        android:divider="@color/line_color"
+        android:scrollbars="none" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@color/prompt_high_text_color" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right|center"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/designDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:text="删除"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/action_button_content_margin" />
+
+        <TextView
+            android:id="@+id/designShare"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分享"
+            android:textColor="@color/main_text_color"
+            android:textSize="@dimen/action_button_content_margin" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginBottom="10dp"
+        android:background="@color/prompt_high_text_color" />
+
+</LinearLayout>

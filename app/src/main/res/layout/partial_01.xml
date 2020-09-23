@@ -1,0 +1,30 @@
+<LinearLayout
+    android:id="@+id/containerSceneAction"
+    android:gravity="center"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="110dp"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/shadow_rounded"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/btnCreateDesign"
+        android:gravity="center"
+        android:layout_gravity="top"
+        android:paddingHorizontal="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="10dp"
+        android:textSize="10sp"
+        android:text="添加图片"/>
+
+    <com.jude.easyrecyclerview.EasyRecyclerView
+        android:visibility="gone"
+        android:id="@+id/scene_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"/>
+
+</LinearLayout>

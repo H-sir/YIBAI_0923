@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/rootLayout"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/contentFrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="49dp" />
+
+    <RelativeLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:clipChildren="false">
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="6dp"
+            android:layout_above="@+id/selectRadioGroup"
+            android:background="@drawable/shadow_top" />
+
+        <RadioGroup
+            android:id="@+id/selectRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/homeRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/radio_button_home_style"
+                android:gravity="center"
+                android:text="@string/home"
+                android:textColor="@drawable/radio_button_text_color_style"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <RadioButton
+                android:id="@+id/productRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/radio_button_product_style"
+                android:gravity="center"
+                android:text="@string/product"
+                android:textColor="@drawable/radio_button_text_color_style"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <RelativeLayout
+                android:id="@+id/centreLayout"
+                android:layout_width="0dp"
+                android:layout_height="93dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    app:srcCompat="@drawable/home_photograph"
+                    tools:ignore="ContentDescription" />
+
+            </RelativeLayout>
+
+            <RadioButton
+                android:id="@+id/quotationRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/radio_button_quotation_style"
+                android:gravity="center"
+                android:text="@string/quotation"
+                android:textColor="@drawable/radio_button_text_color_style"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <RadioButton
+                android:id="@+id/myRadioButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawablePadding="3dp"
+                android:drawableTop="@drawable/radio_button_my_style"
+                android:gravity="center"
+                android:text="@string/my"
+                android:textColor="@drawable/radio_button_text_color_style"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+        </RadioGroup>
+    </RelativeLayout>
+</RelativeLayout>

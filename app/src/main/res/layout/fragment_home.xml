@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <include layout="@layout/include_fragment_home_head_layout" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="114dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.25" />
+
+            <TextView
+                android:id="@+id/startDesignTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/start_design"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/start_design"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/myDesignTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/my_design"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/my_design"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/quickPurchaseTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/quick_purchase"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/quick_purchase"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <TextView
+                android:id="@+id/pictureCaseTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:drawableTop="@mipmap/picture_case"
+                android:drawablePadding="8dp"
+                android:gravity="center"
+                android:text="@string/picture_case"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0.25" />
+        </LinearLayout>
+
+        <com.ybw.yibai.common.widget.magicindicator.MagicIndicator
+            android:id="@+id/magicIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:layout_marginStart="11dp"
+            android:layout_marginEnd="11dp" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:clipChildren="false" />
+
+        <TextView
+            android:id="@+id/recommendProductTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="10dp"
+            android:text="@string/recommend_product"
+            android:textColor="@color/main_text_color"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

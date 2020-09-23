@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_fifty_percent_color">
+
+    <include layout="@layout/include_fragment_scene_edit_main_layout" />
+
+    <include layout="@layout/include_recommended_plant_pot_layout" />
+
+    <include layout="@layout/include_already_placed_layout" />
+
+</android.support.design.widget.CoordinatorLayout>

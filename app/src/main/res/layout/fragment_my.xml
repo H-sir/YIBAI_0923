@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/headLayout"
+            android:layout_width="match_parent"
+            android:layout_height="290dp"
+            android:background="@mipmap/my_background">
+
+            <include layout="@layout/include_fragment_my_user_info_layout" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/activitiesImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/headLayout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="-64dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@null" />
+
+        <LinearLayout
+            android:id="@+id/orderMaterialCardView"
+            android:layout_width="match_parent"
+            android:layout_height="224dp"
+            android:layout_below="@+id/activitiesImageView"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/shadow"
+            android:gravity="center">
+
+            <include layout="@layout/include_fragment_my_pricing_layout" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/purchaseOrderLayout"
+            android:layout_width="match_parent"
+            android:layout_height="142dp"
+            android:layout_below="@+id/orderMaterialCardView"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/shadow">
+
+            <include layout="@layout/include_fragment_my_order_layout" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/balanceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/purchaseOrderLayout"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/shadow">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:drawableEnd="@mipmap/right_gray"
+                android:gravity="center_vertical"
+                android:text="@string/balance"
+                android:textColor="@color/main_text_color"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

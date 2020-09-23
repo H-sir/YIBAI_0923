@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/triangleImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="41dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/triangle_big_top" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="73dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/triangleImageView"
+        android:background="@drawable/background_wait_dialog"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/potComparisonRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/pot_comparison"
+            android:textColor="@drawable/radio_button_text_color_style"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="6dp"
+            android:background="@color/line_color" />
+
+        <RadioButton
+            android:id="@+id/plantComparisonRadioButton"
+            android:layout_width="match_parent"
+            android:layout_height="33dp"
+            android:button="@null"
+            android:gravity="center"
+            android:text="@string/plant_comparison"
+            android:textColor="@drawable/radio_button_text_color_style"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RadioGroup>
+</RelativeLayout>

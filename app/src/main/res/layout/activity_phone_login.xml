@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <ImageView
+        android:id="@+id/backImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@mipmap/left_big"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/accountPasswordLoginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/backImageView"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:text="@string/mobile_phone_quick_login"
+        android:textColor="@color/embellishment_text_color"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/loginWithMobilePhoneNumberAndUserNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/accountPasswordLoginTextView"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="30dp"
+        android:text="@string/unregistered_mobile_phone_number_will_automatically_create_an_account"
+        android:textColor="@color/prompt_high_text_color"
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:id="@+id/mobilePhoneNumberAndUserName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/accountPasswordLoginTextView"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="94dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/background_product_screening_text_unselected"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <ImageView
+            android:id="@+id/idImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@mipmap/id" />
+
+        <com.ybw.yibai.common.widget.ClearEditText
+            android:id="@+id/mobileNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/idImageView"
+            android:background="@null"
+            android:hint="@string/please_enter_your_mobile_number"
+            android:inputType="phone"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:singleLine="true"
+            android:textColor="@color/main_text_color"
+            android:textCursorDrawable="@drawable/edit_text_cursor_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:rightImage="@mipmap/edit_text_clear" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/passwordRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/mobilePhoneNumberAndUserName"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/background_product_screening_text_unselected"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <ImageView
+            android:id="@+id/passwordImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@mipmap/verification_code" />
+
+        <com.ybw.yibai.common.widget.ClearEditText
+            android:id="@+id/verificationCodeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toStartOf="@+id/sendVerificationCodeTextView"
+            android:layout_toEndOf="@+id/passwordImageView"
+            android:background="@null"
+            android:hint="@string/please_enter_verification_code"
+            android:imeOptions="actionDone"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:singleLine="true"
+            android:textColor="@color/main_text_color"
+            android:textCursorDrawable="@drawable/edit_text_cursor_color"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:rightImage="@mipmap/edit_text_clear" />
+
+        <TextView
+            android:id="@+id/sendVerificationCodeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="@string/send_verification_code"
+            android:textColor="@color/embellishment_text_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/loginButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/passwordRelativeLayout"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="75dp"
+        android:background="@drawable/background_button"
+        android:text="@string/login"
+        android:textColor="@android:color/white"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/accountLoginLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginButton"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="@string/use_account_password_login"
+        android:textColor="@color/main_text_color"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/weChatImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/otherWaysToLoginTextView"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="10dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/wechat" />
+
+    <TextView
+        android:id="@+id/otherWaysToLoginTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="23dp"
+        android:text="@string/other_ways_to_login"
+        android:textColor="@color/prompt_high_text_color"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+</RelativeLayout>

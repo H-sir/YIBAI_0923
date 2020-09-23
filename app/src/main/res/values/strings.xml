@@ -1,0 +1,458 @@
+<resources>
+    <string name="app_name">易摆</string>
+
+    <!-- 登录 -->
+    <string name="account_password_login">账号密码登录</string>
+    <string name="login_with_mobile_phone_number_and_user_name">可使用的手机号、用户名登录</string>
+    <string name="please_enter_your_mobile_number_or_username">请输入手机号/用户名</string>
+    <string name="please_enter_your_password">请输入密码</string>
+    <string name="login">登录</string>
+    <string name="forget_password">忘记密码？</string>
+    <string name="sign_in_with_a_verification_code">使用验证码登入</string>
+    <string name="other_ways_to_login">其他方式登录</string>
+    <string name="mobile_phone_quick_login">手机快捷登录</string>
+    <string name="unregistered_mobile_phone_number_will_automatically_create_an_account">未注册的手机号将自动创建账号</string>
+    <string name="please_enter_your_mobile_number">请输入手机号</string>
+    <string name="send_verification_code">发送验证码</string>
+    <string name="please_enter_verification_code">请输入验证码</string>
+    <string name="use_account_password_login">使用账号密码登入</string>
+    <string name="account_and_password_are_empty">账号与密码为空</string>
+    <string name="account_are_empty">账号为空</string>
+    <string name="password_are_empty">密码为空></string>
+    <string name="phone_number_is_empty">手机号码为空</string>
+    <string name="reacquire">重新获取</string>
+    <string name="wechat_is_not_installed">未安装微信</string>
+
+    <!-- 微信绑定手机 -->
+    <string name="binding_mobile_phone">绑定手机</string>
+    <string name="this_wechat_has_not_been_registered_yet">此微信尚未注册,为了您账号不重复,请输入手机号验证,手机号已注册将直接绑定,如手机号未注册,将自动注册并绑定</string>
+
+    <!-- 欢迎界面 -->
+    <string name="slogan">绿植谈单神器助你轻松拿下绿植订单</string>
+
+    <!-- 主界面 -->
+    <string name="home">首页</string>
+    <string name="product">产品</string>
+    <string name="quotation">报价</string>
+    <string name="my">我的</string>
+    <string name="take_a_photo">拍照</string>
+    <string name="photo_album">相册</string>
+    <string name="background_template">背景模版</string>
+
+    <!-- 首页 -->
+    <string name="company_profile">公司简介</string>
+    <string name="case_share">案例分享</string>
+    <string name="scenario_editor">场景编辑</string>
+    <string name="start_design">开始设计</string>
+    <string name="my_design">查看设计</string>
+    <string name="quick_purchase">快速采购</string>
+    <string name="picture_case">图片案例</string>
+    <string name="hot_scheme">热门方案</string>
+    <string name="recommend_product">推荐产品</string>
+    <string name="nationwide">全国</string>
+    <string name="whether_to_switch_to_national_supply">是否切换为全国货源</string>
+    <string name="whether_to_switch_to_the_same_city_supply">是否切换为同城货源</string>
+    <string name="switching_to_the_same_city_source_requires_positioning_service">切换为同城货源需要开启定位服务</string>
+
+    <!-- 产品 -->
+    <string name="edit">编辑</string>
+    <string name="plant">植物</string>
+    <string name="pot">盆器</string>
+    <string name="filter">筛选</string>
+
+    <!-- 开始设计 -->
+    <string name="select_the_background_image_of_the_design">选择设计的背景图</string>
+    <string name="select_scene">选择场景</string>
+    <string name="select_scene_type">选择场景类型</string>
+    <string name="please_enter_a_scene_name">请输入场景名称</string>
+    <string name="you_need_to_select_at_least_one_design_view_to_start_designing">你至少需要选择一张设计背的景图,才可以开始设计(提示: 可以点击上方的相机或者相册图片来创建设计背的景图)</string>
+
+    <!-- 报价 -->
+    <string name="purchase">进货</string>
+    <string name="day">日</string>
+    <string name="month">月</string>
+    <string name="year">年</string>
+    <string name="total">合计:</string>
+    <string name="generate_quotation">生成报价</string>
+    <string name="type">类型:</string>
+    <string name="day_rent">日租</string>
+    <string name="month_rent">月租</string>
+    <string name="year_rent">年租</string>
+    <string name="buy">购买</string>
+    <string name="tax_rate_colon">税率:</string>
+    <string name="tax_exclusive">不含税</string>
+    <string name="three_percent">3%</string>
+    <string name="thirteen_percent">13%</string>
+    <string name="enter_tax_rate">输入税率%</string>
+    <string name="discounts">优惠:</string>
+    <string name="enter_discount_amount">输入优惠金额</string>
+    <string name="please_enter_the_authorization_code">请输入授权码</string>
+    <string name="remember_the_authorization_code">记住授权码</string>
+    <string name="modify_buy_price">修改购买价</string>
+    <string name="modify_month_rent_price">修改月租价</string>
+    <string name="enter_new_buy_price">输入新的购买价</string>
+    <string name="enter_new_month_rent_price">输入新的月租价</string>
+    <string name="no_products_have_been_added_yet">暂未添加任何产品&#8230;</string>
+    <string name="look_at_the_product">看看产品</string>
+    <string name="list">清单</string>
+    <string name="save_quotation">保存报价</string>
+    <string name="direct_clearing">直接结算</string>
+    <string name="quotation_list_and_price">清单及价格</string>
+    <string name="the_tax_rate_cannot_be_greater_than_one_hundred_percent">税率是不可以大于100%的</string>
+
+    <!-- 进货 -->
+    <string name="modify_successfully">修改成功</string>
+    <string name="modify_unsuccessfully">修改失败</string>
+    <string name="successfully_delete">删除成功</string>
+    <string name="unsuccessfully_delete">删除失败</string>
+
+    <!-- 新报价 -->
+    <string name="add_new_location">添加新位置</string>
+    <string name="customer_preselection">客户预选</string>
+    <string name="product_to_be_placed">待摆放产品</string>
+    <string name="rename">改名</string>
+    <string name="pot_">盆</string>
+    <string name="you_need_to_create_an_added_location">你需要创建一个添加的位置(你可以点击列表选中"添加新位置"进行创建)</string>
+    <string name="you_need_to_select_an_added_location">你需要选中一个添加的位置(你可以点击列表选中一个位置)</string>
+    <string name="are_you_sure_to_delete">是否确定删除</string>
+    <string name="modify_bonsai_number">修改盆栽数量</string>
+
+    <!-- 我的 -->
+    <string name="upgrade_now">立即升级</string>
+    <string name="to_be_decided">待确定</string>
+    <string name="to_follow_up">待跟进</string>
+    <string name="deal_done">已成交</string>
+    <string name="expired">已失效</string>
+    <string name="all_quotation">所有报价</string>
+    <string name="quotation_set">报价设置</string>
+    <string name="customer_management">客户管理</string>
+    <string name="purchase_order">已进货订单</string>
+    <string name="all_orders">所有订单</string>
+    <string name="pending_delivery">待配送</string>
+    <string name="completed">已完成</string>
+    <string name="balance">余额</string>
+
+    <!-- 公司资料编辑 -->
+    <string name="company_data_edit">公司资料编辑</string>
+    <string name="company_name">公司名称</string>
+    <string name="company_logo">公司LOGO</string>
+    <string name="home_page_display_pictures">主页展示图片</string>
+    <string name="text_description">文字介绍</string>
+
+    <!-- 热门场景 -->
+    <string name="scene_preview">场景预览</string>
+
+    <!-- 场景 -->
+    <string name="my_scene">我的场景</string>
+    <string name="background_image">背景图</string>
+    <string name="recommended_match">推荐搭配</string>
+    <string name="join_quotation">加入报价</string>
+    <string name="save_photo">保存图片</string>
+    <string name="save_design">保存设计</string>
+    <string name="take_a_photo_replacement">拍照更换</string>
+    <string name="album_replacement">相册更换</string>
+    <string name="adjust_background">调整背景</string>
+    <string name="brightness">亮度</string>
+    <string name="contrast">对比度</string>
+    <string name="replace_the_collocation">更换搭配</string>
+    <string name="bonsai_info">盆栽信息</string>
+    <string name="brightness_adjustment">光亮调整</string>
+    <string name="intelligent_erase">智能擦除</string>
+    <string name="restore_settings">还原设置</string>
+    <string name="plant_info">植物信息</string>
+    <string name="collocation_total_height">搭配总高度约:&#160;&#160;</string>
+    <string name="serial_number_colon">编号:&#160;&#160;</string>
+    <string name="height">高度:&#160;&#160;</string>
+    <string name="total_height_is_expected">总高度预计为:&#160;&#160;</string>
+    <string name="scene_list">场景列表</string>
+    <string name="save_successfully_you_can_click_on_my_design_below_to_view">保存成功啦,可以点击下方的我的设计进行查看</string>
+    <string name="save_failed">保存失败</string>
+    <string name="all">全部</string>
+    <string name="small">小型</string>
+    <string name="middle">中型</string>
+    <string name="large">大型</string>
+    <string name="select_placement_spec">选择摆放规格</string>
+    <string name="more">更多</string>
+    <string name="recommend_plants">推荐植物</string>
+    <string name="recommend_pot">推荐盆器</string>
+    <string name="similar_products">同类产品</string>
+    <string name="quotation_list">报价列表</string>
+    <string name="quotation_details">报价详情</string>
+    <string name="add_the_bonsai_in_this_scene_to_the_quotation">将本场景内摆放的盆栽添加到报价中</string>
+    <string name="add_the_bonsai_in_this_scene_to_the_quotation_succeed">将本场景内摆放的盆栽添加到报价中成功</string>
+    <string name="add_the_bonsai_in_this_scene_to_the_quotation_failure">将本场景内摆放的盆栽添加到报价中失败</string>
+    <string name="modify_scene_name">修改场景名称</string>
+    <string name="no_scenes_are_selected">没有选中任何场景</string>
+    <string name="are_you_sure_to_delete_the_selected_scene">是否确定删除选中的场景?</string>
+    <string name="accomplish">完成改款</string>
+    <string name="select_class">选择分类</string>
+    <string name="no_suitable_plants_recommended">没有适合推荐的植物</string>
+    <string name="no_suitable_pot_recommended">没有适合推荐的盆器</string>
+    <string name="no_suitable_style_for_recommended">没有适合推荐的款式</string>
+    <string name="already_placed">已摆放</string>
+    <string name="import_product_and_design_drawings_into_the_quotation_list">将产品及设计图导入报价清单</string>
+    <string name="all_delete">全部删除</string>
+    <string name="delete_customer_pre_selected_bonsai">是否删除客户预选的该盆栽</string>
+    <string name="this_product_is_not_replaceable">此产品不可搭配</string>
+
+    <!-- 更多 -->
+    <string name="search">搜索</string>
+
+    <!-- 多图对比 -->
+    <string name="multiple_image_contrast">去对比</string>
+    <string name="pot_comparison">盆器对比</string>
+    <string name="plant_comparison">植物对比</string>
+    <string name="change_batch">换一批</string>
+
+    <!-- 已模拟图 -->
+    <string name="simulation_drawing">已模拟图</string>
+    <string name="select_photo">选择图片</string>
+    <string name="check_all">全选</string>
+    <string name="none">全不选</string>
+    <string name="already_selected">已选择</string>
+    <string name="photo">张图片</string>
+
+    <!-- 筛选 -->
+    <string name="reset">重置</string>
+
+    <!-- 盆栽详情 -->
+    <string name="use">已使用</string>
+    <string name="unused">未使用</string>
+    <string name="selected">已选</string>
+    <string name="retail_price">零售价</string>
+    <string name="month_rent_price">月租价</string>
+    <string name="trade_price">进货价</string>
+    <string name="similar_recommendation">相似推荐</string>
+    <string name="look_design">看设计</string>
+    <string name="replace_collocation">换搭配</string>
+    <string name="join_photo_album">加入相册</string>
+    <string name="join_purchase">加入进货</string>
+    <string name="join_preselection">加入预选</string>
+
+    <!--  搭配 -->
+    <string name="collocation">搭配</string>
+    <string name="change_style">改款</string>
+    <string name="see_design">查看设计</string>
+    <string name="open_background">开启背景</string>
+    <string name="close_background">关闭背景</string>
+    <string name="recommended_pot">推荐盆器</string>
+    <string name="margin_setting">边距设置</string>
+    <string name="filtrate">筛选</string>
+
+    <!-- 按客户保存报价 -->
+    <string name="photograph_upload">拍照上传</string>
+    <string name="choose_from_album">从相册中选择</string>
+    <string name="save_quotation_by_customer">按客户保存报价</string>
+    <string name="after_the_generation_the_list_of_quotes_will_be_cleared_and_the_associated_design_screenshot_will_be_uploaded">生成后会清除报价列表并上传关联的设计截图</string>
+    <string name="new_user">新用户</string>
+    <string name="old_customers">老客户</string>
+    <string name="enter_customer_name">输入客户名称</string>
+    <string name="contact_telephone">联系电话</string>
+    <string name="contact_address">联系地址</string>
+    <string name="customer_name_needs_to_be_filled_in">客户名称不可以为空</string>
+
+    <!-- 确认进货订单 -->
+    <string name="confirm_order">确认订单</string>
+    <string name="submit_order">提交订单</string>
+    <string name="mode_distribution">配送方式</string>
+    <string name="same_city_delivery_free_shipping">同城配送&#160;&#160;免运费</string>
+    <string name="general">共</string>
+    <string name="items">件商品</string>
+
+    <!-- 收货地址 -->
+    <string name="shipping_address">收货地址</string>
+    <string name="save">保存</string>
+    <string name="acquiescence">默认</string>
+    <string name="new_add_shipping_address">新增收货地址</string>
+    <string name="consignee">收货人</string>
+    <string name="phone_number">手机号码</string>
+    <string name="area">所在地区</string>
+    <string name="detailed_address_describe">详细地址: 如道路门牌号，小区，等</string>
+    <string name="set_default_address">设为默认地址</string>
+    <string name="delete_shipping_address">删除收货地址</string>
+    <string name="area_selection">区域选择</string>
+    <string name="missing_the_necessary_consignee_information_please_complete_all_the_information">缺少必要的收货人信息,请将所有的信息填写完整</string>
+
+    <!-- 设置 -->
+    <string name="setting">设置</string>
+    <string name="head_portrait">头像</string>
+    <string name="nickname">昵称</string>
+    <string name="mobile_phone_binding">手机绑定</string>
+    <string name="wechat_binding">微信绑定</string>
+    <string name="feedback">问题反馈</string>
+    <string name="watermark_setting">水印设置</string>
+    <string name="about_yibai">关于易摆</string>
+    <string name="using_help">使用帮助</string>
+    <string name="modify_password">修改密码</string>
+    <string name="switch_account">切换账号</string>
+    <string name="are_you_sure_to_exit_the_current_account">是否确定退出当前账号?</string>
+    <string name="no_binding">未绑定</string>
+    <string name="already_binding">已绑定</string>
+
+    <!-- 邀请好友 -->
+    <string name="invite_friends">邀请好友</string>
+    <string name="detailed_rules">详细规则</string>
+    <string name="after_the_invitation_is_successful">邀请成功后-可获得对应的现金奖励</string>
+    <string name="check_my_invitation">查看我的邀请</string>
+    <string name="invite_you_to_use">邀请你使用</string>
+    <string name="save_to_your_phone">保存到手机</string>
+    <string name="wechat_friends">微信好友</string>
+    <string name="circle_of_friends">朋友圈</string>
+
+    <!-- 报价 -->
+    <string name="waiting_for_customer_to_determine">待客户确定</string>
+    <string name="sum">共</string>
+    <string name="tub">盆</string>
+    <string name="amount">金额:&#160;&#160;</string>
+    <string name="has_included">已含</string>
+    <string name="tax_rate">税率</string>
+    <string name="quotation_again">再次报价</string>
+    <string name="carry_on">继续</string>
+    <string name="yibai_app">易摆APP</string>
+    <string name="demo_design_quote_one_stop_trading_artifact">演示·设计·报价一站式交易神器</string>
+    <string name="guangzhou_yibai_network_technology_provides_a_quote">广州易摆网科技提供报价</string>
+    <string name="long_press_the_qr_code_to_save_the_phone">长按二维码保存至手机</string>
+    <string name="image_saved_to">图片已保存至</string>
+    <string name="folder">文件夹</string>
+    <string name="failed_to_save_image">保存图片失败</string>
+    <string name="edit_at_current_quotation">按当前报价编辑</string>
+    <string name="continue_customer_incomplete">继续客户未完成</string>
+
+    <!-- 报价设置 -->
+    <string name="monthly_rent_price_increase_ratio">月租价增幅比例</string>
+    <string name="retail_price_increase_ratio">零售价增幅比例</string>
+    <string name="please_enter_a_percentage_increase">请输入增幅百分比</string>
+    <string name="update">更新</string>
+    <string name="quotation_set_explanation">更新成功后,产品的基础价格都会按照设置的比例显示新的价格,计算公式为: 基础价格 * (1 + 增幅%)</string>
+
+    <!-- 客户列表 -->
+    <string name="customer_list">客户列表</string>
+    <string name="in_the_quotation">报价中</string>
+
+    <!-- 客户详情 -->
+    <string name="customer_details">客户详情</string>
+    <string name="delete_customer">删除客户</string>
+    <string name="customer_name">客户名称</string>
+    <string name="detailed_address">详细地址</string>
+    <string name="numbering">编号</string>
+    <string name="customer_state">客户状态</string>
+    <string name="update_information">更新资料</string>
+    <string name="are_you_sure_to_delete_this_client">是否确定删除该客户?</string>
+
+    <!-- 已进货订单-->
+    <string name="pending_payment">待付款</string>
+    <string name="pending_receipt">待收货</string>
+    <string name="items_commodity">件商品,合计:&#160;&#160;</string>
+    <string name="payment">付款</string>
+    <string name="cancel_order">取消订单</string>
+
+    <!-- 昵称 -->
+    <string name="enter_a_new_nickname">输入新昵称</string>
+
+    <!-- 绑定新手机号码 -->
+    <string name="enter_a_new_phone_number">输入新手机号码</string>
+    <string name="verification_code">验证码</string>
+
+    <!-- 问题反馈 -->
+    <string name="what_can_we_do_for_you">我们有什么可以帮助您吗?</string>
+    <string name="do_you_leave_your_contact_information_so_that_our_technicians_can_help_you_solve_it">您是否留下您的联系方式,以便我们技术人员帮您解决</string>
+    <string name="mobile_number_wechat_qq_mailbox">手机号/微信/QQ/邮箱</string>
+    <string name="submit">提交</string>
+    <string name="feedback_and_contact_information_cannot_be_empty">意见反馈内容和联系方式不可为空</string>
+    <string name="feedback_cannot_be_empty">意见反馈内容不可为空</string>
+    <string name="contact_cannot_be_empty">联系方式不可为空</string>
+
+    <!-- 水印设置 -->
+    <string name="open_watermark">开启水印</string>
+    <string name="uploading_watermark">上传水印</string>
+    <string name="the_trial_version_of_the_customer_is_unable_to_close_the_app_default_watermark">体验版客户是无法关闭App默认水印的</string>
+    <string name="when_the_watermark_is_turned_on_all_saved_images_will_be_watermarked">开启水印后,保存的图片都会带水印</string>
+
+    <!-- 关于易摆 -->
+    <string name="service_agreement">服务协议</string>
+    <string name="version_upgrade">版本升级</string>
+    <string name="the_latest_version">已是最新版本</string>
+
+    <!-- 修改密码 -->
+    <string name="please_enter_a_new_password">请输入新密码</string>
+    <string name="please_enter_your_new_password_once_again">请再次输入新密码</string>
+    <string name="the_input_content_has_empty_data">输入的内容有空</string>
+    <string name="inconsistent_password_entered_twice">两次输入的密码不一致</string>
+    <string name="please_bind_the_mobile_number_first_before_you_can_change_the_password">请先绑定手机号码,才可以修改密码</string>
+
+    <!-- 搜索 -->
+    <string name="search_for_bonsai">搜索您心目中的盆栽&#8230;</string>
+    <string name="recent_search">最近搜索</string>
+
+    <!-- 相册 -->
+    <string name="select_image">选择照片</string>
+    <string name="share">分享</string>
+    <string name="delete">删除</string>
+
+    <!-- 浏览器 -->
+    <string name="see_the_case">查看案例</string>
+    <string name="withdraw_deposit">提现</string>
+
+    <!-- 其他 -->
+    <string name="dding_to_purchase_list_successfully">添加到进货列表成功</string>
+    <string name="adding_to_purchase_list_failed">添加到进货列表失败</string>
+    <string name="added_to_the_simulation_scene_successfully">添加到模拟场景成功</string>
+    <string name="added_to_the_simulation_scene_failed">添加到模拟场景失败</string>
+    <string name="operation_failed">操作失败</string>
+    <string name="make_sure_to_clea_all_search_records">确定清空全部搜索记录?</string>
+    <string name="you_currently_have_no_products_selected">你当前未选中任何产品</string>
+
+    <!-- 版本更新 -->
+    <string name="discover_new_version">发现新版本</string>
+    <string name="next_time_again_say">下次再说</string>
+    <string name="update_now">立即更新</string>
+    <string name="yibai_new_version">易摆新版本</string>
+    <string name="new_version">新版本</string>
+    <string name="download_manager_is_not_available">下载管理程序不可用</string>
+
+    <!-- 自定义的Dialog显示的文字 -->
+    <string name="hint_message">提示消息</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="loading">加载中&#8230;</string>
+
+    <!-- 下载APP错误提示 -->
+    <string name="download_failed">下载失败</string>
+    <string name="SD_card_is_not_installed_on_the_phone_failed_download">手机未安装SD卡,下载失败</string>
+
+    <!-- 当用户拒绝APP必要权限时显示的文字 -->
+    <string name="determine">确定</string>
+    <string name="cancel">取消</string>
+    <string name="the_current_application_lacks_the_necessary_permissions_please_authorize_the_permissions_required_by_the_app">当前应用缺少必要权限,请授权App所需的权限</string>
+    <string name="the_current_application_lacks_positioning_permissions_please_authorize_the_permissions_required_by_the_app">当前应用缺少定位权限,请授权App所需的权限</string>
+    <string name="manual_authorization">手动授权</string>
+    <string name="exit_the_app">退出应用</string>
+    <string name="camera_does_not_start_please_turn_on_camera_permission">相机无法启动,请开启相机权限</string>
+    <string name="open_camera_exception">打开相机异常</string>
+    <string name="open_album_exception">打开相册异常</string>
+
+    <!-- 网络请求错误信息 -->
+    <string name="no_network">网络连接不可用</string>
+    <string name="http_exception">HTTP错误</string>
+    <string name="connect_exception">网络连接异常</string>
+    <string name="socket_timeout_exception">网络连接超时</string>
+    <string name="unknown_host_exception">未知主机异常</string>
+    <string name="illegal_argument_exception">非法参数异常</string>
+    <string name="SSL_handshake_exception">证书验证失败异常</string>
+    <string name="parse_exception">数据解析异常</string>
+    <!-- HTTP 500错误 -->
+    <string name="five_hundred_code">服务器开了一会儿小差,请稍后再试。</string>
+
+    <!-- 各种符号 -->
+    <string name="slash">/</string>
+    <string name="cm">cm</string>
+    <string name="percent_sign">%</string>
+
+    <string name="select_delivery_city_title">选择配送城市</string>
+    <string name="S1">是否跳跳转至小程序查看并\n分享给好友\n不跳转可直接进入小程序登陆\n相同账号后查看\n</string>
+    <string name="S2">稍后自己去</string>
+    <string name="S3">立即跳转</string>
+
+    <string name="exist_scene_title">提示</string>
+    <string name="exist_scene_text">当前有正在编辑的设计，继续创建将完成当前编辑，并清除场景缓存。</string>
+</resources>

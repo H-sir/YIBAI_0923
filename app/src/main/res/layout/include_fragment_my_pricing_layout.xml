@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="199dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:id="@+id/toBeDecidedTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/my_decided"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/to_be_decided"
+            android:textColor="@color/prompt_high_text_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dealDoneTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/my_deal_done"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/deal_done"
+            android:textColor="@color/prompt_high_text_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/expiredTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@mipmap/my_expired"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/expired"
+            android:textColor="@color/prompt_high_text_color"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/line_color" />
+
+    <RelativeLayout
+        android:id="@+id/quotationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <TextView
+            android:id="@+id/quotationTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawableEnd="@mipmap/right_gray"
+            android:gravity="center_vertical"
+            android:text="@string/quotation"
+            android:textColor="@color/main_text_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="20dp"
+            android:gravity="center_vertical"
+            android:text="@string/all_quotation"
+            android:textColor="@color/prompt_low_text_color"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/line_color" />
+
+    <TextView
+        android:id="@+id/quotationSetTextView"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:drawableEnd="@mipmap/right_gray"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/quotation_set"
+        android:textColor="@color/main_text_color"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/line_color" />
+
+    <TextView
+        android:id="@+id/customerManagementTextView"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:drawableEnd="@mipmap/right_gray"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/customer_management"
+        android:textColor="@color/main_text_color"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+</LinearLayout>

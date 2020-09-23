@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.ybw.yibai.common.widget.stickerview.StickerView
+        android:id="@+id/stickerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:bringToFrontCurrentSticker="true"
+        app:showBorder="true"
+        app:showIcons="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 如果想最后保存的图片不带这张图片请将这ImageView移除或者放在外面 -->
+
+            <!-- 客户自定义Logo -->
+
+            <ImageView
+                android:id="@+id/sceneBackgroundImageView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@null"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/customerLogoImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@null" />
+
+            <!-- 体验版本Logo -->
+            <ImageView
+                android:id="@+id/experienceVersionLogoImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="70dp"
+                android:contentDescription="@null"
+                android:src="@mipmap/experience_version_logo"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </com.ybw.yibai.common.widget.stickerview.StickerView>
+
+    <LinearLayout
+        android:id="@+id/backgroundEditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="49dp"
+        android:background="#CCFFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/takePhotoReplacementTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/take_a_photo_replacement"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/take_a_photo_replacement"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/albumReplacementTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:drawableTop="@mipmap/album_replacement"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/album_replacement"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/backgroundTemplateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:drawableTop="@mipmap/template"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/background_template"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/adjustBackgroundTextViewTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:drawableTop="@mipmap/adjust_background"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/adjust_background"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bonsaiEditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:background="#CCFFFFFF"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/replaceCollocationTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/replace_collocation"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/replace_the_collocation"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/bonsaiInfoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/bonsai_info"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/bonsai_info"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/joinPhotoAlbum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/album_replacement"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/join_photo_album"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/joinPurchaseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/restore_settings"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/join_purchase"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/brightnessAdjustmentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/adjust_background"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/brightness_adjustment"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/intelligentEraseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/intelligent_erase"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/intelligent_erase"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/restoreSettingsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/restore_settings"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="@string/restore_settings"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            tools:ignore="SmallSp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/collocationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:onClick="onClick"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="76dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24sp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/white_fifty_percent_color"
+        android:divider="@color/line_color"
+        android:scrollbars="none"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/changeStyleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rect_rounded_black"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="8dp"
+        android:text="@string/change_style"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <include
+        layout="@layout/partial_01"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/btnChangeLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/rect_rounded_white"
+        android:elevation="5dp"
+        android:gravity="center"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="8dp"
+        android:text="全国"
+        android:textColor="@android:color/black"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/productCodeImageButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="68dp"
+        android:background="@drawable/background_collocation"
+        android:contentDescription="@null"
+        android:gravity="center"
+        android:src="@mipmap/product_code_tag"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <com.jude.easyrecyclerview.EasyRecyclerView
+        android:id="@+id/plant_recyclerView"
+        android:layout_width="@dimen/DM1"
+        android:layout_height="@dimen/DM2"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@color/half_trans"
+        android:paddingTop="5dp"
+        android:scrollbars="none"
+        android:visibility="invisible"
+        app:scrollbars="none" />
+
+    <com.jude.easyrecyclerview.EasyRecyclerView
+        android:id="@+id/pot_recyclerView"
+        android:layout_width="@dimen/DM1"
+        android:layout_height="@dimen/DM2"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/half_trans"
+        android:paddingTop="5dp"
+        android:visibility="invisible"
+        app:scrollbars="none" />
+
+    <include layout="@layout/fragment_scene_edit_main_layout_tabs" />
+
+    <TextView
+        android:id="@+id/btnHideTools"
+        android:layout_width="92dp"
+        android:layout_height="32dp"
+        android:layout_above="@+id/bottomCatTab"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/background_company_name"
+        android:gravity="center"
+        android:paddingEnd="4dp"
+        android:text="隐藏工具"
+        android:textColor="@color/main_text_color"
+        android:textSize="10sp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/savePhoto"
+        android:layout_width="92dp"
+        android:layout_height="32dp"
+        android:layout_above="@+id/bottomCatTab"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/background_company_name"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="保存图片"
+        android:textColor="@color/main_text_color"
+        android:textSize="10sp" />
+
+    <TextView
+        android:id="@+id/multipleImageContrastTextView"
+        android:layout_width="92dp"
+        android:layout_height="32dp"
+        android:layout_above="@+id/bottomCatTab"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/background_company_name"
+        android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="@string/multiple_image_contrast"
+        android:textColor="@color/main_text_color"
+        android:textSize="10sp"
+        android:visibility="visible" />
+
+</RelativeLayout>

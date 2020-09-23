@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/arrowsImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="16dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/product_code_info_arrows" />
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="-1dp"
+        android:layout_toEndOf="@+id/arrowsImageView"
+        android:background="@drawable/background_product_code_info"
+        android:paddingTop="13dp"
+        android:paddingBottom="13dp">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/reticuleImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/reticule"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/plantProductPriceCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reticuleImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:singleLine="true"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/potProductPriceCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/productPriceCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/reticuleImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:singleLine="true"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/prompt_low_text_color" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/shoppingCartImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/shopping_cart"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/plantProductTradePriceCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/shoppingCartImageView"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:singleLine="true"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/potProductTradePriceCodeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
+                android:singleLine="true"
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

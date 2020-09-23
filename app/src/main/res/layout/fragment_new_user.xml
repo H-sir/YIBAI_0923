@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/headPortraitImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@null"
+        android:src="@mipmap/add" />
+
+    <com.ybw.yibai.common.widget.ClearEditText
+        android:id="@+id/customerNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/headPortraitImageView"
+        android:layout_marginEnd="68dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="26dp"
+        android:background="@drawable/background_edit_text"
+        android:gravity="center"
+        android:hint="@string/enter_customer_name"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/main_text_color"
+        android:textCursorDrawable="@drawable/edit_text_cursor_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:rightImage="@mipmap/edit_text_clear" />
+
+    <com.ybw.yibai.common.widget.ClearEditText
+        android:id="@+id/telephoneEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/customerNameEditText"
+        android:layout_marginEnd="68dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_edit_text"
+        android:gravity="center"
+        android:hint="@string/contact_telephone"
+        android:inputType="phone"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/main_text_color"
+        android:textCursorDrawable="@drawable/edit_text_cursor_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:rightImage="@mipmap/edit_text_clear" />
+
+    <com.ybw.yibai.common.widget.ClearEditText
+        android:id="@+id/addressEditText"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/telephoneEditText"
+        android:layout_marginEnd="68dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/background_edit_text"
+        android:gravity="center"
+        android:hint="@string/contact_address"
+        android:inputType="text"
+        android:lines="1"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textColor="@color/main_text_color"
+        android:textCursorDrawable="@drawable/edit_text_cursor_color"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:rightImage="@mipmap/edit_text_clear" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:layout_above="@+id/bottomLayout"
+        android:background="@drawable/shadow_top" />
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/cancelTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="122"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/main_text_color"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/saveTextView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="253"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:text="@string/save_design"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</RelativeLayout>

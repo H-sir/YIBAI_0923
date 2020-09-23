@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/trans_grey"
+    android:paddingVertical="5dp"
+    android:gravity="center">
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/titleTv"
+        android:maxLines="1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="默认场景"
+        android:textSize="10sp" />
+
+    <Space
+        android:layout_width="6dp"
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:maxLines="1"
+        android:id="@+id/countTv"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/blue"
+        android:textSize="10sp" />
+
+</LinearLayout>

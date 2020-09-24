@@ -23,6 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 import static com.ybw.yibai.common.constants.HttpUrls.DELETE_DESIGN_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.DELETE_DESIGN_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.DELETE_DESIGN_SCHEME_PIC_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.EDIT_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_DESIGN_INFO_METHOD;
 
 /**
@@ -126,7 +127,19 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
 
             @Override
             public void onNext(BaseBean deleteBase) {
-                callBack.onDeleteSchemeSuccess(schemelistBean);
+                try {
+                    DbManager dbManager = YiBaiApplication.getDbManager();
+                    // 查找当前正在编辑的这一个场景
+                    List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                            .where("scheme_id", "=", schemelistBean.getSchemeId())
+                            .findAll();
+                    if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
+                        dbManager.delete(defaultSceneInfoList);
+                    }
+                    callBack.onDeleteSchemeSuccess(schemelistBean);
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -160,8 +173,59 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
 
             @Override
             public void onNext(BaseBean deleteBase) {
-                deleteScheme(designDetails.getData().getNumber(),callBack,deleteBase);
+                deleteScheme(designDetails.getData().getNumber(), callBack, deleteBase);
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void editSceneName(String scnenName, DesignDetails.DataBean.SchemelistBean schemelistBean, DesignDetailsContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        int uid = YiBaiApplication.getUid();
+        Observable<BaseBean> observable = mApiService.editScheme(timeStamp,
+                OtherUtil.getSign(timeStamp, EDIT_SCHEME_METHOD),
+                uid, scnenName, schemelistBean.getSchemeId());
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    try {
+                        DbManager dbManager = YiBaiApplication.getDbManager();
+                        // 查找当前正在编辑的这一个场景
+                        List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                                .where("scheme_id", "=", schemelistBean.getSchemeId())
+                                .findAll();
+                        if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
+                            defaultSceneInfoList.get(0).setSceneName(scnenName);
+                            dbManager.update(defaultSceneInfoList, "sceneName");
+                        }
+                            callBack.editSceneNameSuccess();
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
             }
 
             @Override

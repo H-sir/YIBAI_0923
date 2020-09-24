@@ -79,38 +79,106 @@ public class SceneModelImpl implements SceneModel {
                     .where("uid", "=", YiBaiApplication.getUid())
                     .and("editScene", "=", true)
                     .findAll();
-            if (sceneInfoList != null && sceneInfoList.size() > 0) {
-                SceneInfo sceneInfo = sceneInfoList.get(0);
-                editScene(sceneInfo, createSceneData, callBack);
-            } else {
-                for (int i = 0; i < createSceneData.size(); i++) {
-                    CreateSceneData sceneData = createSceneData.get(i);
-
-                    String name = sceneData.getName();
-                    String path = sceneData.getFile().getAbsolutePath();
-                    SceneInfo sceneInfo = new SceneInfo();
-                    sceneInfo.setUid(YiBaiApplication.getUid());
-                    sceneInfo.setSceneId(TimeUtil.getNanoTime());
-
-                    if (TextUtils.isEmpty(name)) {
-                        sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
-                    } else {
-                        sceneInfo.setSceneName(name);
-                    }
-                    sceneInfo.setSceneBackground(path);
-                    if (i == createSceneData.size() - 1) {
-                        sceneInfo.setEditScene(true);
-                    } else {
-                        sceneInfo.setEditScene(false);
-                    }
-                    dbManager.save(sceneInfo);
+            String number = "";
+            for (SceneInfo sceneInfo : sceneInfoList) {
+                if (sceneInfo.isEditScene()) {
+                    number = sceneInfo.getNumber();
                 }
-                callBack.addSceneInfoResult(true);
+                sceneInfo.setEditScene(false);
+                // 更新SceneInfo列名为editScene的数据
+                dbManager.update(sceneInfo, "editScene");
             }
+            addSceneInfoPage(createSceneData, 0, number, dbManager, callBack);
         } catch (DbException e) {
             e.printStackTrace();
             callBack.addSceneInfoResult(false);
         }
+    }
+
+    /**
+     * 递归创建
+     */
+    private void addSceneInfoPage(List<CreateSceneData> createSceneData, int index, String number, DbManager dbManager, CallBack callBack) {
+        if (index < createSceneData.size()) {
+            CreateSceneData sceneData = createSceneData.get(index);
+
+            String name = sceneData.getName();
+            String path = sceneData.getFile().getAbsolutePath();
+            SceneInfo sceneInfo = new SceneInfo();
+            sceneInfo.setUid(YiBaiApplication.getUid());
+            sceneInfo.setNumber(number);
+            sceneInfo.setSceneId(TimeUtil.getNanoTime());
+
+            if (TextUtils.isEmpty(name)) {
+                sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
+            } else {
+                sceneInfo.setSceneName(name);
+            }
+            sceneInfo.setSceneBackground(path);
+            if (index == createSceneData.size() - 1) {
+                sceneInfo.setEditScene(true);
+            } else {
+                sceneInfo.setEditScene(false);
+            }
+            designNewScheme(sceneInfo, dbManager, createSceneData, index, callBack);
+        } else {
+            callBack.addSceneInfoResult(true);
+        }
+    }
+
+    /**
+     * 创建场景
+     */
+    public void designNewScheme(SceneInfo sceneInfo, DbManager manager, List<CreateSceneData> createSceneData, int index, CallBack callBack) {
+        String schemeName = sceneInfo.getSceneName();
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        int uid = YiBaiApplication.getUid();
+        Observable<DesignScheme> observable;
+        if (sceneInfo.getSceneBackground() != null) {
+            observable = mApiService.designNewScheme(timeStamp,
+                    OtherUtil.getSign(timeStamp, DESIGN_SCHEME_METHOD),
+                    uid, sceneInfo.getNumber(), 1, schemeName, getParamByBgPic(sceneInfo.getSceneBackground()));
+        } else {
+            observable = mApiService.designNewScheme(timeStamp,
+                    OtherUtil.getSign(timeStamp, DESIGN_SCHEME_METHOD),
+                    uid, sceneInfo.getNumber(), 1, schemeName);
+        }
+        Observer<DesignScheme> observer = new Observer<DesignScheme>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(DesignScheme designScheme) {
+                try {
+                    if (designScheme.getCode() == 200) {
+                        sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
+                        // 保存场景信息
+                        manager.save(sceneInfo);
+                        addSceneInfoPage(createSceneData, index + 1, sceneInfo.getNumber(), manager, callBack);
+                    } else {
+                        callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
+                    }
+                } catch (DbException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 
     /**

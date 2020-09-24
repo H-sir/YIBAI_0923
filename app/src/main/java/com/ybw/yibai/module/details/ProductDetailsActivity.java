@@ -1,5 +1,6 @@
 package com.ybw.yibai.module.details;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -683,6 +684,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
      *
      * @param skuList 产品信息
      */
+    @SuppressLint("NewApi")
     @Override
     public void returnSelectsProductInfo(SkuListBean skuList) {
         mSkuListBean = skuList;
@@ -703,10 +705,12 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (1 == useState) {
             // 使用
             mUseStateTextView.setText(getResources().getString(R.string.use));
+            mUseStateTextView.setVisibility(View.GONE);
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_button_unpressed));
         } else {
             // 不使用
+            mUseStateTextView.setVisibility(View.GONE);
             mUseStateTextView.setText(getResources().getString(R.string.unused));
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, R.color.prompt_low_text_color));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_image_view));

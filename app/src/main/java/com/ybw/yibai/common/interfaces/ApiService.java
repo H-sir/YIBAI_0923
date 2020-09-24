@@ -349,6 +349,27 @@ public interface ApiService {
                                              @Part("type") int type,
                                              @Part("scheme_name") String schemeName);
 
+    /**
+     * 14.4.	创建场景或场景添加图片产品
+     *
+     * @param timestamp    时间搓
+     * @param sign         签名
+     * @param uid          用户的ID
+     * @param desingNumber 设计编号
+     * @param type         1创建场景2添加图片和产品
+     * @param schemeName   场景名称(type为1时才有效,可不传)
+     * @return 设计编号
+     */
+    @Multipart
+    @POST(HttpUrls.DESIGN_SCHEME_URL)
+    Observable<DesignScheme> designNewScheme(@Header("timestamp") String timestamp,
+                                             @Header("sign") String sign,
+                                             @Part("uid") int uid,
+                                             @Part("desing_number") String desingNumber,
+                                             @Part("type") int type,
+                                             @Part("scheme_name") String schemeName,
+                                             @Part MultipartBody.Part parts
+    );
 
     /**
      * 14.4.	创建场景或场景添加图片产品
@@ -386,11 +407,30 @@ public interface ApiService {
     @Multipart
     @POST(HttpUrls.EDIT_SCHEME_URL)
     Observable<BaseBean> editScheme(@Header("timestamp") String timestamp,
-                                        @Header("sign") String sign,
-                                        @Part("uid") int uid,
-                                        @Part("name") String name,
-                                        @Part("scheme_id") String scheme_id,
-                                        @Part MultipartBody.Part parts);
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("name") String name,
+                                    @Part("scheme_id") String scheme_id,
+                                    @Part MultipartBody.Part parts);
+
+    /**
+     * 14.4.	修改场景信息
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @param name      场景名称
+     * @param scheme_id 场景ID
+     * @return 设计编号
+     */
+    @Multipart
+    @POST(HttpUrls.EDIT_SCHEME_URL)
+    Observable<BaseBean> editScheme(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("name") String name,
+                                    @Part("scheme_id") String scheme_id);
+
 
     /**
      * 14.4.	创建场景或场景添加图片产品

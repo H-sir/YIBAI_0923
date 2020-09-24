@@ -9,7 +9,9 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.BTCBean;
+import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CreateSceneData;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
@@ -36,6 +38,7 @@ import com.ybw.yibai.module.sceneedit.SceneEditContract.SceneEditModel;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,10 +50,12 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.EDIT_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.FAST_IMPORT_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CATEGORY_SIMILAR_SUK_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_NEWRECOMMEND_METHOD;
@@ -490,6 +495,56 @@ public class SceneEditModelImpl implements SceneEditModel {
     }
 
     /**
+     * 更新背景图片
+     */
+    @Override
+    public void updateSceneBg(String absolutePath, String sceneName, String scheme_id, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        int uid = YiBaiApplication.getUid();
+        Observable<BaseBean> observable = mApiService.editScheme(timeStamp,
+                OtherUtil.getSign(timeStamp, EDIT_SCHEME_METHOD),
+                uid, sceneName, scheme_id, getBgPicByPath(absolutePath));
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.updateSceneBgSuccess();
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    private MultipartBody.Part getBgPicByPath(String path) {
+        File file = new File(path);
+        String fileName = file.getName();
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
+        MultipartBody.Part parts = MultipartBody.Part.createFormData("bgpic", file.getName(), requestBody);
+        return parts;
+    }
+
+    /**
      * 将"模拟搭配产品"数据添加到报价列表数据中
      *
      * @param simulationData "模拟搭配产品"数据
@@ -852,7 +907,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 simulationData.setWidth(width);
                 simulationData.setHeight(height);
             }
-            
+
             // 默认为1
             simulationData.setxScale(1);
             simulationData.setyScale(1);

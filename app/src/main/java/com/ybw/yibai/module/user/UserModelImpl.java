@@ -184,7 +184,7 @@ public class UserModelImpl implements UserContract.UserModel {
                     .findAll();
             for (Iterator<SceneInfo> iterator = sceneInfoList.iterator(); iterator.hasNext(); ) {
                 SceneInfo info = iterator.next();
-                if (info.getScheme_id().equals(sceneInfo.getScheme_id())) {
+                if (info.getScheme_id() != null && info.getScheme_id().equals(sceneInfo.getScheme_id())) {
                     info.setEditScene(true);
                 } else {
                     info.setEditScene(false);

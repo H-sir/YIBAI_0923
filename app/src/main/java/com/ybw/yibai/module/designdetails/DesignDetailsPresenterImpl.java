@@ -89,4 +89,14 @@ public class DesignDetailsPresenterImpl extends BasePresenterImpl<DesignDetailsC
     public void onDeleteDesignSuccess(BaseBean baseBean) {
         mDesignDetailsView.onDeleteDesignSuccess(baseBean);
     }
+
+    @Override
+    public void editSceneName(String scnenName, DesignDetails.DataBean.SchemelistBean schemelistBean) {
+        mSceneDetailsModel.editSceneName(scnenName,schemelistBean,this);
+    }
+
+    @Override
+    public void editSceneNameSuccess() {
+        mDesignDetailsView.editSceneNameSuccess();
+    }
 }

@@ -48,12 +48,14 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
             android:padding="10dp"
+            android:visibility="gone"
             android:src="@mipmap/scene_list" />
 
         <ImageView
             android:id="@+id/screenRotationImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_toStartOf="@+id/listImageView"
             android:background="?android:attr/selectableItemBackgroundBorderless"

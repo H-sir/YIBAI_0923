@@ -209,15 +209,28 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
         mediaMessage.title = "设计号：" + designLists.get(position).getNumber();//自定义
         mediaMessage.description = designLists.get(position).getNumber();//自定义
-        Bitmap bitmap = BitmapFactory.decodeResource(DesignActivity.this.getResources(), R.mipmap.share_img);
-        Bitmap sendBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-        bitmap.recycle();
-        mediaMessage.thumbData = ImageDispose.Bitmap2Bytes(sendBitmap);
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = "";
-        req.scene = SendMessageToWX.Req.WXSceneSession;
-        req.message = mediaMessage;
-        YiBaiApplication.getIWXAPI().sendReq(req);
+        ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
+            @Override
+            public void onCallBack(byte[] bytes) {
+                if (bytes != null)
+                    mediaMessage.thumbData = bytes;
+                SendMessageToWX.Req req = new SendMessageToWX.Req();
+                req.transaction = "";
+                req.scene = SendMessageToWX.Req.WXSceneSession;
+                req.message = mediaMessage;
+                YiBaiApplication.getIWXAPI().sendReq(req);
+            }
+        });
+
+//        Bitmap bitmap = BitmapFactory.decodeResource(DesignActivity.this.getResources(), R.mipmap.share_img);
+//        Bitmap sendBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
+//        bitmap.recycle();
+//        mediaMessage.thumbData = ImageDispose.Bitmap2Bytes(sendBitmap);
+//        SendMessageToWX.Req req = new SendMessageToWX.Req();
+//        req.transaction = "";
+//        req.scene = SendMessageToWX.Req.WXSceneSession;
+//        req.message = mediaMessage;
+//        YiBaiApplication.getIWXAPI().sendReq(req);
     }
 
     @Override

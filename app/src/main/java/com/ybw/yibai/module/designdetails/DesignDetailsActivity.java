@@ -3,10 +3,15 @@ package com.ybw.yibai.module.designdetails;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -18,6 +23,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.DesignDetailsListAdapter;
 import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.DesignDetails;
+import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
@@ -25,6 +31,7 @@ import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.utils.MessageUtil;
+import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.design.DesignActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
@@ -120,7 +127,9 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     @Override
     protected void initEvent() {
         mDesignDetailsListAdapter.setSceneItemClickListener(this);
-
+        mDesignDetailsListAdapter.setOnDesignDetailsDeleteClickListener(this);
+        mDesignDetailsListAdapter.setOnDesignDetailsRenameClickListener(this);
+        mDesignDetailsListAdapter.setOnDesignDetailsListDeleteClickListener(this);
         String mDdesignNumber = (String) getIntent().getSerializableExtra(DESIGN_NUMBER);
         if (null == mDdesignNumber) {
             return;
@@ -223,7 +232,70 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
      */
     @Override
     public void onDesignDetailsRename(int position) {
+        DesignDetails.DataBean.SchemelistBean schemelistBean = schemelistBeans.get(position);
+        existSceneInfoPopupWindow(schemelistBean);
+    }
 
+    PopupWindow mPopupWindow;
+    DesignDetails.DataBean.SchemelistBean updateSchemelistBean;
+
+    private void existSceneInfoPopupWindow(DesignDetails.DataBean.SchemelistBean schemelistBean) {
+        if (null == mPopupWindow) {
+            View view = getLayoutInflater().inflate(R.layout.popup_window_edit_scene_name_layout, null);
+            mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            EditText editText = view.findViewById(R.id.editText);
+            Button cancelButton = view.findViewById(R.id.cancelButton);
+            Button determineButton = view.findViewById(R.id.determineButton);
+            cancelButton.setOnClickListener(v -> {
+                if (null != mPopupWindow && mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+            });
+            determineButton.setOnClickListener(v -> {
+                String scnenName = editText.getText().toString();
+                if (scnenName != null && !scnenName.isEmpty()) {
+                    updateSchemelistBean = schemelistBean;
+                    updateSchemelistBean.setSchemeName(scnenName);
+                    if (null != mPopupWindow && mPopupWindow.isShowing()) {
+                        mPopupWindow.dismiss();
+                    }
+                    mDesignDetailsPresenter.editSceneName(scnenName, schemelistBean);
+                } else {
+                    MessageUtil.showMessage("请输入修改的名称");
+                }
+            });
+            mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+            mPopupWindow.setOutsideTouchable(true);
+            mPopupWindow.setFocusable(true);
+
+            // 设置一个动画效果
+            mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
+
+            // 在弹出PopupWindow设置屏幕透明度
+            OtherUtil.setBackgroundAlpha(this, 0.6f);
+            // 添加PopupWindow窗口关闭事件
+            mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(this, 1f));
+            mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
+        } else {
+            // 在弹出PopupWindow设置屏幕透明度
+            OtherUtil.setBackgroundAlpha(this, 0.6f);
+            // 添加PopupWindow窗口关闭事件
+            mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(this, 1f));
+            mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
+        }
+    }
+
+    @Override
+    public void editSceneNameSuccess() {
+        for (Iterator<DesignDetails.DataBean.SchemelistBean> iterator = schemelistBeans.iterator(); iterator.hasNext(); ) {
+            DesignDetails.DataBean.SchemelistBean bean = iterator.next();
+            if(bean.getSchemeId().equals(updateSchemelistBean.getSchemeId())){
+                bean.setSchemeName(updateSchemelistBean.getSchemeName());
+                break;
+            }
+        }
+        mDesignDetailsListAdapter.notifyDataSetChanged();
     }
 
     /**

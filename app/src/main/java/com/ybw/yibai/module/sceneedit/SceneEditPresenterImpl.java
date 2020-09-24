@@ -428,6 +428,11 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         addSimulationData(data);
     }
 
+    @Override
+    public void updateSceneBgSuccess() {
+        mSceneEditView.updateSceneBgSuccess();
+    }
+
     /**
      * 获取相似类型sku列表
      *
@@ -507,6 +512,14 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             }
         }
         mSceneEditModel.getNewRecommed(cateCode, productSkuId, augmentedProductSkuId, specTypeId, specid, attrid, plantParamMap, this);
+    }
+
+    /**
+     * 更新背景图片
+     * */
+    @Override
+    public void updateSceneBg(String absolutePath, String sceneName, String scheme_id) {
+        mSceneEditModel.updateSceneBg(absolutePath,sceneName,scheme_id,this);
     }
 
     /**

@@ -159,6 +159,9 @@ public interface SceneEditContract {
         void onCreateSceneOrPicCallback(CreateSceneOrPicModel model);
 
         void onGetSceneListCallback(List<SceneInfo> sceneInfos);
+
+        void updateSceneBgSuccess();
+
     }
 
     interface SceneEditPresenter extends BasePresenter<SceneEditView> {
@@ -424,6 +427,11 @@ public interface SceneEditContract {
          * 根据刷选条件获取新的推荐搭配
          */
         void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int specTypeId, List<String> specidList, List<String> attridList, Map<String, String> plantParamMap);
+
+        /**
+         * 更新背景图片
+         * */
+        void updateSceneBg(String absolutePath, String sceneName, String scheme_id);
     }
 
     interface SceneEditModel {
@@ -615,6 +623,11 @@ public interface SceneEditContract {
          */
         void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int specTypeId, String specid,
                             String attrid, Map<String, String> plantParamMap, CallBack callBack);
+
+        /**
+         * 更新背景图片
+         * */
+        void updateSceneBg(String absolutePath, String sceneName, String scheme_id, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -700,5 +713,8 @@ public interface SceneEditContract {
          * 只传规格时的返回
          * */
         void onGetRecommendByAddSpecSuccess(Recommend recommend);
+
+        void updateSceneBgSuccess();
+
     }
 }

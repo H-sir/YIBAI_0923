@@ -38,6 +38,9 @@ public interface DesignDetailsContract {
          * 删除设计成功回调
          */
         void onDeleteDesignSuccess(BaseBean baseBean);
+
+        void editSceneNameSuccess();
+
     }
 
     interface DesignDetailsPresenter extends BasePresenter<DesignDetailsView> {
@@ -61,6 +64,11 @@ public interface DesignDetailsContract {
          * 删除设计
          */
         void deleteDesign(DesignDetails designDetails);
+
+        /**
+         * 修改场景名称
+         * */
+        void editSceneName(String scnenName, DesignDetails.DataBean.SchemelistBean schemelistBean);
     }
 
     interface DesignDetailsModel {
@@ -84,6 +92,8 @@ public interface DesignDetailsContract {
          * 删除设计
          */
         void deleteDesign(DesignDetails designDetails, CallBack callBack);
+
+        void editSceneName(String scnenName, DesignDetails.DataBean.SchemelistBean schemelistBean, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -111,5 +121,7 @@ public interface DesignDetailsContract {
          * 删除设计成功回调
          */
         void onDeleteDesignSuccess(BaseBean baseBean);
+
+        void editSceneNameSuccess();
     }
 }

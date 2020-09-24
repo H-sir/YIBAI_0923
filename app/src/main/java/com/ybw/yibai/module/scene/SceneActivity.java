@@ -64,6 +64,7 @@ import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
+import com.ybw.yibai.common.utils.NavigationBarUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
@@ -444,6 +445,9 @@ public class SceneActivity extends BaseActivity implements SceneView,
         YiBaiApplication.setWindowWidth(width);
         YiBaiApplication.setWindowHeight(height);
         setNativeLightStatusBar(this, true);
+        if(NavigationBarUtil.hasNavigationBar(this)){
+            NavigationBarUtil.initActivity(findViewById(android.R.id.content));
+        }
         return R.layout.activity_scene;
     }
 

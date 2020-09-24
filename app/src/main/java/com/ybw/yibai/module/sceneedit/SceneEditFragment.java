@@ -1153,7 +1153,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         btnReset.setOnClickListener(this);
         btnCnAdd.setOnClickListener(this);
 
-        // 获取设计详情
+//         获取设计详情
         String number = SPUtil.INSTANCE.getValue(getContext(), "number", String.class);
         if (number != null && !number.isEmpty()) {
             mSceneEditPresenter.getDesignDetail(number);
@@ -2039,8 +2039,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mSceneRecyclerView.setVisibility(View.GONE);
             return;
         }
-        mSceneEditPresenter.getDesignDetail(SPUtil.INSTANCE.getValue(getContext(), "number", String.class));
-        mSceneEditPresenter.getSceneList();
+//        mSceneEditPresenter.getDesignDetail(SPUtil.INSTANCE.getValue(getContext(), "number", String.class));
+//        mSceneEditPresenter.getSceneList();
         if (position != currentPosition) {
             return;
         }
@@ -2057,6 +2057,14 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mSceneInfo.setSceneBackground(file.getAbsolutePath());
         mSceneEditPresenter.updateSceneInfo(mSceneInfo);
         mSceneEditPresenter.setBackgroundImage(mSceneBackgroundImageView, file.getAbsolutePath());
+        mSceneEditPresenter.updateSceneBg(file.getAbsolutePath(), mSceneInfo.getSceneName(), mSceneInfo.getScheme_id());
+    }
+
+    /**
+     * 更新成功
+     */
+    @Override
+    public void updateSceneBgSuccess() {
         /**
          * 发送数据到{@link SceneActivity#onSceneInfoChange(SceneInfoChange)}
          */

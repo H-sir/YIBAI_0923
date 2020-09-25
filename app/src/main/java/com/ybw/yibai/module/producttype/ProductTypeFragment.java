@@ -44,7 +44,9 @@ import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Preferences.CATEGORY_CODE;
 import static com.ybw.yibai.common.constants.Preferences.KEY_WORD;
+import static com.ybw.yibai.common.constants.Preferences.PLANT;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
+import static com.ybw.yibai.common.constants.Preferences.POT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_ID;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_NAME;
@@ -337,6 +339,10 @@ public class ProductTypeFragment extends BaseFragment implements ProductTypeView
             startActivity(intent);
         } else {
             // 说明从"更多"界面打开
+            if(listBean.getComtype() == 2)
+            listBean.setCategoryCode(PLANT);
+            else
+            listBean.setCategoryCode(POT);
             mProductTypePresenter.saveSimulation(listBean);
         }
     }

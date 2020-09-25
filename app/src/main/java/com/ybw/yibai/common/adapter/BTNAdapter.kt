@@ -23,9 +23,11 @@ class BTNAdapter(context: Context) : RecyclerArrayAdapter<BTCBean.Child>(context
     var field: String = "0"
     var multipleSelect: Boolean = false
     var onSelectListener: IOnSelectListener<Pair<String, BTCBean.Child>>? = null
+    var onTimeSelectListener: IOnSelectListener<Pair<String, BTCBean.Child>>? = null
 
     init {
         super.setOnItemClickListener {
+            onTimeSelectListener?.onSelect(Pair(key, allData[it]))
             if (allData[it].select) {
                 allData[it].select = false;
             } else {

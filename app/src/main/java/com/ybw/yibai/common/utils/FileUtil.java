@@ -185,4 +185,32 @@ public class FileUtil {
             return path;
         }
     }
+
+    public static void main(String[] arg) {
+        int iiiIndex = 0;
+        for (int i = 0; i < 3; i++) {
+            iiiIndex++;
+            int index = 0;
+            int num = 3;
+            for (int j = 0; j < 10; j++) {
+                if(iiiIndex == 3){
+                    if (num * (iiiIndex - 1) <= index && index < 10) {
+                        System.out.print(j);
+                        index++;
+                    } else {
+                        index++;
+                        continue;
+                    }
+                }else{
+                    if (num * (iiiIndex - 1) <= index && index < num * iiiIndex) {
+                        System.out.print(j);
+                        index++;
+                    } else {
+                        index++;
+                        continue;
+                    }
+                }
+            }
+        }
+    }
 }

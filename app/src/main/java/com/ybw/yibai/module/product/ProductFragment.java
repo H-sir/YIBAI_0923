@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_USE_STATE_ID;
@@ -278,7 +279,14 @@ public class ProductFragment extends BaseFragment implements ProductView, View.O
         if (null == data) {
             return;
         }
-        List<UsestateBean> useState = data.getUsestate();
+        List<UsestateBean> useState = new ArrayList<>();
+        for (Iterator<UsestateBean> iterator = data.getUsestate().iterator(); iterator.hasNext(); ) {
+            UsestateBean usestateBean = iterator.next();
+            if (usestateBean.getName().equals("已使用") || usestateBean.getName().equals("未使用"))
+                continue;
+            useState.add(usestateBean);
+        }
+
         if (null == useState || useState.size() == 0) {
             return;
         }

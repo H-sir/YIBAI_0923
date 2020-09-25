@@ -14,6 +14,7 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.common.bean.SystemParameter.DataBean.CatelistBean.ListBean;
 import com.ybw.yibai.module.producttype.ProductTypeFragment;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -75,9 +76,18 @@ public class ProductSecondaryClassifyFilterAdapter extends RecyclerView.Adapter<
         }
 
         myViewHolder.mTextView.setOnClickListener(v -> {
-            // 如果之前选中,那现在设置没有选中
-            // 如果之前没有选中,那现在设置选中
-            listBean.setSelect(!select);
+            if(listBean.isSelect()){
+                listBean.setSelect(false);
+            }else {
+                for (Iterator<ListBean> iterator = mClassifyList.iterator(); iterator.hasNext(); ) {
+                    ListBean bean = iterator.next();
+                    bean.setSelect(false);
+                }
+                listBean.setSelect(true);
+            }
+//            // 如果之前选中,那现在设置没有选中
+//            // 如果之前没有选中,那现在设置选中
+//            listBean.setSelect(!select);
             notifyDataSetChanged();
             if (null == onItemClickListener) {
                 return;

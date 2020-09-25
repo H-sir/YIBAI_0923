@@ -82,6 +82,7 @@ import com.ybw.yibai.common.bean.SystemParameter.DataBean.SpectypeBean;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.bean.ViewPagerPosition;
+import com.ybw.yibai.common.callback.IOnSelectListener;
 import com.ybw.yibai.common.contants.GVar;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
@@ -808,6 +809,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     private TextView mBtnChangeLocation, btnCnAdd;
     private static ListBean lastBean;
     private BTCAdapter mParamAdapter;
+    private BTCBean.Child timeBean = null;
     private BTNAdapter mParamSonAdapter;
     private SOAdapter mSceneAdapter;
     private BTCBean sceneParamDataBean;
@@ -1098,6 +1100,12 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //                    productSkuId, augmentedProductSkuId,
 //                    null, potTypeId, param);
         });
+
+        mParamSonAdapter.setOnTimeSelectListener(data -> {
+            timeBean = data.getSecond();
+        });
+
+
         // 场景编辑框被点击
         mSceneAdapter.setOnItemClickListener(position -> {
             SceneInfo _item = mSceneAdapter.getItem(position);
@@ -2165,8 +2173,22 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetRecommendSuccess(Recommend recommend) {
-        if (recommend.getData().getPot() == null && recommend.getData().getPlant() == null) {
+        if ((recommend.getData().getPot() == null || recommend.getData().getPot().getList().size() == 0) &&
+                (recommend.getData().getPlant() == null || recommend.getData().getPlant().getList().size() == 0)) {
             MessageUtil.showMessage("无筛选结果，选择无效");
+            for (Iterator<BTCBean> iterator = mParamAdapter.getAllData().iterator(); iterator.hasNext(); ) {
+                BTCBean btcBean = iterator.next();
+                for (Iterator<BTCBean.Child> simulationDataIterator = btcBean.getSon().iterator(); simulationDataIterator.hasNext(); ) {
+                    BTCBean.Child child = simulationDataIterator.next();
+                    if (child.getId().equals(timeBean.getId())) {
+                        btcBean.setMName("");
+                        child.setSelect(false);
+                        break;
+                    }
+                }
+            }
+            mParamAdapter.notifyDataSetChanged();
+            mParamSonAdapter.notifyDataSetChanged();
             return;
         }
         if (CODE_SUCCEED != recommend.getCode()) {
@@ -2464,6 +2486,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             PotSelectAdapter potSelectAdapter = new PotSelectAdapter(mContext, mRecommendPotList, true);
             viewPager.setAdapter(potSelectAdapter);
             potSelectAdapter.setOnItemLongClickListener(this);
+
 
             int index = i;
             HorizontalViewPager.OnPageChangeListener onPageChangeListener = new HorizontalViewPager.OnPageChangeListener() {

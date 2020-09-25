@@ -1217,7 +1217,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
                 layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
                 layoutParams.topMargin = (int) currentY;
-                layoutParams.width = (int) currentStickerHeight;
+                layoutParams.width = (int) currentStickerWidth;
                 layoutParams.height = (int) currentStickerHeight;
                 viewPager.setLayoutParams(layoutParams);
             } else {
@@ -1230,7 +1230,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) matchLayout.getLayoutParams();
                 layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
                 layoutParams.topMargin = (int) currentY;
-                layoutParams.width = (int) currentStickerHeight;
+                layoutParams.width = (int) currentStickerWidth;
                 layoutParams.height = (int) currentStickerHeight;
                 matchLayout.setLayoutParams(layoutParams);
             }

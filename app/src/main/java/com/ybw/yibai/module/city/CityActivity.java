@@ -1,10 +1,12 @@
 package com.ybw.yibai.module.city;
 
 import android.Manifest;
+import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +25,7 @@ import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.module.home.HomeFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -30,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
@@ -208,7 +212,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         cityName = userPosition.getData().getCity_name();
         if (cityName != null) {
             /**
-             * 发送数据到{@link com.ybw.yibai.module.home.HomeFragment#onSetCity(String)}
+             * 发送数据到{@link HomeFragment#onSetCity(String)}
              * 使其跳转到对应的Fragment
              */
             EventBus.getDefault().postSticky(cityName);
@@ -247,18 +251,6 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         ExceptionUtil.handleException(throwable);
     }
 
-
-    @OnClick(R.id.backImageView)
-    public void onViewClicked() {
-        if (cityName != null && !cityName.isEmpty())
-        /**
-         * 发送数据到{@link com.ybw.yibai.module.home.HomeFragment#onSetCity(String)}
-         * 使其跳转到对应的Fragment
-         */
-            EventBus.getDefault().postSticky(cityName);
-        finish();
-    }
-
     /**
      * 友盟统计Fragment页面
      */
@@ -281,6 +273,32 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
             }
             mCityPresenter.onDetachView();
             mCityPresenter = null;
+        }
+    }
+
+    @OnClick({R.id.backImageView, R.id.cityCurrent})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.backImageView:
+                if (cityName != null && !cityName.isEmpty())
+                /**
+                 * 发送数据到{@link HomeFragment#onSetCity(String)}
+                 * 使其跳转到对应的Fragment
+                 */
+                    EventBus.getDefault().postSticky(cityName);
+                finish();
+                break;
+            case R.id.cityCurrent:
+                cityName = cityCurrent.getText().toString();
+                if (cityName != null) {
+                    /**
+                     * 发送数据到{@link HomeFragment#onSetCity(String)}
+                     * 使其跳转到对应的Fragment
+                     */
+                    EventBus.getDefault().postSticky(cityName);
+                    onBackPressed();
+                }
+                break;
         }
     }
 }

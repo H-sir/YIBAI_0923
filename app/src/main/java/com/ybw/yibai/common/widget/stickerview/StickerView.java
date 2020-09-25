@@ -11,6 +11,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.IntDef;
@@ -28,6 +29,7 @@ import android.widget.FrameLayout;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.YiBaiApplication;
+import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.SDCardHelperUtil;
@@ -1123,14 +1125,14 @@ public class StickerView extends FrameLayout {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                addStickerImmediately(sticker, x, y, xScale, yScale);
+                addStickerImmediately(null,sticker, x, y, xScale, yScale);
             }
         } else {
             if (0 == x && 0 == y) {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                post(() -> addStickerImmediately(sticker, x, y, xScale, yScale));
+                post(() -> addStickerImmediately(null,sticker, x, y, xScale, yScale));
             }
         }
         return this;
@@ -1151,7 +1153,7 @@ public class StickerView extends FrameLayout {
      * @return 添加的"贴纸"
      */
     @NonNull
-    public StickerView addSticker(@NonNull BaseSticker sticker, float x, float y, double xScale, double yScale,
+    public StickerView addSticker(SimulationData simulationData, @NonNull BaseSticker sticker, float x, float y, double xScale, double yScale,
                                   Object tag, Object sign, String pottedName, String pottedHeight) {
         sticker.setTag(tag);
         sticker.setSign(sign);
@@ -1162,14 +1164,14 @@ public class StickerView extends FrameLayout {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                addStickerImmediately(sticker, x, y, xScale, yScale);
+                addStickerImmediately(simulationData, sticker, x, y, xScale, yScale);
             }
         } else {
             if (0 == x && 0 == y) {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                post(() -> addStickerImmediately(sticker, x, y, xScale, yScale));
+                post(() -> addStickerImmediately(simulationData,sticker, x, y, xScale, yScale));
             }
         }
         return this;
@@ -1212,13 +1214,26 @@ public class StickerView extends FrameLayout {
      * @param xScale  X轴的缩放比例
      * @param yScale  Y轴的缩放比例
      */
-    protected void addStickerImmediately(@NonNull BaseSticker sticker, float x, float y, double xScale, double yScale) {
+    protected void addStickerImmediately(SimulationData simulationData, @NonNull BaseSticker sticker, float x, float y, double xScale, double yScale) {
         LogUtil.e(TAG, "贴纸左上角距离屏幕左上角X轴的距离: " + x);
         LogUtil.e(TAG, "贴纸左上角距离屏幕左上角Y轴的距离: " + y);
         LogUtil.e(TAG, "X轴的缩放比例: " + xScale);
         LogUtil.e(TAG, "Y轴的缩放比例: " + yScale);
+        Drawable drawable = sticker.getDrawable();
+        int minimumWidth = drawable.getMinimumWidth();
+        float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
+        float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
 
-        setStickerPosition(sticker, x, y);
+        sticker.getMatrix().setTranslate(x, y);
+//        sticker.getMatrix().preScale((float) 1, (float) 1);
+        sticker.getMatrix().postScale((float) scaleFactorWidth, (float) scaleFactorHeight, x, y);
+        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
+//        setStickerPosition(sticker, x, y);
+
+
+        mHandlingSticker = sticker;
+        mStickerList.add(sticker);
+
         /**
          * https://blog.csdn.net/maxchenfuhai/article/details/51690857
          *
@@ -1227,8 +1242,8 @@ public class StickerView extends FrameLayout {
          * float px: X轴缩放中心点
          * float py: Y轴缩放中心点
          */
-        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
-        mHandlingSticker = sticker;
+//        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
+//        mHandlingSticker = sticker;
         mStickerList.add(sticker);
         if (null != mOnStickerOperationListener) {
             mOnStickerOperationListener.onStickerAdded(sticker);

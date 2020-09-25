@@ -3020,6 +3020,18 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
                 mSavePhoto.setVisibility(View.VISIBLE);
                 if (flag) {
+                    int pos = 0;
+                    if (mRecommendPotList.size() > pos) {
+                        getPlantInfo(pos);
+                        if (null != mPlantViewPagerList && mPlantViewPagerList.size() > 0) {
+                            for (HorizontalViewPager viewPager : mPlantViewPagerList) {
+                                viewPager.setCurrentItem(pos);
+                            }
+                        }
+                        mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+
+                    }
+
 //                    mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
                 } else {
                     mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);

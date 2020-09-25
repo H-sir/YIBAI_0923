@@ -712,6 +712,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
             // 不使用
             mUseStateTextView.setVisibility(View.GONE);
             mUseStateTextView.setText(getResources().getString(R.string.unused));
+            mUseStateTextView.setVisibility(View.GONE);
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, R.color.prompt_low_text_color));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_image_view));
         }

@@ -416,6 +416,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 
     @Override
     public void onGetRecommendByAddSpecSuccess(Recommend recommend) {
+        mSceneEditView.onGetRecommendSuccess(recommend);
         if (CODE_SUCCEED != recommend.getCode()) {
             MessageUtil.showMessage(recommend.getMsg());
             return;
@@ -425,7 +426,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             return;
         }
         addSimulationData(data);
-        mSceneEditView.onGetRecommendSuccess(recommend);
     }
 
     @Override
@@ -516,10 +516,10 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 
     /**
      * 更新背景图片
-     * */
+     */
     @Override
     public void updateSceneBg(String absolutePath, String sceneName, String scheme_id) {
-        mSceneEditModel.updateSceneBg(absolutePath,sceneName,scheme_id,this);
+        mSceneEditModel.updateSceneBg(absolutePath, sceneName, scheme_id, this);
     }
 
     /**
@@ -829,7 +829,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 Bitmap bitmap = getLocalBitmap(picturePath);
                 Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
                 DrawableSticker drawableSticker = new DrawableSticker(drawable);
-                stickerView.addSticker(simulationData,drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
+                stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
             } else {
                 // 图片不存在,可能被删除了
                 LogUtil.e(TAG, "图片不存在,可能被删除了");

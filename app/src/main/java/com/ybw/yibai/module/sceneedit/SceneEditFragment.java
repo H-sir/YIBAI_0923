@@ -64,6 +64,7 @@ import com.ybw.yibai.common.bean.ImageContrastSelectedProduct;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.NewMatch;
+import com.ybw.yibai.common.bean.ParamSonBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.ProductData;
 import com.ybw.yibai.common.bean.QuotationData;
@@ -809,7 +810,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     private TextView mBtnChangeLocation, btnCnAdd;
     private static ListBean lastBean;
     private BTCAdapter mParamAdapter;
-    private BTCBean.Child timeBean = null;
+    private List<ParamSonBean> timeBean = new ArrayList<>();
     private BTNAdapter mParamSonAdapter;
     private SOAdapter mSceneAdapter;
     private BTCBean sceneParamDataBean;
@@ -1102,7 +1103,15 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         });
 
         mParamSonAdapter.setOnTimeSelectListener(data -> {
-            timeBean = data.getSecond();
+            timeBean.clear();
+            for (Iterator<BTCBean.Child> iterator = data.getSecond().iterator(); iterator.hasNext(); ) {
+                BTCBean.Child child = iterator.next();
+                ParamSonBean paramSonBean = new ParamSonBean();
+                paramSonBean.setId(child.getId());
+                paramSonBean.setName(child.getName());
+                paramSonBean.setSelect(child.getSelect());
+                timeBean.add(paramSonBean);
+            }
         });
 
 
@@ -1385,17 +1394,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
         // 重置筛选参数
         if (id == R.id.text1) {
-            for (int i = 0; i < mParamAdapter.getAllData().size(); i++) {
-                BTCBean item = mParamAdapter.getAllData().get(i);
-                item.setSelect(false);
-                for (int n = 0; n < item.getSon().size(); n++) {
-                    BTCBean.Child child = item.getSon().get(n);
-                    child.setSelect(false);
-                }
-            }
-            SpecId = "";
-            mParamAdapter.notifyDataSetChanged();
-            mParamSonAdapter.notifyDataSetChanged();
+            onResert();
 
             mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);
 //            mSceneEditPresenter.getRecommend(POT, productSkuId, augmentedProductSkuId,
@@ -1437,6 +1436,23 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 );
             }
         }
+    }
+
+    private void onResert() {
+        for (int i = 0; i < mParamAdapter.getAllData().size(); i++) {
+            BTCBean item = mParamAdapter.getAllData().get(i);
+            item.setSelect(false);
+            item.setMName("");
+            for (int n = 0; n < item.getSon().size(); n++) {
+                BTCBean.Child child = item.getSon().get(n);
+                child.setSelect(false);
+            }
+        }
+        attridList.clear();
+        specidList.clear();
+        SpecId = "";
+        mParamAdapter.notifyDataSetChanged();
+        mParamSonAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -2180,10 +2196,15 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 BTCBean btcBean = iterator.next();
                 for (Iterator<BTCBean.Child> simulationDataIterator = btcBean.getSon().iterator(); simulationDataIterator.hasNext(); ) {
                     BTCBean.Child child = simulationDataIterator.next();
-                    if (child.getId().equals(timeBean.getId())) {
-                        btcBean.setMName("");
-                        child.setSelect(false);
-                        break;
+                    for (Iterator<ParamSonBean> dataIterator = timeBean.iterator(); dataIterator.hasNext(); ) {
+                        ParamSonBean next = dataIterator.next();
+                        if (child.getId().equals(next.getId())) {
+                            child.setSelect(next.getSelect());
+                            btcBean.setMName("");
+                            if (next.getSelect())
+                                btcBean.setMName(next.getName());
+                            break;
+                        }
                     }
                 }
             }
@@ -3015,6 +3036,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mSavePhoto.setVisibility(View.GONE);
                 mSceneEditPresenter.getCategorySimilarSKUList(augmentedProductSkuId);
             } else {
+                onResert();
                 // 上下搭配
                 //mPotClassSelectTextView.setVisibility(View.VISIBLE);
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
@@ -3031,7 +3053,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                         mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
 
                     }
-
 //                    mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
                 } else {
                     mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);

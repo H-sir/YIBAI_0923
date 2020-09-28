@@ -2597,9 +2597,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             double augmentedProductHeight_ = mSimulationData.getAugmentedProductHeight();
             double productOffsetRatio_ = mSimulationData.getProductOffsetRatio();
             double augmentedProductOffsetRatio_ = mSimulationData.getAugmentedProductOffsetRatio();
-            mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
-                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
-
+            setCollocationContent(matchLayout, plantViewPager, potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
             // TODO 左右滚动
             int index = i;
             HorizontalViewPager.OnPageChangeListener onPlantPageChangeListener = new HorizontalViewPager.OnPageChangeListener() {
@@ -2609,7 +2607,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //                     动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
 //                    mSceneEditPresenter.setCollocationContent(matchLayout, plantViewPager,
 //                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
-                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+                    setCollocationContent(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
@@ -2630,7 +2628,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 public void onPageSelected(int position) {
                     onPotPageSelected(position, index);
                     // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+                    setCollocationContent(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
@@ -2654,6 +2652,16 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mPotSelectAdapterList.add(potSelectAdapter);
             mOnPlantPageChangeListenerList.add(onPlantPageChangeListener);
             mOnPotPageChangeListenerList.add(onPotPageChangeListener);
+        }
+    }
+
+    private void setCollocationContent(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager, double productHeight_, double augmentedProductHeight_, double productOffsetRatio_, double augmentedProductOffsetRatio_) {
+        if (isChangeFlagOne) {
+            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+        } else {
+            mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
+                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
         }
     }
 
@@ -3011,6 +3019,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         augmentedTradePriceCode = listBean.getTrade_price_code();
     }
 
+    boolean isChangeFlagOne = false;
+
     /**
      * 更换搭配操作
      *
@@ -3019,6 +3029,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     private void replaceCollocation(boolean flag) {
         String text = mChangeStyleTextView.getText().toString();
         if (text.equals(mContext.getResources().getString(R.string.change_style))) {
+            if (flag) isChangeFlagOne = true;
+            else isChangeFlagOne = false;
             isChangeFlag = true;
             BaseSticker currentSticker = mStickerView.getCurrentSticker();
             if (null == currentSticker) {
@@ -3095,6 +3107,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             String label = getClass().getSimpleName() + "Three";
             GuideUtil.showGuideView(this, R.layout.guide_scene_edit_three_layout, label);
         } else {
+            isChangeFlagOne = false;
             mProductCodeImageButton.setVisibility(View.GONE);
             mChangeStyleTextView.setText(mContext.getResources().getString(R.string.change_style));
             mBtnChangeLocation.setVisibility(View.GONE);

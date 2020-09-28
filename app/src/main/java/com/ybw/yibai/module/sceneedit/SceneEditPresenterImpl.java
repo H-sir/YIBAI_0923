@@ -1391,22 +1391,36 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                                                  double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
         matchLayout.postDelayed(() -> {
             int height = matchLayout.getHeight();
-            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
-            if (0 == h) {
-                return;
-            }
+            double allHeight = plantHeight + potHeight;
+            double mPlant = plantHeight - plantOffsetRatio;
+            double mPot = potHeight - potOffsetRatio;
             // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-            double portionHeight = BigDecimal.valueOf((float) height / h)
-                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-
+            double portionPlantHeight = BigDecimal.valueOf((float) height / mPlant).doubleValue();
+            double portionPotHeight = BigDecimal.valueOf((float) height / mPot).doubleValue();
             ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-            plantImageViewParams.height = (int) (portionHeight * (plantHeight + plantOffsetRatio));
+            plantImageViewParams.height = (int) (portionPlantHeight * (plantHeight + plantOffsetRatio) / 2);
             plantViewPager.setLayoutParams(plantImageViewParams);
 
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = (int) (portionHeight * (potHeight));
+            viewPagerParams.height = (int) (portionPotHeight * (potHeight + potOffsetRatio) / 2);
             potViewPager.setLayoutParams(viewPagerParams);
-        },500);
+
+//            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
+//            if (0 == h) {
+//                return;
+//            }
+//            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
+//            double portionHeight = BigDecimal.valueOf((float) height / h)
+//                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+//
+//            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+//            plantImageViewParams.height = (int) (portionHeight * (plantHeight + plantOffsetRatio));
+//            plantViewPager.setLayoutParams(plantImageViewParams);
+//
+//            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+//            viewPagerParams.height = (int) (portionHeight * (potHeight));
+//            potViewPager.setLayoutParams(viewPagerParams);
+        }, 500);
     }
 
     @Override

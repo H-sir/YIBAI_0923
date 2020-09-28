@@ -1219,25 +1219,25 @@ public class StickerView extends FrameLayout {
         LogUtil.e(TAG, "贴纸左上角距离屏幕左上角Y轴的距离: " + y);
         LogUtil.e(TAG, "X轴的缩放比例: " + xScale);
         LogUtil.e(TAG, "Y轴的缩放比例: " + yScale);
-        Drawable drawable = sticker.getDrawable();
-        float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
-        float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
-
-        sticker.getMatrix().setTranslate(x, y);
-        sticker.getMatrix().postScale((float) scaleFactorWidth, (float) scaleFactorHeight, x, y);
-        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
-
-
-//        setStickerPosition(sticker, x, y);
-//        /**
-//         * https://blog.csdn.net/maxchenfuhai/article/details/51690857
-//         *
-//         * float sx: X轴的缩放大小
-//         * float sy: Y轴的缩放大小
-//         * float px: X轴缩放中心点
-//         * float py: Y轴缩放中心点
-//         */
+//        Drawable drawable = sticker.getDrawable();
+//        float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
+//        float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
+//
+//        sticker.getMatrix().setTranslate(x, y);
+//        sticker.getMatrix().postScale((float) scaleFactorWidth, (float) scaleFactorHeight, x, y);
 //        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
+
+
+        setStickerPosition(sticker, x, y);
+        /**
+         * https://blog.csdn.net/maxchenfuhai/article/details/51690857
+         *
+         * float sx: X轴的缩放大小
+         * float sy: Y轴的缩放大小
+         * float px: X轴缩放中心点
+         * float py: Y轴缩放中心点
+         */
+        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
 
         mHandlingSticker = sticker;
         mStickerList.add(sticker);

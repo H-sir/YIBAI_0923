@@ -59,6 +59,7 @@ public class HotSchemeModelImpl implements HotSchemeModel {
         String productPic2 = plantBean.getPic2();
         String productPic3 = plantBean.getPic3();
         double productHeight = plantBean.getHeight();
+        double productOffsetRatio = plantBean.getOffset_ratio();
 
         int augmentedProductSkuId = potBean.getSku_id();
         String augmentedProductName = potBean.getName();
@@ -95,6 +96,7 @@ public class HotSchemeModelImpl implements HotSchemeModel {
         LogUtil.e(TAG, "附加产品的高度: " + augmentedProductHeight);
 
         LogUtil.e(TAG, "主产品的款名Id+附加产品的款名Id的组合: " + finallySkuId);
+        LogUtil.e(TAG, "偏移量(如果该产品是植物): " + productOffsetRatio);
         LogUtil.e(TAG, "偏移量(如果该产品是花盆): " + augmentedProductOffsetRatio);
         LogUtil.e(TAG, "保存Bitmap为图片到本地的路径: " + picturePath);
 
@@ -134,6 +136,7 @@ public class HotSchemeModelImpl implements HotSchemeModel {
             if (0 != productHeight) {
                 simulationData.setProductHeight(productHeight);
             }
+            simulationData.setProductOffsetRatio(productOffsetRatio);
             /*----------*/
             simulationData.setAugmentedProductSkuId(augmentedProductSkuId);
             if (!TextUtils.isEmpty(augmentedProductName)) {

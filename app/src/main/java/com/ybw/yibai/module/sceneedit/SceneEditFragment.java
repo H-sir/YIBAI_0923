@@ -1025,7 +1025,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         // 屏幕左边植物被点击
         mPlantAdapter.setOnSelectListener(data -> {
             int pos = mPlantAdapter.getAllData().indexOf(data);
-            if (mRecommendPotList.size() > pos) {
+            int size = mRecommendPlantList.size();
+            if (size > pos) {
                 getPlantInfo(pos);
                 if (null != mPlantViewPagerList && mPlantViewPagerList.size() > 0) {
                     for (HorizontalViewPager viewPager : mPlantViewPagerList) {
@@ -1548,12 +1549,29 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onPlantViewPagerItemLongClick(int position) {
-        mSceneEditPresenter.getNewRecommed(PLANT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
+        onPlantViewPagerSuccess(mPlantAdapter.getAllData());
+//        mSceneEditPresenter.getNewRecommed(PLANT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
 //        mSceneEditPresenter.getNewRecommed(PLANT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
 //        mSceneEditPresenter.getRecommend(PLANT, productSkuId, augmentedProductSkuId,
 //                mSelectType,
 //                potTypeId, plantParamMap);
         mProductTypeBottomSheetBehavior.setState(STATE_EXPANDED);
+    }
+
+    public void onPlantViewPagerSuccess(List<ListBean> allData) {
+        mProductTypeViewPager.removeAllViews();
+        mProductTypeDotLinearLayout.removeAllViews();
+        List<ListBean> plantList = new ArrayList<>();
+        plantList.addAll(allData);
+        productType = PLANT;
+        List<List<ListBean>> plantLists = splitList(plantList, 10);
+        mPlantAdapter.clear();
+        mPlantAdapter.addAll(plantList);
+        mRecommendPlantList.clear();
+        mRecommendPlantList.addAll(plantList);
+        mProductTypeTextView.setText(getResources().getString(R.string.recommend_plants));
+        mFilterTextView.setVisibility(View.INVISIBLE);
+        initRecommendProductFragment(plantLists);
     }
 
     /**
@@ -1565,17 +1583,30 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     public void onPotViewPagerItemLongClick(int position) {
         if (1 == productCombinationType || 1 == augmentedCombinationType) {
             // 单图模式
-
             mSceneEditPresenter.getCategorySimilarSKUList(augmentedProductSkuId);
         } else {
-            // 上下搭配
-            mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, potParamMap);
-//
-//            mSceneEditPresenter.getRecommend(POT, productSkuId, augmentedProductSkuId,
-//                    mSelectType,
-//                    potTypeId, potParamMap);
+            onGetRecommendSuccess(mPotAdapter.getAllData());
+//            // 上下搭配
+//            mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, potParamMap);
+
         }
         mProductTypeBottomSheetBehavior.setState(STATE_EXPANDED);
+    }
+
+    public void onGetRecommendSuccess(List<ListBean> allData) {
+        mProductTypeViewPager.removeAllViews();
+        mProductTypeDotLinearLayout.removeAllViews();
+        List<ListBean> potList = new ArrayList<>();
+        potList.addAll(allData);
+        productType = POT;
+        List<List<ListBean>> potLists = splitList(potList, 10);
+        mPotAdapter.clear();
+        mPotAdapter.addAll(potList);
+        mRecommendPotList.clear();
+        mRecommendPotList.addAll(potList);
+        mProductTypeTextView.setText(getResources().getString(R.string.recommend_pot));
+        mFilterTextView.setVisibility(View.INVISIBLE);
+        initRecommendProductFragment(potLists);
     }
 
     /**
@@ -1687,6 +1718,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mSceneEditPresenter.deleteSimulationData(simulationData);
             stickerView.removeCurrentSticker();
             mSceneEditPresenter.getSimulationData(sceneId);
+            productSkuId = 0;
         }
     }
 
@@ -2232,43 +2264,42 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mPlantAdapter.clear();
             mPlantAdapter.addAll(plantList);
             int pos = 0;
-            if (plantList.size() > 0) {
-                if (productSkuId > 0) {
-                    for (int i = 0; i < plantList.size(); i++) {
-                        ListBean item = plantList.get(i);
-                        if (item.getSku_id() == productSkuId) {
-                            pos = i;
-                            break;
-                        }
+            if (productSkuId > 0) {
+                for (int i = 0; i < plantList.size(); i++) {
+                    ListBean item = plantList.get(i);
+                    if (item.getSku_id() == productSkuId) {
+                        pos = i;
+                        break;
                     }
                 }
-
-                plantList.get(pos).setSelect(true);
-
-                mPlantAdapter.getAllData().get(pos).setSelect(true);
-                mPlantRecyclerView.scrollToPosition(pos);
-                mRecommendPlantList.clear();
-                mRecommendPlantList.addAll(plantList);
-                mProductTypeTextView.setText(getResources().getString(R.string.recommend_plants));
-                mFilterTextView.setVisibility(View.VISIBLE);
-                if (null != mPlantSelectAdapterList && mPlantSelectAdapterList.size() > 0) {
-                    for (PlantSelectAdapter plantSelectAdapter : mPlantSelectAdapterList) {
-                        plantSelectAdapter.notifyDataSetChanged();
-                    }
-                }
-                // 默认选中第一个
-                if (null != mPlantViewPagerList && mPlantViewPagerList.size() > 0) {
-                    for (HorizontalViewPager viewPager : mPlantViewPagerList) {
-                        viewPager.setCurrentItem(pos);
-                    }
-                }
-                if (null != mOnPlantPageChangeListenerList && mOnPlantPageChangeListenerList.size() > 0) {
-                    for (HorizontalViewPager.OnPageChangeListener onPageChangeListener : mOnPlantPageChangeListenerList) {
-                        onPageChangeListener.onPageSelected(pos);
-                    }
-                }
-                initRecommendProductFragment(plantLists);
             }
+
+            plantList.get(pos).setSelect(true);
+
+            mPlantAdapter.getAllData().get(pos).setSelect(true);
+            mPlantRecyclerView.scrollToPosition(pos);
+            mRecommendPlantList.clear();
+            mRecommendPlantList.addAll(plantList);
+            mProductTypeTextView.setText(getResources().getString(R.string.recommend_plants));
+            mFilterTextView.setVisibility(View.INVISIBLE);
+            if (null != mPlantSelectAdapterList && mPlantSelectAdapterList.size() > 0) {
+                for (PlantSelectAdapter plantSelectAdapter : mPlantSelectAdapterList) {
+                    plantSelectAdapter.notifyDataSetChanged();
+                }
+            }
+            // 默认选中第一个
+            if (null != mPlantViewPagerList && mPlantViewPagerList.size() > 0) {
+                for (HorizontalViewPager viewPager : mPlantViewPagerList) {
+                    viewPager.setCurrentItem(pos);
+                }
+            }
+            if (null != mOnPlantPageChangeListenerList && mOnPlantPageChangeListenerList.size() > 0) {
+                for (HorizontalViewPager.OnPageChangeListener onPageChangeListener : mOnPlantPageChangeListenerList) {
+                    onPageChangeListener.onPageSelected(pos);
+                }
+            }
+            mPlantAdapter.notifyDataSetChanged();
+            initRecommendProductFragment(plantLists);
         }
         if (recommend.getData().getPot() != null) {
             potList.addAll(recommend.getData().getPot().getList());
@@ -2575,9 +2606,12 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 @Override
                 public void onPageSelected(int position) {
                     onPlantPageSelected(position, index);
-                    // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-                    mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
+//                     动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
+//                    mSceneEditPresenter.setCollocationContent(matchLayout, plantViewPager,
+//                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                    plantSelectAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -2596,8 +2630,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 public void onPageSelected(int position) {
                     onPotPageSelected(position, index);
                     // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-                    mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
+                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                    plantSelectAdapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -3019,7 +3054,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             removeSticker();
 
-            mSceneEditPresenter.setCollocationLayoutPosition(mCollocationLayout, mSimulationDataList,
+            mSceneEditPresenter.setCollocationLayoutPosition(currentSticker, mCollocationLayout, mSimulationDataList,
                     finallySkuId, productCombinationType, augmentedCombinationType);
             if (1 == productCombinationType || 1 == augmentedCombinationType) {
                 // 单图模式
@@ -3038,12 +3073,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             } else {
                 onResert();
                 // 上下搭配
-                //mPotClassSelectTextView.setVisibility(View.VISIBLE);
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
                 mSavePhoto.setVisibility(View.VISIBLE);
                 if (flag) {
                     int pos = 0;
-                    if (mRecommendPotList.size() > pos) {
+                    if (mRecommendPlantList.size() > pos) {
                         getPlantInfo(pos);
                         if (null != mPlantViewPagerList && mPlantViewPagerList.size() > 0) {
                             for (HorizontalViewPager viewPager : mPlantViewPagerList) {
@@ -3051,13 +3085,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                             }
                         }
                         mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
-
                     }
-//                    mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
                 } else {
                     mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);
-//                    mSceneEditPresenter.getRecommend(PLANT, productSkuId, augmentedProductSkuId, mSelectType, potTypeId, plantParamMap);
-//                    mSceneEditPresenter.getRecommend(POT, productSkuId, augmentedProductSkuId, mSelectType, potTypeId, potParamMap);
                 }
             }
 

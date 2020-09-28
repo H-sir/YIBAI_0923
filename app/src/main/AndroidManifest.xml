@@ -50,6 +50,7 @@
         <activity
             android:name=".module.welcome.WelcomeActivity"
             android:screenOrientation="portrait"
+            android:icon="@mipmap/ic_launcher"
             android:theme="@style/WelComeActivityTitleTheme"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

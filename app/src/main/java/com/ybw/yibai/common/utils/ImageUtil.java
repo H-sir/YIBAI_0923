@@ -855,7 +855,6 @@ public class ImageUtil {
         // 新合成Bitmap的高度
         int newBitmapHeight;
         // 第二个Bitmap向上的偏移量
-        // 第二个Bitmap向上的偏移量
         int potOffset = 0;
         if (0 != potOffsetRatio) {
             potOffset = (int) new BigDecimal((float) potOffsetRatio * newSecondHeight / secondProportion)
@@ -863,8 +862,8 @@ public class ImageUtil {
         }
         // 第一个Bitmap向下的偏移量
         int plantOffset = 0;
-        if (0 != potOffsetRatio) {
-            plantOffset = (int) new BigDecimal((float) plantOffsetRatio * newSecondHeight / secondProportion)
+        if (0 != plantOffsetRatio) {
+            plantOffset = (int) new BigDecimal((float) plantOffsetRatio * newSecondHeight / firstProportion)
                     .setScale(0, BigDecimal.ROUND_HALF_DOWN).doubleValue();
         }
         newBitmapHeight = newFirstHeight + newSecondHeight - potOffset - plantOffset;

@@ -15,11 +15,13 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.model.ByteArrayLoader;
 import com.google.gson.Gson;
 import com.jaygoo.widget.OnRangeChangedListener;
 import com.jaygoo.widget.RangeSeekBar;
@@ -52,6 +54,7 @@ import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.widget.HorizontalViewPager;
 import com.ybw.yibai.common.widget.MatchLayout;
+import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.common.widget.stickerview.DrawableSticker;
 import com.ybw.yibai.common.widget.stickerview.StickerView;
 import com.ybw.yibai.module.sceneedit.SceneEditContract.CallBack;
@@ -657,6 +660,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         String productPic2 = simulationData.getProductPic2();
         String productPic3 = simulationData.getProductPic3();
         double productHeight = simulationData.getProductHeight();
+        double productOffsetRatio = simulationData.getProductOffsetRatio();
 
         int augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
         String augmentedProductName = simulationData.getAugmentedProductName();
@@ -666,7 +670,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         double augmentedProductHeight = simulationData.getAugmentedProductHeight();
         double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
 
-        double collocationHeight = productHeight + augmentedProductHeight;
+        double collocationHeight = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
         double h = new BigDecimal(collocationHeight).setScale(2, RoundingMode.HALF_EVEN).doubleValue();
 
         View view = fragment.getLayoutInflater().inflate(R.layout.popup_window_plant_info_layout, null);
@@ -800,6 +804,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             String picturePath = simulationData.getPicturePath();
             String productName = simulationData.getProductName();
             double productHeight = simulationData.getProductHeight();
+            double productOffsetRatio = simulationData.getProductOffsetRatio();
             String augmentedProductName = simulationData.getAugmentedProductName();
             double augmentedProductHeight = simulationData.getAugmentedProductHeight();
             double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
@@ -819,7 +824,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 stringBuilder.append(augmentedProductName);
             }
             String pottedName = stringBuilder.toString();
-            double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio;
+            double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
             // 四舍五入
             long h = Math.round(height);
             String pottedHeight = fragment.getResources().getString(R.string.total_height_is_expected) + h + fragment.getResources().getString(R.string.cm);
@@ -1245,6 +1250,99 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     }
 
     /**
+     * 设置"搭配图片布局的容器"子View的位置
+     *
+     * @param collocationLayout        搭配图片布局的容器
+     * @param simulationDataList       用户保存的"模拟搭配图片"数据
+     * @param finallySkuId             当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
+     * @param productCombinationType   主产品组合模式: 1单图模式,2搭配上部,3搭配下部
+     * @param augmentedCombinationType 附加产品组合模式: 1单图模式,2搭配上部,3搭配下部
+     */
+    @Override
+    public void setCollocationLayoutPosition(BaseSticker currentSticker, RelativeLayout collocationLayout, List<SimulationData> simulationDataList,
+                                             String finallySkuId, int productCombinationType, int augmentedCombinationType) {
+        Fragment fragment = (Fragment) mSceneEditView;
+        Context context = fragment.getContext();
+        if (null == context) {
+            return;
+        }
+        mViewPagerList.clear();
+        mMatchLayoutList.clear();
+        // 移除上一次动态添加的View
+        collocationLayout.removeAllViews();
+
+        // 根据当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
+        // 在用户保存的"模拟搭配图片"数据找出同款的产品
+        List<SimulationData> list = new ArrayList<>();
+        for (SimulationData simulationData : simulationDataList) {
+            String finallySkuId_ = simulationData.getFinallySkuId();
+            if (TextUtils.isEmpty(finallySkuId) || TextUtils.isEmpty(finallySkuId_)) {
+                continue;
+            }
+            if (!finallySkuId.equals(finallySkuId_)) {
+                continue;
+            }
+            list.add(simulationData);
+        }
+        if (list.size() == 0) {
+            return;
+        }
+        for (SimulationData simulationData : list) {
+            float currentX = simulationData.getX();
+            float currentY = simulationData.getY();
+            double width = simulationData.getWidth();
+            double height = simulationData.getHeight();
+            double xScale = simulationData.getxScale();
+            double yScale = simulationData.getyScale();
+//            double currentStickerWidth = width * xScale;
+//            double currentStickerHeight = height * yScale;
+            Drawable drawable = currentSticker.getDrawable();
+            float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
+            float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
+            double currentStickerWidth = width * xScale * scaleFactorWidth;
+            double currentStickerHeight = height * yScale * scaleFactorHeight;
+
+            if (1 == productCombinationType || 1 == augmentedCombinationType) {
+                // 动态添加View
+                HorizontalViewPager viewPager = new HorizontalViewPager(context);
+                viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                collocationLayout.addView(viewPager);
+                mViewPagerList.add(viewPager);
+
+                // 动态设置位置
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+//                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
+                layoutParams.leftMargin = (int) currentX;
+                layoutParams.topMargin = (int) currentY;
+                layoutParams.width = (int) currentStickerWidth;
+                layoutParams.height = (int) currentStickerHeight;
+                viewPager.setLayoutParams(layoutParams);
+            } else {
+                // 动态添加View
+                MatchLayout matchLayout = new MatchLayout(context);
+                collocationLayout.addView(matchLayout);
+                mMatchLayoutList.add(matchLayout);
+
+                // 动态设置位置
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) matchLayout.getLayoutParams();
+//                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
+                layoutParams.leftMargin = (int) currentX;
+                layoutParams.topMargin = (int) currentY;
+                layoutParams.width = (int) currentStickerWidth;
+                layoutParams.height = (int) currentStickerHeight;
+                matchLayout.setLayoutParams(layoutParams);
+            }
+        }
+        if (1 == productCombinationType || 1 == augmentedCombinationType) {
+            // 单图模式
+            mSceneEditView.onSetSingleCollocationLayoutPositionSucceed(mViewPagerList);
+        } else {
+            // 上下搭配
+            mSceneEditView.onSetGroupCollocationLayoutPositionSucceed(mMatchLayoutList);
+        }
+    }
+
+    /**
      * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
      *
      * @param matchLayout      自定义植物与盆器互相搭配的View
@@ -1265,15 +1363,64 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 return;
             }
             // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
+            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
+
+            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+            plantImageViewParams.height = (int) (portionHeight * (plantHeight));
+            plantViewPager.setLayoutParams(plantImageViewParams);
+
+            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+            viewPagerParams.height = (int) (portionHeight * (potHeight));
+            potViewPager.setLayoutParams(viewPagerParams);
+        });
+    }
+
+    /**
+     * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
+     *
+     * @param matchLayout      自定义植物与盆器互相搭配的View
+     * @param plantViewPager   放置"植物自由搭配图"的ViewPager
+     * @param potViewPager     放置"盆器自由搭配图"的ViewPager
+     * @param plantHeight      用户当前选择的植物规格的高度
+     * @param potHeight        用户当前选择的盆规格的高度
+     * @param plantOffsetRatio 花盆的偏移量
+     * @param potOffsetRatio   花盆的偏移量
+     */
+    @Override
+    public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
+                                                 double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
+        matchLayout.postDelayed(() -> {
+            int height = matchLayout.getHeight();
+            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
+            if (0 == h) {
+                return;
+            }
+            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
             double portionHeight = BigDecimal.valueOf((float) height / h)
                     .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
             ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-            plantImageViewParams.height = (int) (portionHeight * plantHeight);
+            plantImageViewParams.height = (int) (portionHeight * (plantHeight + plantOffsetRatio));
             plantViewPager.setLayoutParams(plantImageViewParams);
 
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = (int) (portionHeight * potHeight);
+            viewPagerParams.height = (int) (portionHeight * (potHeight));
+            potViewPager.setLayoutParams(viewPagerParams);
+        },500);
+    }
+
+    @Override
+    public void setCollocationContent(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
+                                      double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
+        matchLayout.post(() -> {
+            int height = matchLayout.getHeight();
+
+            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+            plantImageViewParams.height = height;
+            plantViewPager.setLayoutParams(plantImageViewParams);
+
+            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+            viewPagerParams.height = height;
             potViewPager.setLayoutParams(viewPagerParams);
         });
     }
@@ -1357,7 +1504,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      */
     private void handleOnDownloadFinished(ProductData productData, List<SimulationData> simulationDataList, String finallySkuId, boolean single, List<Bitmap> bitmapList) {
         double productHeight = productData.getProductHeight();
-        double roductOffsetRatio = productData.getProductOffsetRatio();
+        double productOffsetRatio = productData.getProductOffsetRatio();
         double augmentedProductHeight = productData.getAugmentedProductHeight();
         double augmentedProductOffsetRatio = productData.getAugmentedProductOffsetRatio();
 
@@ -1387,7 +1534,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             // 下载图片失败return
             return;
         }
-        Bitmap bitmap = ImageUtil.pictureSynthesis(productHeight, augmentedProductHeight, roductOffsetRatio,
+        Bitmap bitmap = ImageUtil.pictureSynthesis(productHeight, augmentedProductHeight, productOffsetRatio,
                 augmentedProductOffsetRatio, bitmaps);
         if (null == bitmap) {
             // 合成图片失败return

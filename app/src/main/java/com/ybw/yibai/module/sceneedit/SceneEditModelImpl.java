@@ -1172,6 +1172,7 @@ public class SceneEditModelImpl implements SceneEditModel {
             productCombinationType = listBean.getComtype();
             productPriceCode = listBean.getPrice_code();
             productTradePriceCode = listBean.getTrade_price_code();
+            break;
         }
         Recommend.DataBean.PotBean pot = data.getPot();
         for (Iterator<ListBean> iterator = pot.getList().iterator(); iterator.hasNext(); ) {
@@ -1189,6 +1190,7 @@ public class SceneEditModelImpl implements SceneEditModel {
             augmentedCombinationType = listBean.getComtype();
             augmentedPriceCode = listBean.getPrice_code();
             augmentedTradePriceCode = listBean.getTrade_price_code();
+            break;
         }
 
         int uid = YiBaiApplication.getUid();

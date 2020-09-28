@@ -28,6 +28,7 @@ import com.ybw.yibai.common.model.ItemDesignSceneModel;
 import com.ybw.yibai.common.network.response.ResponsePage;
 import com.ybw.yibai.common.widget.HorizontalViewPager;
 import com.ybw.yibai.common.widget.MatchLayout;
+import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.common.widget.stickerview.StickerView;
 
 import java.io.File;
@@ -352,6 +353,19 @@ public interface SceneEditContract {
                                           String finallySkuId, int productCombinationType, int augmentedCombinationType);
 
         /**
+         * /**
+         * 设置"搭配图片布局的容器"子View的位置
+         *
+         * @param collocationLayout        搭配图片布局的容器
+         * @param simulationDataList       用户保存的"模拟搭配图片"数据
+         * @param finallySkuId             当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
+         * @param productCombinationType   主产品组合模式: 1单图模式,2搭配上部,3搭配下部
+         * @param augmentedCombinationType 附加产品组合模式: 1单图模式,2搭配上部,3搭配下部
+         */
+        void setCollocationLayoutPosition(BaseSticker currentSticker, RelativeLayout collocationLayout, List<SimulationData> simulationDataList,
+                                          String finallySkuId, int productCombinationType, int augmentedCombinationType);
+
+        /**
          * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
          *
          * @param matchLayout    自定义植物与盆器互相搭配的View
@@ -361,7 +375,31 @@ public interface SceneEditContract {
          * @param potHeight      用户当前选择的盆规格的高度
          */
         void setCollocationContentParams(MatchLayout matchLayout, HorizontalViewPager plantViewPager,
-                                         HorizontalViewPager potViewPager, double plantHeight, double potHeight, double plantOffsetRatio,double potoffsetRatio);
+                                         HorizontalViewPager potViewPager, double plantHeight, double potHeight, double plantOffsetRatio, double potoffsetRatio);
+
+        /**
+         * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
+         *
+         * @param matchLayout    自定义植物与盆器互相搭配的View
+         * @param plantViewPager 放置"植物自由搭配图"的ViewPager
+         * @param potViewPager   放置"盆器自由搭配图"的ViewPager
+         * @param plantHeight    用户当前选择的植物规格的高度
+         * @param potHeight      用户当前选择的盆规格的高度
+         */
+        void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager,
+                                              HorizontalViewPager potViewPager, double plantHeight, double potHeight, double plantOffsetRatio, double potoffsetRatio);
+
+        /**
+         * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
+         *
+         * @param matchLayout    自定义植物与盆器互相搭配的View
+         * @param plantViewPager 放置"植物自由搭配图"的ViewPager
+         * @param potViewPager   放置"盆器自由搭配图"的ViewPager
+         * @param plantHeight    用户当前选择的植物规格的高度
+         * @param potHeight      用户当前选择的盆规格的高度
+         */
+        void setCollocationContent(MatchLayout matchLayout, HorizontalViewPager plantViewPager,
+                                   HorizontalViewPager potViewPager, double plantHeight, double potHeight, double plantOffsetRatio, double potoffsetRatio);
 
         /**
          * 将新搭配的产品数据添加到"模拟搭配产品"数据
@@ -430,7 +468,7 @@ public interface SceneEditContract {
 
         /**
          * 更新背景图片
-         * */
+         */
         void updateSceneBg(String absolutePath, String sceneName, String scheme_id);
     }
 
@@ -545,6 +583,7 @@ public interface SceneEditContract {
          * @param callBack 回调方法
          */
         void addSimulationData(SpecSuk.DataBean data, Bitmap bitmap, CallBack callBack);
+
         /**
          * 添加"随机组合"数据到"模拟搭配产品"数据
          *
@@ -626,7 +665,7 @@ public interface SceneEditContract {
 
         /**
          * 更新背景图片
-         * */
+         */
         void updateSceneBg(String absolutePath, String sceneName, String scheme_id, CallBack callBack);
     }
 
@@ -711,7 +750,7 @@ public interface SceneEditContract {
 
         /**
          * 只传规格时的返回
-         * */
+         */
         void onGetRecommendByAddSpecSuccess(Recommend recommend);
 
         void updateSceneBgSuccess();

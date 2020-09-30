@@ -16,7 +16,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -1356,23 +1358,59 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void setCollocationContentParams(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                             double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
-        matchLayout.post(() -> {
+        matchLayout.postDelayed(() -> {
             int height = matchLayout.getHeight();
+            int width = matchLayout.getWidth();
+            int top = matchLayout.getTop();
             double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
             if (0 == h) {
                 return;
             }
             // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
+            double portionHeight = BigDecimal.valueOf((float) height / h).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-            plantImageViewParams.height = (int) (portionHeight * (plantHeight));
-            plantViewPager.setLayoutParams(plantImageViewParams);
+            double plantImageViewParamsHeight = BigDecimal.valueOf(portionHeight * (plantHeight)).
+                    setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double viewPagerParamsHeight = BigDecimal.valueOf(portionHeight * (potHeight)).
+                    setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = (int) (portionHeight * (potHeight));
+            viewPagerParams.height = BigDecimal.valueOf(viewPagerParamsHeight).setScale(0, BigDecimal.ROUND_UP).intValue();
             potViewPager.setLayoutParams(viewPagerParams);
-        });
+
+            if (plantOffsetRatio > 0) {
+                double plantImageViewParamsWidth = (width + ((plantOffsetRatio * portionHeight) * (width / plantHeight)));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        BigDecimal.valueOf(plantImageViewParamsWidth).setScale(0, BigDecimal.ROUND_UP).intValue(),
+                        BigDecimal.valueOf(height).setScale(0, BigDecimal.ROUND_UP).intValue());
+
+                int windowWidth = YiBaiApplication.getWindowWidth();
+                params.leftMargin = BigDecimal.valueOf(((double) windowWidth - plantImageViewParamsWidth) / 2)
+                        .setScale(0, BigDecimal.ROUND_UP).intValue();
+                params.topMargin = (int) top;
+                matchLayout.setLayoutParams(params);
+
+                ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+                plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight + (plantOffsetRatio * portionHeight))
+                        .setScale(0, BigDecimal.ROUND_UP).intValue();
+                plantImageViewParams.width = BigDecimal.valueOf(plantImageViewParamsWidth)
+                        .setScale(0, BigDecimal.ROUND_UP).intValue();
+                plantViewPager.setLayoutParams(plantImageViewParams);
+            } else {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+                int windowWidth = YiBaiApplication.getWindowWidth();
+                params.leftMargin = (int) ((windowWidth - width) / 2);
+                params.topMargin = (int) top;
+                matchLayout.setLayoutParams(params);
+
+                ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+                plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight)
+                        .setScale(0, BigDecimal.ROUND_UP).intValue();
+                plantImageViewParams.width = width;
+                plantViewPager.setLayoutParams(plantImageViewParams);
+            }
+
+        }, 200);
     }
 
     /**
@@ -1389,38 +1427,75 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                                  double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
-        matchLayout.postDelayed(() -> {
-            int height = matchLayout.getHeight();
-            double allHeight = plantHeight + potHeight;
-            double mPlant = plantHeight - plantOffsetRatio;
-            double mPot = potHeight - potOffsetRatio;
-            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-            double portionPlantHeight = BigDecimal.valueOf((float) height / mPlant).doubleValue();
-            double portionPotHeight = BigDecimal.valueOf((float) height / mPot).doubleValue();
-            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-            plantImageViewParams.height = (int) (portionPlantHeight * (plantHeight + plantOffsetRatio) / 2);
-            plantViewPager.setLayoutParams(plantImageViewParams);
+        matchLayout.post(() -> {
+            matchLayout.postDelayed(() -> {
+                int height = matchLayout.getHeight();
+                int width = matchLayout.getWidth();
+                int top = matchLayout.getTop();
+                double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
+                if (0 == h) {
+                    return;
+                }
+                // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
+                double portionHeight = BigDecimal.valueOf((float) height / h).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = (int) (portionPotHeight * (potHeight + potOffsetRatio) / 2);
-            potViewPager.setLayoutParams(viewPagerParams);
+                double plantImageViewParamsHeight = BigDecimal.valueOf(portionHeight * (plantHeight)).
+                        setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                double viewPagerParamsHeight = BigDecimal.valueOf(portionHeight * (potHeight)).
+                        setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
-//            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
-//            if (0 == h) {
-//                return;
-//            }
+                ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+                viewPagerParams.height = BigDecimal.valueOf(viewPagerParamsHeight).setScale(0, BigDecimal.ROUND_UP).intValue();
+                potViewPager.setLayoutParams(viewPagerParams);
+
+                if (plantOffsetRatio > 0) {
+                    double plantImageViewParamsWidth = width;
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                            BigDecimal.valueOf(plantImageViewParamsWidth).setScale(0, BigDecimal.ROUND_UP).intValue(),
+                            BigDecimal.valueOf(height).setScale(0, BigDecimal.ROUND_UP).intValue());
+
+                    int windowWidth = YiBaiApplication.getWindowWidth();
+                    params.leftMargin = BigDecimal.valueOf(((double) windowWidth - plantImageViewParamsWidth) / 2)
+                            .setScale(0, BigDecimal.ROUND_UP).intValue();
+                    params.topMargin = (int) top;
+                    matchLayout.setLayoutParams(params);
+
+                    ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+                    plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight + (plantOffsetRatio * portionHeight))
+                            .setScale(0, BigDecimal.ROUND_UP).intValue();
+                    plantImageViewParams.width = (int) plantImageViewParamsWidth;
+                    plantViewPager.setLayoutParams(plantImageViewParams);
+                } else {
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+                    int windowWidth = YiBaiApplication.getWindowWidth();
+                    params.leftMargin = (int) ((windowWidth - width) / 2);
+                    params.topMargin = (int) top;
+                    matchLayout.setLayoutParams(params);
+
+                    ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+                    plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight)
+                            .setScale(0, BigDecimal.ROUND_UP).intValue();
+                    plantImageViewParams.height = width;
+                    plantViewPager.setLayoutParams(plantImageViewParams);
+                }
+
+            }, 200);
+
+//            int height = matchLayout.getHeight();
+//            double allHeight = plantHeight + potHeight;
+//            double mPlant = plantHeight - plantOffsetRatio;
+//            double mPot = potHeight - potOffsetRatio;
 //            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-//            double portionHeight = BigDecimal.valueOf((float) height / h)
-//                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-//
+//            double portionPlantHeight = BigDecimal.valueOf((float) height / mPlant).doubleValue();
+//            double portionPotHeight = BigDecimal.valueOf((float) height / mPot).doubleValue();
 //            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-//            plantImageViewParams.height = (int) (portionHeight * (plantHeight + plantOffsetRatio));
+//            plantImageViewParams.height = (int) (portionPlantHeight * (plantHeight + plantOffsetRatio) / 2);
 //            plantViewPager.setLayoutParams(plantImageViewParams);
 //
 //            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-//            viewPagerParams.height = (int) (portionHeight * (potHeight));
+//            viewPagerParams.height = (int) (portionPotHeight * (potHeight + potOffsetRatio) / 2);
 //            potViewPager.setLayoutParams(viewPagerParams);
-        }, 500);
+        });
     }
 
     @Override

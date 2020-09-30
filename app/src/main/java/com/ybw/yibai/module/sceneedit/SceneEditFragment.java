@@ -2605,8 +2605,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 public void onPageSelected(int position) {
                     onPlantPageSelected(position, index);
 //                     动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-//                    mSceneEditPresenter.setCollocationContent(matchLayout, plantViewPager,
-//                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     setCollocationContent(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     plantSelectAdapter.notifyDataSetChanged();
@@ -2627,6 +2625,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 @Override
                 public void onPageSelected(int position) {
                     onPotPageSelected(position, index);
+//                    mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
+//                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
                     setCollocationContent(matchLayout, plantViewPager,
                             potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
@@ -2657,8 +2657,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     private void setCollocationContent(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager, double productHeight_, double augmentedProductHeight_, double productOffsetRatio_, double augmentedProductOffsetRatio_) {
         if (isChangeFlagOne) {
-            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+            mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
                     potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+//            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+//                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+            isChangeFlagOne = false;
         } else {
             mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
                     potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
@@ -3066,7 +3069,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             removeSticker();
 
-            mSceneEditPresenter.setCollocationLayoutPosition(currentSticker, mCollocationLayout, mSimulationDataList,
+            mSceneEditPresenter.setCollocationLayoutPosition(mCollocationLayout, mSimulationDataList,
                     finallySkuId, productCombinationType, augmentedCombinationType);
             if (1 == productCombinationType || 1 == augmentedCombinationType) {
                 // 单图模式

@@ -207,7 +207,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         miniProgram.userName = "gh_a532df421aeb";//小程序端提供参数
         miniProgram.path = "/pages/index/index?number=" + designLists.get(position).getNumber(); //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
         WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
-        mediaMessage.title = "设计号：" + designLists.get(position).getNumber();//自定义
+        mediaMessage.title = "亲，请查看您的绿植设计方案~" + designLists.get(position).getNumber();//自定义
         mediaMessage.description = designLists.get(position).getNumber();//自定义
         ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
             @Override

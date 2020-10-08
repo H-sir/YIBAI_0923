@@ -387,7 +387,10 @@ public interface SceneEditContract {
          * @param potHeight      用户当前选择的盆规格的高度
          */
         void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager,
-                                              HorizontalViewPager potViewPager, double plantHeight, double potHeight, double plantOffsetRatio, double potoffsetRatio);
+                                              HorizontalViewPager potViewPager,
+                                              double plantHeight, double potHeight,
+                                              double plantOffsetRatio, double potoffsetRatio,
+                                              double productOffsetWidth_, double augmentedProductOffsetWidth_);
 
         /**
          * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致

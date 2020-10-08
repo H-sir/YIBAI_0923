@@ -28,6 +28,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -90,6 +91,7 @@ import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.model.ItemDesignSceneModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.network.response.ResponsePage;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.FilterFactoryUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
@@ -135,6 +137,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -314,6 +317,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     private double productHeight;
 
     /**
+     * 主产品名称的宽度
+     */
+    private double productWidth;
+
+    /**
      * 主产品组合模式: 1单图模式,2搭配上部,3搭配下部
      */
     private int productCombinationType;
@@ -379,6 +387,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      * 附加产品的高度
      */
     private double augmentedProductHeight;
+    /**
+     * 附加产品的宽度
+     */
+    private double augmentedProductWidth;
 
     /**
      * 花盆的偏移量
@@ -2565,6 +2577,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
     }
 
+
+
     /**
      * 在设置"搭配图片布局的容器"的位置成功时回调 -> 组合
      *
@@ -2597,16 +2611,26 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             double augmentedProductHeight_ = mSimulationData.getAugmentedProductHeight();
             double productOffsetRatio_ = mSimulationData.getProductOffsetRatio();
             double augmentedProductOffsetRatio_ = mSimulationData.getAugmentedProductOffsetRatio();
-            setCollocationContent(matchLayout, plantViewPager, potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+            setCollocationContent(matchLayout, plantViewPager, potViewPager,
+                    productHeight_, augmentedProductHeight_,
+                    productOffsetRatio_, augmentedProductOffsetRatio_,
+                    productWidth, augmentedProductWidth);
+
             // TODO 左右滚动
             int index = i;
             HorizontalViewPager.OnPageChangeListener onPlantPageChangeListener = new HorizontalViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageSelected(int position) {
                     onPlantPageSelected(position, index);
+//                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+//                        potViewPager, productHeight_, augmentedProductHeight_,
+//                        productOffsetRatio, augmentedProductOffsetRatio,
+//                            productWidth, augmentedProductWidth);
 //                     动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-                    setCollocationContent(matchLayout, plantViewPager,
-                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                    setCollocationContent(matchLayout, plantViewPager, potViewPager,
+                            productHeight, augmentedProductHeight,
+                            productOffsetRatio, augmentedProductOffsetRatio,
+                            productWidth, augmentedProductWidth);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
 
@@ -2625,11 +2649,15 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 @Override
                 public void onPageSelected(int position) {
                     onPotPageSelected(position, index);
-//                    mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
-//                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
-                    setCollocationContent(matchLayout, plantViewPager,
-                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                    setCollocationContent(matchLayout, plantViewPager, potViewPager,
+                            productHeight, augmentedProductHeight,
+                            productOffsetRatio, augmentedProductOffsetRatio,
+                            productWidth, augmentedProductWidth);
+//                    mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+//                        potViewPager, productHeight_, augmentedProductHeight_,
+//                        productOffsetRatio, augmentedProductOffsetRatio,
+//                            productWidth, augmentedProductWidth);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
 
@@ -2655,16 +2683,20 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
     }
 
-    private void setCollocationContent(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager, double productHeight_, double augmentedProductHeight_, double productOffsetRatio_, double augmentedProductOffsetRatio_) {
+    private void setCollocationContent(MatchLayout matchLayout,
+                                       HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
+                                       double productHeight_, double augmentedProductHeight_,
+                                       double productOffsetRatio_, double augmentedProductOffsetRatio_,
+                                       double productOffsetWidth_, double augmentedProductOffsetWidth_) {
         if (isChangeFlagOne) {
-            mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
-                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
-//            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
-//                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
-            isChangeFlagOne = false;
+            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
+                    potViewPager, productHeight_, augmentedProductHeight_,
+                    productOffsetRatio, augmentedProductOffsetRatio,
+                    productWidth, augmentedProductWidth);
         } else {
             mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
-                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+                    potViewPager, productHeight_, augmentedProductHeight_,
+                    productOffsetRatio_, augmentedProductOffsetRatio_);
         }
     }
 
@@ -2988,6 +3020,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         productPic2 = listBean.getPic2();
         productPic3 = listBean.getPic3();
         productHeight = listBean.getHeight();
+        productWidth = listBean.getDiameter();
         productOffsetRatio = listBean.getOffset_ratio();
         productCombinationType = listBean.getComtype();
         productPriceCode = listBean.getPrice_code();
@@ -3016,6 +3049,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         augmentedProductPic2 = listBean.getPic2();
         augmentedProductPic3 = listBean.getPic3();
         augmentedProductHeight = listBean.getHeight();
+        augmentedProductWidth = listBean.getDiameter();
         augmentedProductOffsetRatio = listBean.getOffset_ratio();
         augmentedCombinationType = listBean.getComtype();
         augmentedPriceCode = listBean.getPrice_code();
@@ -3069,7 +3103,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             removeSticker();
 
-            mSceneEditPresenter.setCollocationLayoutPosition(mCollocationLayout, mSimulationDataList,
+            mSceneEditPresenter.setCollocationLayoutPosition(currentSticker, mCollocationLayout, mSimulationDataList,
                     finallySkuId, productCombinationType, augmentedCombinationType);
             if (1 == productCombinationType || 1 == augmentedCombinationType) {
                 // 单图模式

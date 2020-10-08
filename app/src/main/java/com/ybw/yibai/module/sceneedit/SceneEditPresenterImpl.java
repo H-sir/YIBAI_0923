@@ -16,9 +16,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -1175,8 +1173,91 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      * @param augmentedCombinationType 附加产品组合模式: 1单图模式,2搭配上部,3搭配下部
      */
     @Override
-    public void setCollocationLayoutPosition(RelativeLayout collocationLayout, List<SimulationData> simulationDataList,
+    public void setCollocationLayoutPosition(BaseSticker currentSticker, RelativeLayout collocationLayout, List<SimulationData> simulationDataList,
                                              String finallySkuId, int productCombinationType, int augmentedCombinationType) {
+        Fragment fragment = (Fragment) mSceneEditView;
+        Context context = fragment.getContext();
+        if (null == context) {
+            return;
+        }
+        mViewPagerList.clear();
+        mMatchLayoutList.clear();
+        // 移除上一次动态添加的View
+        collocationLayout.removeAllViews();
+
+        // 根据当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
+        // 在用户保存的"模拟搭配图片"数据找出同款的产品
+        List<SimulationData> list = new ArrayList<>();
+        for (SimulationData simulationData : simulationDataList) {
+            String finallySkuId_ = simulationData.getFinallySkuId();
+            if (TextUtils.isEmpty(finallySkuId) || TextUtils.isEmpty(finallySkuId_)) {
+                continue;
+            }
+            if (!finallySkuId.equals(finallySkuId_)) {
+                continue;
+            }
+            list.add(simulationData);
+        }
+        if (list.size() == 0) {
+            return;
+        }
+        for (SimulationData simulationData : list) {
+            float currentX = simulationData.getX();
+            float currentY = simulationData.getY();
+            double width = simulationData.getWidth();
+            double height = simulationData.getHeight();
+            double xScale = simulationData.getxScale();
+            double yScale = simulationData.getyScale();
+            double currentStickerWidth = width * xScale;
+            double currentStickerHeight = height * yScale;
+//            Drawable drawable = currentSticker.getDrawable();
+//            float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
+//            float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
+//            double currentStickerWidth = width * xScale * scaleFactorWidth;
+//            double currentStickerHeight = height * yScale * scaleFactorHeight;
+
+            if (1 == productCombinationType || 1 == augmentedCombinationType) {
+                // 动态添加View
+                HorizontalViewPager viewPager = new HorizontalViewPager(context);
+                viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                collocationLayout.addView(viewPager);
+                mViewPagerList.add(viewPager);
+
+                // 动态设置位置
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
+//                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
+                layoutParams.leftMargin = (int) currentX;
+                layoutParams.topMargin = (int) currentY;
+                layoutParams.width = (int) currentStickerWidth;
+                layoutParams.height = (int) currentStickerHeight;
+                viewPager.setLayoutParams(layoutParams);
+            } else {
+                // 动态添加View
+                MatchLayout matchLayout = new MatchLayout(context);
+                collocationLayout.addView(matchLayout);
+                mMatchLayoutList.add(matchLayout);
+
+                // 动态设置位置
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) matchLayout.getLayoutParams();
+//                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
+                layoutParams.leftMargin = (int) currentX;
+                layoutParams.topMargin = (int) currentY;
+                layoutParams.width = (int) currentStickerWidth;
+                layoutParams.height = (int) currentStickerHeight;
+                matchLayout.setLayoutParams(layoutParams);
+            }
+        }
+        if (1 == productCombinationType || 1 == augmentedCombinationType) {
+            // 单图模式
+            mSceneEditView.onSetSingleCollocationLayoutPositionSucceed(mViewPagerList);
+        } else {
+            // 上下搭配
+            mSceneEditView.onSetGroupCollocationLayoutPositionSucceed(mMatchLayoutList);
+        }
+    }
+
+    @Override
+    public void setCollocationLayoutPosition(RelativeLayout collocationLayout, List<SimulationData> simulationDataList, String finallySkuId, int productCombinationType, int augmentedCombinationType) {
         Fragment fragment = (Fragment) mSceneEditView;
         Context context = fragment.getContext();
         if (null == context) {
@@ -1222,97 +1303,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 
                 // 动态设置位置
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
-                layoutParams.leftMargin = (int) currentX;
-                layoutParams.topMargin = (int) currentY;
-                layoutParams.width = (int) currentStickerWidth;
-                layoutParams.height = (int) currentStickerHeight;
-                viewPager.setLayoutParams(layoutParams);
-            } else {
-                // 动态添加View
-                MatchLayout matchLayout = new MatchLayout(context);
-                collocationLayout.addView(matchLayout);
-                mMatchLayoutList.add(matchLayout);
-
-                // 动态设置位置
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) matchLayout.getLayoutParams();
-                layoutParams.leftMargin = (int) currentX;
-                layoutParams.topMargin = (int) currentY;
-                layoutParams.width = (int) currentStickerWidth;
-                layoutParams.height = (int) currentStickerHeight;
-                matchLayout.setLayoutParams(layoutParams);
-            }
-        }
-        if (1 == productCombinationType || 1 == augmentedCombinationType) {
-            // 单图模式
-            mSceneEditView.onSetSingleCollocationLayoutPositionSucceed(mViewPagerList);
-        } else {
-            // 上下搭配
-            mSceneEditView.onSetGroupCollocationLayoutPositionSucceed(mMatchLayoutList);
-        }
-    }
-
-    /**
-     * 设置"搭配图片布局的容器"子View的位置
-     *
-     * @param collocationLayout        搭配图片布局的容器
-     * @param simulationDataList       用户保存的"模拟搭配图片"数据
-     * @param finallySkuId             当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
-     * @param productCombinationType   主产品组合模式: 1单图模式,2搭配上部,3搭配下部
-     * @param augmentedCombinationType 附加产品组合模式: 1单图模式,2搭配上部,3搭配下部
-     */
-    @Override
-    public void setCollocationLayoutPosition(BaseSticker currentSticker, RelativeLayout collocationLayout, List<SimulationData> simulationDataList,
-                                             String finallySkuId, int productCombinationType, int augmentedCombinationType) {
-        Fragment fragment = (Fragment) mSceneEditView;
-        Context context = fragment.getContext();
-        if (null == context) {
-            return;
-        }
-        mViewPagerList.clear();
-        mMatchLayoutList.clear();
-        // 移除上一次动态添加的View
-        collocationLayout.removeAllViews();
-
-        // 根据当前正在操作贴纸所属的主产品的款名Id+附加产品的款名Id的组合+用户的uid
-        // 在用户保存的"模拟搭配图片"数据找出同款的产品
-        List<SimulationData> list = new ArrayList<>();
-        for (SimulationData simulationData : simulationDataList) {
-            String finallySkuId_ = simulationData.getFinallySkuId();
-            if (TextUtils.isEmpty(finallySkuId) || TextUtils.isEmpty(finallySkuId_)) {
-                continue;
-            }
-            if (!finallySkuId.equals(finallySkuId_)) {
-                continue;
-            }
-            list.add(simulationData);
-        }
-        if (list.size() == 0) {
-            return;
-        }
-        for (SimulationData simulationData : list) {
-            float currentX = simulationData.getX();
-            float currentY = simulationData.getY();
-            double width = simulationData.getWidth();
-            double height = simulationData.getHeight();
-            double xScale = simulationData.getxScale();
-            double yScale = simulationData.getyScale();
-//            double currentStickerWidth = width * xScale;
-//            double currentStickerHeight = height * yScale;
-            Drawable drawable = currentSticker.getDrawable();
-            float scaleFactorWidth = (float) (simulationData.getWidth() / drawable.getIntrinsicWidth());
-            float scaleFactorHeight = (float) (simulationData.getHeight() / drawable.getIntrinsicHeight());
-            double currentStickerWidth = width * xScale * scaleFactorWidth;
-            double currentStickerHeight = height * yScale * scaleFactorHeight;
-
-            if (1 == productCombinationType || 1 == augmentedCombinationType) {
-                // 动态添加View
-                HorizontalViewPager viewPager = new HorizontalViewPager(context);
-                viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
-                collocationLayout.addView(viewPager);
-                mViewPagerList.add(viewPager);
-
-                // 动态设置位置
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) viewPager.getLayoutParams();
 //                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
                 layoutParams.leftMargin = (int) currentX;
                 layoutParams.topMargin = (int) currentY;
@@ -1343,6 +1333,10 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             mSceneEditView.onSetGroupCollocationLayoutPositionSucceed(mMatchLayoutList);
         }
     }
+
+    int oneWidth;
+    int ontHeight;
+    int top;
 
     /**
      * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
@@ -1358,59 +1352,26 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void setCollocationContentParams(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                             double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
-        matchLayout.postDelayed(() -> {
+        matchLayout.post(() -> {
+            oneWidth = matchLayout.getWidth();
+            ontHeight = matchLayout.getHeight();
+            top = matchLayout.getTop();
             int height = matchLayout.getHeight();
-            int width = matchLayout.getWidth();
-            int top = matchLayout.getTop();
             double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
             if (0 == h) {
                 return;
             }
             // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-            double portionHeight = BigDecimal.valueOf((float) height / h).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
 
-            double plantImageViewParamsHeight = BigDecimal.valueOf(portionHeight * (plantHeight)).
-                    setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            double viewPagerParamsHeight = BigDecimal.valueOf(portionHeight * (potHeight)).
-                    setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+            plantImageViewParams.height = (int) (portionHeight * (plantHeight));
+            plantViewPager.setLayoutParams(plantImageViewParams);
 
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = BigDecimal.valueOf(viewPagerParamsHeight).setScale(0, BigDecimal.ROUND_UP).intValue();
+            viewPagerParams.height = (int) (portionHeight * (potHeight));
             potViewPager.setLayoutParams(viewPagerParams);
-
-            if (plantOffsetRatio > 0) {
-                double plantImageViewParamsWidth = (width + ((plantOffsetRatio * portionHeight) * (width / plantHeight)));
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        BigDecimal.valueOf(plantImageViewParamsWidth).setScale(0, BigDecimal.ROUND_UP).intValue(),
-                        BigDecimal.valueOf(height).setScale(0, BigDecimal.ROUND_UP).intValue());
-
-                int windowWidth = YiBaiApplication.getWindowWidth();
-                params.leftMargin = BigDecimal.valueOf(((double) windowWidth - plantImageViewParamsWidth) / 2)
-                        .setScale(0, BigDecimal.ROUND_UP).intValue();
-                params.topMargin = (int) top;
-                matchLayout.setLayoutParams(params);
-
-                ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-                plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight + (plantOffsetRatio * portionHeight))
-                        .setScale(0, BigDecimal.ROUND_UP).intValue();
-                plantImageViewParams.width = BigDecimal.valueOf(plantImageViewParamsWidth)
-                        .setScale(0, BigDecimal.ROUND_UP).intValue();
-                plantViewPager.setLayoutParams(plantImageViewParams);
-            } else {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-                int windowWidth = YiBaiApplication.getWindowWidth();
-                params.leftMargin = (int) ((windowWidth - width) / 2);
-                params.topMargin = (int) top;
-                matchLayout.setLayoutParams(params);
-
-                ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-                plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight)
-                        .setScale(0, BigDecimal.ROUND_UP).intValue();
-                plantImageViewParams.width = width;
-                plantViewPager.setLayoutParams(plantImageViewParams);
-            }
-
-        }, 200);
+        });
     }
 
     /**
@@ -1426,75 +1387,52 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      */
     @Override
     public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
-                                                 double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
+                                                 double plantHeight, double potHeight,
+                                                 double plantOffsetRatio, double potOffsetRatio,
+                                                 double productWidth, double augmentedProductWidth) {
         matchLayout.post(() -> {
-            matchLayout.postDelayed(() -> {
-                int height = matchLayout.getHeight();
-                int width = matchLayout.getWidth();
-                int top = matchLayout.getTop();
-                double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
-                if (0 == h) {
-                    return;
-                }
-                // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-                double portionHeight = BigDecimal.valueOf((float) height / h).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            int height = ontHeight;
+            int witdh = oneWidth;
+            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
+            if (0 == h) {
+                return;
+            }
+            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
+            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
+            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+            if (plantOffsetRatio > 0) {
+                double scale = plantHeight / (plantHeight - plantOffsetRatio);
+                double scale1 =  (plantHeight - plantOffsetRatio)/plantHeight ;
+                double newWitdh = 633;
+//                witdh * scale;
 
-                double plantImageViewParamsHeight = BigDecimal.valueOf(portionHeight * (plantHeight)).
-                        setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-                double viewPagerParamsHeight = BigDecimal.valueOf(portionHeight * (potHeight)).
-                        setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) newWitdh, height);
+                int windowWidth = YiBaiApplication.getWindowWidth();
+                params.leftMargin = (int) ((windowWidth - newWitdh) / 2);
+                params.topMargin = (int) top;
+                matchLayout.setLayoutParams(params);
 
-                ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-                viewPagerParams.height = BigDecimal.valueOf(viewPagerParamsHeight).setScale(0, BigDecimal.ROUND_UP).intValue();
-                potViewPager.setLayoutParams(viewPagerParams);
+                plantImageViewParams.width = (int) newWitdh;
+                plantImageViewParams.height = (int) ((portionHeight * plantHeight) + (scale * plantOffsetRatio));
 
-                if (plantOffsetRatio > 0) {
-                    double plantImageViewParamsWidth = width;
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                            BigDecimal.valueOf(plantImageViewParamsWidth).setScale(0, BigDecimal.ROUND_UP).intValue(),
-                            BigDecimal.valueOf(height).setScale(0, BigDecimal.ROUND_UP).intValue());
+                viewPagerParams.width = (int) newWitdh;
+                viewPagerParams.height = (int) (portionHeight * (potHeight));
+            } else {
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) witdh, height);
+                int windowWidth = YiBaiApplication.getWindowWidth();
+                params.leftMargin = (int) ((windowWidth - witdh) / 2);
+                params.topMargin = (int) top;
+                matchLayout.setLayoutParams(params);
 
-                    int windowWidth = YiBaiApplication.getWindowWidth();
-                    params.leftMargin = BigDecimal.valueOf(((double) windowWidth - plantImageViewParamsWidth) / 2)
-                            .setScale(0, BigDecimal.ROUND_UP).intValue();
-                    params.topMargin = (int) top;
-                    matchLayout.setLayoutParams(params);
+                plantImageViewParams.width = (int) witdh;
+                plantImageViewParams.height = (int) (portionHeight * plantHeight);
 
-                    ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-                    plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight + (plantOffsetRatio * portionHeight))
-                            .setScale(0, BigDecimal.ROUND_UP).intValue();
-                    plantImageViewParams.width = (int) plantImageViewParamsWidth;
-                    plantViewPager.setLayoutParams(plantImageViewParams);
-                } else {
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
-                    int windowWidth = YiBaiApplication.getWindowWidth();
-                    params.leftMargin = (int) ((windowWidth - width) / 2);
-                    params.topMargin = (int) top;
-                    matchLayout.setLayoutParams(params);
-
-                    ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-                    plantImageViewParams.height = BigDecimal.valueOf(plantImageViewParamsHeight)
-                            .setScale(0, BigDecimal.ROUND_UP).intValue();
-                    plantImageViewParams.height = width;
-                    plantViewPager.setLayoutParams(plantImageViewParams);
-                }
-
-            }, 200);
-
-//            int height = matchLayout.getHeight();
-//            double allHeight = plantHeight + potHeight;
-//            double mPlant = plantHeight - plantOffsetRatio;
-//            double mPot = potHeight - potOffsetRatio;
-//            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-//            double portionPlantHeight = BigDecimal.valueOf((float) height / mPlant).doubleValue();
-//            double portionPotHeight = BigDecimal.valueOf((float) height / mPot).doubleValue();
-//            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-//            plantImageViewParams.height = (int) (portionPlantHeight * (plantHeight + plantOffsetRatio) / 2);
-//            plantViewPager.setLayoutParams(plantImageViewParams);
-//
-//            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-//            viewPagerParams.height = (int) (portionPotHeight * (potHeight + potOffsetRatio) / 2);
-//            potViewPager.setLayoutParams(viewPagerParams);
+                viewPagerParams.width = (int) witdh;
+                viewPagerParams.height = (int) (portionHeight * (potHeight));
+            }
+            plantViewPager.setLayoutParams(plantImageViewParams);
+            potViewPager.setLayoutParams(viewPagerParams);
         });
     }
 
@@ -1513,6 +1451,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             potViewPager.setLayoutParams(viewPagerParams);
         });
     }
+
 
     /**
      * 将新搭配的产品数据添加到"模拟搭配产品"数据

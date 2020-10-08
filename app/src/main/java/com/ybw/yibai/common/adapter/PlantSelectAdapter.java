@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.ybw.yibai.R;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.module.collocation.CollocationActivity;
@@ -73,7 +74,7 @@ public class PlantSelectAdapter extends PagerAdapter {
             }
             return false;
         });
-
+//        imageView.setBackgroundResource(R.drawable.bg_border);
         ListBean listBean = mPlantList.get(position);
         String pic2 = listBean.getPic2();
         String pic3 = listBean.getPic3();

@@ -257,14 +257,37 @@ public class SimulationData implements Serializable {
     @Column(name = "yScale")
     private double yScale;
 
-    /*----------*/
-
+//    @Column(name = "scaleFactorWidth")
+//    private double scaleFactorWidth = width;
+//
+//    @Column(name = "scaleFactorHeight")
+//    private double scaleFactorHeight = height;
     /**
      * 某一种"模拟搭配产品"的数量
      * (在"SceneEditFragment场景编辑界面"统计"模拟搭配产品"的数量时用到
      * 如果"finallySkuId"相同,就可以认定为同一个产品）
      */
     private int number;
+
+    /*----------*/
+
+
+//    public double getScaleFactorWidth() {
+//        return scaleFactorWidth;
+//    }
+//
+//    public void setScaleFactorWidth(double scaleFactorWidth) {
+//        this.scaleFactorWidth = scaleFactorWidth;
+//    }
+//
+//    public double getScaleFactorHeight() {
+//        return scaleFactorHeight;
+//    }
+//
+//    public void setScaleFactorHeight(double scaleFactorHeight) {
+//        this.scaleFactorHeight = scaleFactorHeight;
+//    }
+
 
     /*----------*/
 

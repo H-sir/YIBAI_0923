@@ -333,7 +333,7 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
         miniProgram.userName = "gh_a532df421aeb";//小程序端提供参数
         miniProgram.path = "/pages/index/index?number=" + mDesignDetails.getData().getNumber(); //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
         WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
-        mediaMessage.title = "设计号：" + mDesignDetails.getData().getNumber();//自定义
+        mediaMessage.title = "亲，请查看您的绿植设计方案~" + mDesignDetails.getData().getNumber();//自定义
         mediaMessage.description = mDesignDetails.getData().getNumber();//自定义
         ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
             @Override

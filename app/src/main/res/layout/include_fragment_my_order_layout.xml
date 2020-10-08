@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:drawableEnd="@mipmap/right_gray"
             android:gravity="center_vertical"
-            android:text="@string/purchase_order"
+            android:text="进货订单"
             android:textColor="@color/main_text_color"
             android:textSize="14sp"
             android:textStyle="bold" />

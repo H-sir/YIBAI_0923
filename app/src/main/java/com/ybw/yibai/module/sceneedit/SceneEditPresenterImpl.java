@@ -1391,8 +1391,9 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                                                  double plantOffsetRatio, double potOffsetRatio,
                                                  double productWidth, double augmentedProductWidth) {
         matchLayout.post(() -> {
-            int height = ontHeight;
-            int witdh = oneWidth;
+            int height = matchLayout.getHeight();
+            int witdh = matchLayout.getWidth();
+            top = matchLayout.getTop();
             double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
             if (0 == h) {
                 return;
@@ -1405,7 +1406,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 double scale = plantHeight / (plantHeight - plantOffsetRatio);
                 double scale1 =  (plantHeight - plantOffsetRatio)/plantHeight ;
                 double newWitdh = 633;
-//                witdh * scale;
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) newWitdh, height);
                 int windowWidth = YiBaiApplication.getWindowWidth();
@@ -1419,16 +1419,16 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 viewPagerParams.width = (int) newWitdh;
                 viewPagerParams.height = (int) (portionHeight * (potHeight));
             } else {
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) witdh, height);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) 633, height);
                 int windowWidth = YiBaiApplication.getWindowWidth();
                 params.leftMargin = (int) ((windowWidth - witdh) / 2);
                 params.topMargin = (int) top;
                 matchLayout.setLayoutParams(params);
 
-                plantImageViewParams.width = (int) witdh;
+                plantImageViewParams.width = (int) 633;
                 plantImageViewParams.height = (int) (portionHeight * plantHeight);
 
-                viewPagerParams.width = (int) witdh;
+                viewPagerParams.width = (int) 633;
                 viewPagerParams.height = (int) (portionHeight * (potHeight));
             }
             plantViewPager.setLayoutParams(plantImageViewParams);

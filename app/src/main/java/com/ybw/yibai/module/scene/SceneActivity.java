@@ -39,6 +39,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.FragmentPagerAdapter;
 import com.ybw.yibai.common.adapter.SceneListAdapter;
 import com.ybw.yibai.common.adapter.SceneQuotationAdapter;
+import com.ybw.yibai.common.bean.BarViewSelected;
 import com.ybw.yibai.common.bean.BottomSheetBehaviorState;
 import com.ybw.yibai.common.bean.CreateSceneData;
 import com.ybw.yibai.common.bean.DeletePlacement;
@@ -52,6 +53,7 @@ import com.ybw.yibai.common.bean.SaveAddSchemeBean;
 import com.ybw.yibai.common.bean.SceneDesign;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SceneInfoChange;
+import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.bean.StickerViewSelected;
 import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.SystemParameter.DataBean.SpectypeBean;
@@ -70,9 +72,11 @@ import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;
+import com.ybw.yibai.module.market.MarketActivity;
 import com.ybw.yibai.module.more.MoreActivity;
 import com.ybw.yibai.module.preselection.ConsumerPreselectionFragment;
 import com.ybw.yibai.module.scene.SceneContract.ScenePresenter;
@@ -102,6 +106,7 @@ import static com.ybw.yibai.common.constants.Preferences.CUSTOMERS_PRESELECTION_
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
+import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 import static com.ybw.yibai.common.utils.OtherUtil.splitList;
@@ -794,6 +799,62 @@ public class SceneActivity extends BaseActivity implements SceneView,
             }
         }
 
+        // 盆栽信息
+        if (id == R.id.bonsaiInfoTextView) {
+//            BaseSticker currentSticker = mStickerView.getCurrentSticker();
+//            if (null == currentSticker) {
+//                return;
+//            }
+//            int position = (int) currentSticker.getTag();
+//            SimulationData simulationData = mSimulationDataList.get(position);
+//            mSceneEditPresenter.displayPlantInfoPopupWindow(mRootView, simulationData);
+        }
+
+        // 加入相册
+        if (id == R.id.joinPhotoAlbum) {
+//            BaseSticker currentSticker = mStickerView.getCurrentSticker();
+//            if (null == currentSticker) {
+//                return;
+//            }
+//            int position = (int) currentSticker.getTag();
+//            SimulationData simulationData = mSimulationDataList.get(position);
+//            mSceneEditPresenter.joinPhotoAlbum(simulationData);
+        }
+
+        // 加入进货
+        if (id == R.id.joinPurchaseTextView) {
+//            BaseSticker currentSticker = mStickerView.getCurrentSticker();
+//            if (null == currentSticker) {
+//                return;
+//            }
+//            int position = (int) currentSticker.getTag();
+//            SimulationData simulationData = mSimulationDataList.get(position);
+//            mSceneEditPresenter.addQuotationData(simulationData);
+        }
+
+        //查看货源
+        if (id == R.id.skuMarketTextView) {
+//            if (augmentedProductSkuId != 0 && productSkuId != 0) {
+//                skuMarketPopupWindow();
+//            } else {
+//                Intent intent = new Intent(getActivity(), MarketActivity.class);
+//                if (productSkuId != 0) {
+//                    intent.putExtra(PRODUCT_SKU_ID, productSkuId);
+//                } else {
+//                    intent.putExtra(PRODUCT_SKU_ID, augmentedProductSkuId);
+//                }
+//                startActivity(intent);
+//            }
+        }
+
+        // 加入该款
+        if (id == R.id.changeStyleTextView) {
+//            replaceCollocation(false);
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+                mDrawerLayout.closeDrawer(GravityCompat.END);
+            }
+        }
+
         /**
          * 发送数据到{@link SceneEditFragment#onSceneActivityClick(View)}
          */
@@ -1391,14 +1452,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
     }
 
     /**
-     * EventBus
-     * 接收用户从{@link SceneEditFragment} 传递过来的数据在"贴纸View"被选中状态发生改变时
-     *
-     * @param stickerViewSelected "贴纸View"被选中状态
+     * @param barViewSelected "贴纸View"被选中状态
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void barViewSelected(@NonNull StickerViewSelected stickerViewSelected) {
-        boolean selected = stickerViewSelected.isSelected();
+    public void barViewSelected(@NonNull BarViewSelected barViewSelected) {
+        boolean selected = barViewSelected.isSelected();
         if (selected) {
             mBarView.setVisibility(View.GONE);
         } else {

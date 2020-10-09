@@ -56,6 +56,7 @@ import com.ybw.yibai.common.adapter.RecommendPotTypeAdapter;
 import com.ybw.yibai.common.adapter.SOAdapter;
 import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.BTCBean;
+import com.ybw.yibai.common.bean.BarViewSelected;
 import com.ybw.yibai.common.bean.BottomSheetBehaviorState;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
 import com.ybw.yibai.common.bean.ExistSimulationData;
@@ -1247,7 +1248,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                     productTradePriceCode, augmentedPriceCode, augmentedTradePriceCode, productPrice, augmentedProductPrice);
         }
 
-        // 更换搭配
+        // 加入该款
         if (id == R.id.changeStyleTextView) {
             replaceCollocation(false);
         }
@@ -2606,7 +2607,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             double augmentedProductHeight_ = mSimulationData.getAugmentedProductHeight();
             double productOffsetRatio_ = mSimulationData.getProductOffsetRatio();
             double augmentedProductOffsetRatio_ = mSimulationData.getAugmentedProductOffsetRatio();
-            setCollocationContent(matchLayout, plantViewPager, potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
+            setCollocationContent(matchLayout, plantViewPager, potViewPager, productHeight_,
+                    augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_,
+                    productWidth, augmentedProductWidth,true);
             // TODO 左右滚动
             int index = i;
             HorizontalViewPager.OnPageChangeListener onPlantPageChangeListener = new HorizontalViewPager.OnPageChangeListener() {
@@ -2615,7 +2618,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                     onPlantPageSelected(position, index);
 //                     动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
                     setCollocationContent(matchLayout, plantViewPager,
-                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                            potViewPager, productHeight, augmentedProductHeight,
+                            productOffsetRatio, augmentedProductOffsetRatio,
+                            productWidth, augmentedProductWidth,true);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
 
@@ -2638,7 +2643,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
                     // 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致
                     setCollocationContent(matchLayout, plantViewPager,
-                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio);
+                            potViewPager, productHeight, augmentedProductHeight, productOffsetRatio, augmentedProductOffsetRatio
+                            , productWidth, augmentedProductWidth,false);
                     plantSelectAdapter.notifyDataSetChanged();
                 }
 
@@ -2666,18 +2672,19 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     private void setCollocationContent(MatchLayout matchLayout,
                                        HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
-                                       double productHeight_, double augmentedProductHeight_,
-                                       double productOffsetRatio_, double augmentedProductOffsetRatio_,
-                                       double productOffsetWidth_, double augmentedProductOffsetWidth_) {
-        if (isChangeFlagOne) {
+                                       double productHeight, double augmentedProductHeight,
+                                       double productOffsetRatio, double augmentedProductOffsetRatio,
+                                       double productOffsetWidth, double augmentedProductOffsetWidth,
+                                       boolean plantOrPot) {
+        if (plantOrPot) {
             mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
-                    potViewPager, productHeight_, augmentedProductHeight_,
+                    potViewPager, productHeight, augmentedProductHeight,
                     productOffsetRatio, augmentedProductOffsetRatio,
-                    productWidth, augmentedProductWidth);
+                    productOffsetWidth, augmentedProductOffsetWidth);
         } else {
             mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
-                    potViewPager, productHeight_, augmentedProductHeight_,
-                    productOffsetRatio_, augmentedProductOffsetRatio_);
+                    potViewPager, productHeight, augmentedProductHeight,
+                    productOffsetRatio, augmentedProductOffsetRatio);
         }
     }
 
@@ -3120,9 +3127,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
 
             /**
-             * 发送数据到{@link SceneActivity#barViewSelected(StickerViewSelected)}
+             * 发送数据到{@link SceneActivity#barViewSelected(BarViewSelected)}
              */
-            EventBus.getDefault().postSticky(new StickerViewSelected(true));
+            EventBus.getDefault().postSticky(new BarViewSelected(true));
 
             // 显示第三个引导层
             String label = getClass().getSimpleName() + "Three";
@@ -3182,9 +3189,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
              */
             EventBus.getDefault().postSticky(new StickerViewSelected(false));
             /**
-             * 发送数据到{@link SceneActivity#barViewSelected(StickerViewSelected)}
+             * 发送数据到{@link SceneActivity#barViewSelected(BarViewSelected)}
              */
-            EventBus.getDefault().postSticky(new StickerViewSelected(false));
+            EventBus.getDefault().postSticky(new BarViewSelected(false));
             if (mComType != null && mComType.equals("1")) {
                 mSceneContainerTool.setVisibility(View.GONE);
             }
@@ -3306,6 +3313,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             startActivity(intent);
             Objects.requireNonNull(getActivity()).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
+
+
     }
 
     /**
@@ -3367,6 +3376,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 addSpec = true;
                 mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
 //                replaceCollocation(true);
+                /**
+                 * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+                 */
                 EventBus.getDefault().postSticky(new StickerViewSelected(true));
                 if (mComType != null && mComType.equals("1")) {
                     mSceneContainerTool.setVisibility(View.GONE);

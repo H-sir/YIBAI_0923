@@ -141,6 +141,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
      (__ __)
     */
 
+    /**
+     * 标题view
+     */
+    private RelativeLayout mBarView;
+
     private CoordinatorLayout mRootLayout;
 
     /**
@@ -456,6 +461,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mRootLayout = findViewById(R.id.rootLayout);
         mDrawerLayout = findViewById(R.id.drawer_layout);
 
+        mBarView = findViewById(R.id.barView);
         mViewPager = findViewById(R.id.viewPager);
         mBackImageView = findViewById(R.id.backImageView);
         mTitleTextView = findViewById(R.id.titleTextView);
@@ -1381,6 +1387,22 @@ public class SceneActivity extends BaseActivity implements SceneView,
         boolean exist = existSimulationData.isExist();
         if (!exist) {
             mArcMenu.expandArcMenu();
+        }
+    }
+
+    /**
+     * EventBus
+     * 接收用户从{@link SceneEditFragment} 传递过来的数据在"贴纸View"被选中状态发生改变时
+     *
+     * @param stickerViewSelected "贴纸View"被选中状态
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void barViewSelected(@NonNull StickerViewSelected stickerViewSelected) {
+        boolean selected = stickerViewSelected.isSelected();
+        if (selected) {
+            mBarView.setVisibility(View.GONE);
+        } else {
+            mBarView.setVisibility(View.VISIBLE);
         }
     }
 

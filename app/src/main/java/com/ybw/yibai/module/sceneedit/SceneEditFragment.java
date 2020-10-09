@@ -90,6 +90,7 @@ import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.model.ItemDesignSceneModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.network.response.ResponsePage;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.FilterFactoryUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
@@ -133,8 +134,11 @@ import org.xutils.ex.DbException;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -2663,7 +2667,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //                    potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
             isChangeFlagOne = false;
         } else {
-            mSceneEditPresenter.setCollocationContentParams(matchLayout, plantViewPager,
+            mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
                     potViewPager, productHeight_, augmentedProductHeight_, productOffsetRatio_, augmentedProductOffsetRatio_);
         }
     }
@@ -3051,7 +3055,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
             mChangeStyleTextView.setText(mContext.getResources().getString(R.string.accomplish));
             mProductCodeImageButton.setVisibility(View.VISIBLE);
-            mBonsaiEditLayout.setVisibility(View.GONE);
+            mBonsaiEditLayout.setVisibility(View.VISIBLE);
             mCollocationLayout.setVisibility(View.VISIBLE);
             mProductTypeBottomSheetBehavior.setState(STATE_HIDDEN);
             mSceneContainerTool.setVisibility(View.GONE);
@@ -3105,6 +3109,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                     mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);
                 }
             }
+
+            /**
+             * 发送数据到{@link SceneActivity#barViewSelected(StickerViewSelected)}
+             */
+            EventBus.getDefault().postSticky(new StickerViewSelected(true));
 
             // 显示第三个引导层
             String label = getClass().getSimpleName() + "Three";
@@ -3161,6 +3170,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             /**
              * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+             */
+            EventBus.getDefault().postSticky(new StickerViewSelected(false));
+            /**
+             * 发送数据到{@link SceneActivity#barViewSelected(StickerViewSelected)}
              */
             EventBus.getDefault().postSticky(new StickerViewSelected(false));
             if (mComType != null && mComType.equals("1")) {

@@ -1428,7 +1428,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                                  double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
         matchLayout.post(() -> {
-            matchLayout.postDelayed(() -> {
                 int height = matchLayout.getHeight();
                 int width = matchLayout.getWidth();
                 int top = matchLayout.getTop();
@@ -1478,9 +1477,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                     plantImageViewParams.height = width;
                     plantViewPager.setLayoutParams(plantImageViewParams);
                 }
-
-            }, 200);
-
 //            int height = matchLayout.getHeight();
 //            double allHeight = plantHeight + potHeight;
 //            double mPlant = plantHeight - plantOffsetRatio;

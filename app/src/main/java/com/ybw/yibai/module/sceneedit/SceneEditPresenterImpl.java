@@ -1234,6 +1234,15 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             } else {
                 // 动态添加View
                 MatchLayout matchLayout = new MatchLayout(context);
+                matchLayout.setCurrentX(currentX);
+                matchLayout.setCurrentY(currentY);
+                matchLayout.setSimulationWidth(width);
+                matchLayout.setSimulationHeight(height);
+                matchLayout.setxScale(xScale);
+                matchLayout.setyScale(yScale);
+                matchLayout.setCurrentStickerWidth(currentStickerWidth);
+                matchLayout.setCurrentStickerHeight(currentStickerHeight);
+
                 collocationLayout.addView(matchLayout);
                 mMatchLayoutList.add(matchLayout);
 
@@ -1323,6 +1332,15 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 layoutParams.width = (int) currentStickerWidth;
                 layoutParams.height = (int) currentStickerHeight;
                 matchLayout.setLayoutParams(layoutParams);
+
+                matchLayout.setCurrentX(currentX);
+                matchLayout.setCurrentY(currentY);
+                matchLayout.setSimulationWidth(width);
+                matchLayout.setSimulationHeight(height);
+                matchLayout.setxScale(xScale);
+                matchLayout.setyScale(yScale);
+                matchLayout.setCurrentStickerWidth(currentStickerWidth);
+                matchLayout.setCurrentStickerHeight(currentStickerHeight);
             }
         }
         if (1 == productCombinationType || 1 == augmentedCombinationType) {
@@ -1353,9 +1371,33 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     public void setCollocationContentParams(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                             double plantHeight, double potHeight, double plantOffsetRatio, double potOffsetRatio) {
         matchLayout.post(() -> {
-            oneWidth = matchLayout.getWidth();
-            ontHeight = matchLayout.getHeight();
-            top = matchLayout.getTop();
+//            int height = matchLayout.getHeight();
+//            int width = matchLayout.getWidth();
+//            double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
+//            if (0 == h) {
+//                return;
+//            }
+//            // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
+//            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
+//            ViewGroup.LayoutParams layoutParams = matchLayout.getLayoutParams();
+//            layoutParams.width = BigDecimal.valueOf((width + ((plantOffsetRatio + potOffsetRatio) * portionHeight))).intValue();
+//            layoutParams.height = BigDecimal.valueOf(portionHeight * (plantHeight + plantOffsetRatio + potHeight + potOffsetRatio)).intValue();
+//            matchLayout.setLayoutParams(layoutParams);
+//
+//            ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
+//            plantImageViewParams.height = (int) (portionHeight * (plantHeight + plantOffsetRatio));
+//            plantImageViewParams.width = BigDecimal.valueOf((width + ((plantOffsetRatio + potOffsetRatio) * portionHeight))).intValue();
+//            plantViewPager.setLayoutParams(plantImageViewParams);
+//
+//            ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
+//            viewPagerParams.height = (int) (portionHeight * (potHeight + potOffsetRatio));
+//            viewPagerParams.width = BigDecimal.valueOf((width + ((plantOffsetRatio + potOffsetRatio) * portionHeight))).intValue();
+//            potViewPager.setLayoutParams(viewPagerParams);
+
+
+//            oneWidth = matchLayout.getWidth();
+//            ontHeight = matchLayout.getHeight();
+//            top = matchLayout.getTop();
             int height = matchLayout.getHeight();
             double h = plantHeight + potHeight - plantOffsetRatio - potOffsetRatio;
             if (0 == h) {
@@ -1388,8 +1430,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                                  double plantHeight, double potHeight,
-                                                 double plantOffsetRatio, double potOffsetRatio,
-                                                 double productWidth, double augmentedProductWidth) {
+                                                 double plantOffsetRatio, double potOffsetRatio,double productWidth, double augmentedProductWidth) {
         matchLayout.post(() -> {
             int height = matchLayout.getHeight();
             int witdh = matchLayout.getWidth();
@@ -1404,7 +1445,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
             if (plantOffsetRatio > 0) {
                 double scale = plantHeight / (plantHeight - plantOffsetRatio);
-                double scale1 =  (plantHeight - plantOffsetRatio)/plantHeight ;
+                double scale1 = (plantHeight - plantOffsetRatio) / plantHeight;
                 double newWitdh = 633;
 
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams((int) newWitdh, height);

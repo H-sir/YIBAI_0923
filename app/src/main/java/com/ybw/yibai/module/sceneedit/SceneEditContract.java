@@ -390,7 +390,7 @@ public interface SceneEditContract {
                                               HorizontalViewPager potViewPager,
                                               double plantHeight, double potHeight,
                                               double plantOffsetRatio, double potoffsetRatio,
-                                              double productOffsetWidth_, double augmentedProductOffsetWidth_);
+                                              double productWidth, double augmentedProductWidth);
 
         /**
          * 动态设置"搭配图片的布局里面的ViewPager,ViewPager的高度,使其比例与植物高度:盆器高度比例一致

@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="场景及设计图片"
+            android:text="场景列表"
             android:textColor="@color/main_text_color"
             android:textSize="16sp"
             android:textStyle="bold" />

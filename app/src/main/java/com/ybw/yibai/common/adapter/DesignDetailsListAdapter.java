@@ -66,6 +66,8 @@ public class DesignDetailsListAdapter extends RecyclerView.Adapter<RecyclerView.
         DesignDetails.DataBean.SchemelistBean schemelistBean = schemelistBeans.get(position);
         myViewHolder.mDesignDetailsName.setText(schemelistBean.getSchemeName());
 
+        ImageUtil.displayImage(mContext, myViewHolder.mDesignBg, schemelistBean.getBgpic());
+
         mDesignListAdapter = new com.ybw.yibai.common.widget.horizontal.adatper.BaseAdapter<>();
         myViewHolder.mDesignDetailsListView.setAdapter(mDesignListAdapter);
 
@@ -90,6 +92,7 @@ public class DesignDetailsListAdapter extends RecyclerView.Adapter<RecyclerView.
         private MyViewHolder(View itemView) {
             super(itemView);
 
+            mDesignBg = itemView.findViewById(R.id.designBg);
             mDesignDetailsName = itemView.findViewById(R.id.designDetailsName);
             mDesignDetailsRename = itemView.findViewById(R.id.designDetailsRename);
             mDesignDetailsDelete = itemView.findViewById(R.id.designDetailsDelete);
@@ -118,6 +121,7 @@ public class DesignDetailsListAdapter extends RecyclerView.Adapter<RecyclerView.
          * 场景名称
          */
         TextView mDesignDetailsName;
+        ImageView mDesignBg;
 
         /**
          * 场景改名

@@ -264,8 +264,7 @@
         android:layout_alignParentBottom="true"
         android:background="#CCFFFFFF"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="gone">
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/replaceCollocationTextView"
@@ -282,6 +281,46 @@
             android:visibility="gone"
             tools:ignore="SmallSp" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/saveScenarios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:drawableTop="@mipmap/save_scenarios"
+                    android:drawablePadding="3dp"
+                    android:gravity="center"
+                    android:text="保存设计"
+                    android:textColor="@color/main_text_color"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    tools:ignore="SmallSp" />
+
+                <TextView
+                    android:id="@+id/saveTextViewNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/background_customer_blue_s"
+                    android:text="0"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+
         <TextView
             android:id="@+id/bonsaiInfoTextView"
             android:layout_width="wrap_content"
@@ -290,7 +329,21 @@
             android:drawableTop="@mipmap/bonsai_info"
             android:drawablePadding="3dp"
             android:gravity="center"
+            android:visibility="gone"
             android:text="@string/bonsai_info"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/addShopping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/add_shopping_img"
+            android:drawablePadding="3dp"
+            android:gravity="center"
+            android:text="加入预选"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -303,6 +356,7 @@
             android:drawableTop="@mipmap/album_replacement"
             android:drawablePadding="3dp"
             android:gravity="center"
+            android:visibility="gone"
             android:text="@string/join_photo_album"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
@@ -326,7 +380,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
-            android:drawableTop="@mipmap/restore_settings"
+            android:drawableTop="@mipmap/sku_market_img"
             android:drawablePadding="3dp"
             android:gravity="center"
             android:text="查看货源"

@@ -32,6 +32,16 @@ public class MatchLayout extends FrameLayout {
      */
     private HorizontalViewPager mPotViewPager;
 
+    private float currentX;
+    private float currentY;
+    private double simulationWidth;
+    private double simulationHeight;
+    private double xScale;
+    private double yScale;
+    private double currentStickerWidth;
+    private double currentStickerHeight;
+
+
     public MatchLayout(@NonNull Context context) {
         super(context);
         init();
@@ -71,5 +81,69 @@ public class MatchLayout extends FrameLayout {
 
     public void setPotViewPager(HorizontalViewPager mPotViewPager) {
         this.mPotViewPager = mPotViewPager;
+    }
+
+    public float getCurrentX() {
+        return currentX;
+    }
+
+    public void setCurrentX(float currentX) {
+        this.currentX = currentX;
+    }
+
+    public float getCurrentY() {
+        return currentY;
+    }
+
+    public void setCurrentY(float currentY) {
+        this.currentY = currentY;
+    }
+
+    public double getSimulationWidth() {
+        return simulationWidth;
+    }
+
+    public void setSimulationWidth(double simulationWidth) {
+        this.simulationWidth = simulationWidth;
+    }
+
+    public double getSimulationHeight() {
+        return simulationHeight;
+    }
+
+    public void setSimulationHeight(double simulationHeight) {
+        this.simulationHeight = simulationHeight;
+    }
+
+    public double getxScale() {
+        return xScale;
+    }
+
+    public void setxScale(double xScale) {
+        this.xScale = xScale;
+    }
+
+    public double getyScale() {
+        return yScale;
+    }
+
+    public void setyScale(double yScale) {
+        this.yScale = yScale;
+    }
+
+    public double getCurrentStickerWidth() {
+        return currentStickerWidth;
+    }
+
+    public void setCurrentStickerWidth(double currentStickerWidth) {
+        this.currentStickerWidth = currentStickerWidth;
+    }
+
+    public double getCurrentStickerHeight() {
+        return currentStickerHeight;
+    }
+
+    public void setCurrentStickerHeight(double currentStickerHeight) {
+        this.currentStickerHeight = currentStickerHeight;
     }
 }

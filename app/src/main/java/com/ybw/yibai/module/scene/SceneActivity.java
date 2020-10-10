@@ -39,6 +39,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.FragmentPagerAdapter;
 import com.ybw.yibai.common.adapter.SceneListAdapter;
 import com.ybw.yibai.common.adapter.SceneQuotationAdapter;
+import com.ybw.yibai.common.bean.AddSchemePathBead;
 import com.ybw.yibai.common.bean.BarViewSelected;
 import com.ybw.yibai.common.bean.BottomSheetBehaviorState;
 import com.ybw.yibai.common.bean.CreateSceneData;
@@ -92,6 +93,7 @@ import org.xutils.DbManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1188,6 +1190,21 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mScenePresenter.designScheme(designSchemeRequest);
     }
 
+    /**
+     * EventBus
+     * 接收用户从{@link SceneEditFragment} 传递过来的保存设计的信息
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAddSchemePath(AddSchemePathBead addSchemePathBead) {
+        DesignSchemeRequest designSchemeRequest = new DesignSchemeRequest();
+        designSchemeRequest.setDesingNumber(mDesingNumber);
+        designSchemeRequest.setType(2);
+        designSchemeRequest.setSchemeId(mSceneInfo.getScheme_id());
+        designSchemeRequest.setPic(addSchemePathBead.getPathName());
+        designSchemeRequest.setProductSkuId(addSchemePathBead.getProductSkuId() + "," + addSchemePathBead.getAugmentedProductSkuId());
+        mScenePresenter.designScheme(designSchemeRequest);
+    }
+
     @Override
     public void onGetDesignSchemeSuccess(DesignScheme designScheme) {
         SceneDesign sceneDesign = new SceneDesign();
@@ -1391,6 +1408,19 @@ public class SceneActivity extends BaseActivity implements SceneView,
         spectypeBean.setId(-1);
         spectypeBean.setName(getResources().getString(R.string.more));
         mBonsaiSpecTypeList.clear();
+        Collections.sort(data.getSpectype(), new Comparator<SpectypeBean>() {
+            @Override
+            public int compare(SpectypeBean s1, SpectypeBean s2) {
+                int diff = s1.getId() - s2.getId();
+                if (diff > 0) {
+                    return -1;
+                } else if (diff < 0) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+
         mBonsaiSpecTypeList.addAll(data.getSpectype());
         mBonsaiSpecTypeList.add(0, spectypeBean);
         for (int i = 0; i < mBonsaiSpecTypeList.size(); i++) {

@@ -102,7 +102,16 @@ public class DesignDetails implements Serializable {
 
             @SerializedName("scheme_id") private String schemeId;
             @SerializedName("scheme_name") private String schemeName;
+            @SerializedName("bgpic") private String bgpic;
             @SerializedName("imglist") private List<ImaData> imglist;
+
+            public String getBgpic() {
+                return bgpic;
+            }
+
+            public void setBgpic(String bgpic) {
+                this.bgpic = bgpic;
+            }
 
             public String getSchemeId() {
                 return schemeId;

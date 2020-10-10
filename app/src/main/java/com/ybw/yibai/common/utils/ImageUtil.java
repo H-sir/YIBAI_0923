@@ -756,6 +756,31 @@ public class ImageUtil {
     }
 
     /**
+     * 将两个Bitmap合成一个Bitmap
+     *
+     * @param firstProportion             第一个Bitmap的高占合成后图片高的比
+     * @param secondProportion            第二个Bitmap的高占合成后图片高的比
+     * @param productOffsetRatio          第一张图片向上的偏移量
+     * @param augmentedProductOffsetRatio 第二张图片向上的偏移量
+     * @param bitmaps                     要合成的Bitmap
+     * @return 合成后的Bitmap
+     */
+    @Nullable
+    public static Bitmap pictureSynthesis(double firstProportion, double secondProportion, double productOffsetRatio, double augmentedProductOffsetRatio, List<Bitmap> bitmaps) {
+        if (bitmaps.size() <= 0) {
+            return null;
+        }
+        if (bitmaps.size() == 1) {
+            return bitmaps.get(0);
+        }
+        Bitmap newBitmap = bitmaps.get(0);
+        for (int i = 1; i < bitmaps.size(); i++) {
+            newBitmap = createBitmap(newBitmap, bitmaps.get(i), firstProportion, secondProportion, productOffsetRatio, augmentedProductOffsetRatio);
+        }
+        return newBitmap;
+    }
+
+    /**
      * 将两个Bitmap上下合成合成一个Bitmap
      *
      * @param firstBitmap      第一个Bitmap

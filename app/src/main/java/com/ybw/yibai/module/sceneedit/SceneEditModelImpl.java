@@ -1696,13 +1696,18 @@ public class SceneEditModelImpl implements SceneEditModel {
             double oldHeight = currentSimulationData.getHeight();
             double oldXScale = currentSimulationData.getxScale();
             double oldYScale = currentSimulationData.getyScale();
-            double showWidth = oldWidth * oldXScale;
-            double showHeight = oldHeight * oldYScale;
-            double yScale = new BigDecimal((float) showHeight / height).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            int showWidth = BigDecimal.valueOf(oldWidth * oldXScale)
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
+            int showHeight = BigDecimal.valueOf(oldHeight * oldYScale)
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
+            double yScale = oldYScale;
+//                    new BigDecimal(((double)showHeight / (double)height))
+//                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             // 新合成的图片距离X轴的距离(要保持新合成的图片的中心点要和当前用户正在操作的贴纸的中心点相同)
             // 算法: 1,原中心点的位置 = 贴纸左上角距离屏幕左上角X轴的距离 + (更换搭配之前贴纸实际的宽度 * 更换搭配之前贴纸的X轴的缩放比例 / 2)
             //      2,新合成的图片距离X轴的距离 = 原中心点的位置 - (新合成的图片宽度 * 新合成的图片Y轴的缩放 / 2)
-            float newX = (float) ((oldWidth * oldXScale / 2 + x) - (width * yScale / 2));
+            float newX = BigDecimal.valueOf((oldWidth * oldXScale / 2 + x) - (width * yScale / 2))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
 
             LogUtil.e(TAG, "贴纸左上角距离屏幕左上角X轴的距离: " + x);
             LogUtil.e(TAG, "贴纸左上角距离屏幕左上角Y轴的距离: " + y);
@@ -1789,15 +1794,15 @@ public class SceneEditModelImpl implements SceneEditModel {
                 if (judeFileExists(picturePath)) {
                     simulationData.setPicturePath(picturePath);
                 }
-                simulationData.setX(newX);
+                simulationData.setX(x);
                 simulationData.setY(y);
                 if (0 < width && 0 < height) {
                     simulationData.setWidth(width);
                     simulationData.setHeight(height);
                 }
                 // 注意: 这里的宽高应该是一样的缩放比例
-                simulationData.setxScale(yScale);
-                simulationData.setyScale(yScale);
+                simulationData.setxScale(oldXScale);
+                simulationData.setyScale(oldYScale);
                 /*----------*/
                 // 保存新的贴纸数据
                 dbManager.save(simulationData);

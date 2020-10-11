@@ -10,22 +10,31 @@ public class DrawableSticker extends BaseSticker {
     private Rect mRect;
 
     private Drawable mDrawable;
+    private int intrinsicWidth = 0;
+    private int intrinsicHeight = 0;
 
     public DrawableSticker(Drawable drawable) {
         mDrawable = drawable;
         mRect = new Rect(0, 0, getWidth(), getHeight());
     }
 
+    public DrawableSticker(Drawable drawable, int intrinsicWidth, int intrinsicHeight) {
+        mDrawable = drawable;
+        this.intrinsicWidth = intrinsicWidth;
+        this.intrinsicHeight = intrinsicHeight;
+        mRect = new Rect(0, 0, getWidth(), getHeight());
+    }
+
     @Override
     public int getWidth() {
         // 返回可绘制图形的固有宽度
-        return mDrawable.getIntrinsicWidth();
+        return intrinsicWidth > 0 ? intrinsicWidth : mDrawable.getIntrinsicWidth();
     }
 
     @Override
     public int getHeight() {
         // 返回可绘制图形的固有高度
-        return mDrawable.getIntrinsicHeight();
+        return intrinsicHeight > 0 ? intrinsicHeight : mDrawable.getIntrinsicHeight();
     }
 
     @NonNull

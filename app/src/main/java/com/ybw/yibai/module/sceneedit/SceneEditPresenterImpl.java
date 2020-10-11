@@ -796,7 +796,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      * @param simulationDataList 用户保存的"模拟搭配产品"数据
      */
     @Override
-    public void addSticker(StickerView stickerView, List<SimulationData> simulationDataList) {
+    public void addSticker(int stickerWidth, int stickerHeight, StickerView stickerView, List<SimulationData> simulationDataList) {
         Fragment fragment = (Fragment) mSceneEditView;
         for (int i = 0; i < simulationDataList.size(); i++) {
             SimulationData simulationData = simulationDataList.get(i);
@@ -834,7 +834,31 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 Bitmap bitmap = getLocalBitmap(picturePath);
                 Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
                 DrawableSticker drawableSticker = new DrawableSticker(drawable);
-                stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
+                int intrinsicWidth = bitmap.getWidth();
+                int intrinsicHeight = bitmap.getHeight();
+                int intrinsicWidth1 = drawable.getIntrinsicWidth();
+                int intrinsicHeight1 = drawable.getIntrinsicHeight();
+                double mxScale = xScale / ((double) intrinsicWidth1 / (double) intrinsicWidth);
+                double myScale = yScale / ((double) intrinsicHeight1 / (double) intrinsicHeight);
+                double xx, yy;
+                if (stickerWidth > 0 && stickerHeight > 0) {
+                    xx = mxScale / ((double) intrinsicWidth1 / (double) stickerWidth);
+                    yy = myScale / ((double) intrinsicHeight1 / (double) stickerHeight);
+                } else {
+                    xx = mxScale;
+                    yy = myScale;
+                }
+
+                float i1 = Math.abs((intrinsicWidth1 - stickerWidth)) / 2;
+                float i2 = Math.abs((intrinsicHeight1 - stickerHeight)) / 2;
+                stickerView.addSticker(simulationData, drawableSticker, x - i1, y - i2,
+                        xx,
+                        yy,
+                        i, finallySkuId, pottedName, pottedHeight);
+//                Bitmap bitmap = getLocalBitmap(picturePath);
+//                Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
+//                DrawableSticker drawableSticker = new DrawableSticker(drawable);
+//                stickerView.addSticker(simulationData,drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
             } else {
                 // 图片不存在,可能被删除了
                 LogUtil.e(TAG, "图片不存在,可能被删除了");
@@ -1329,8 +1353,14 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 //                layoutParams.leftMargin = (int) (currentX - (currentStickerHeight / 2 - currentStickerWidth / 2));
                 layoutParams.leftMargin = (int) currentX;
                 layoutParams.topMargin = (int) currentY;
-                layoutParams.width = (int) currentStickerWidth;
-                layoutParams.height = (int) currentStickerHeight;
+                if (currentStickerWidth > currentStickerHeight) {
+                    layoutParams.width = (int) currentStickerWidth;
+                    layoutParams.height = (int) currentStickerWidth;
+                } else {
+                    layoutParams.leftMargin = (int) (currentX - ((currentStickerHeight - currentStickerWidth) / 2));
+                    layoutParams.width = (int) currentStickerHeight;
+                    layoutParams.height = (int) currentStickerHeight;
+                }
                 matchLayout.setLayoutParams(layoutParams);
 
                 matchLayout.setCurrentX(currentX);
@@ -1404,14 +1434,17 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 return;
             }
             // 将搭配图片布局的容器的高度/(植物高度 + 盆的高度 - 花盆的偏移量) = 每一份的高度,保留2为小数
-            double portionHeight = BigDecimal.valueOf((float) height / h).doubleValue();
+            double portionHeight = BigDecimal.valueOf((float) height / h).
+                    setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
 
             ViewGroup.LayoutParams plantImageViewParams = plantViewPager.getLayoutParams();
-            plantImageViewParams.height = (int) (portionHeight * (plantHeight));
+            plantImageViewParams.height = BigDecimal.valueOf((portionHeight * (plantHeight)))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
             plantViewPager.setLayoutParams(plantImageViewParams);
 
             ViewGroup.LayoutParams viewPagerParams = potViewPager.getLayoutParams();
-            viewPagerParams.height = (int) (portionHeight * (potHeight));
+            viewPagerParams.height = BigDecimal.valueOf((portionHeight * (potHeight)))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
             potViewPager.setLayoutParams(viewPagerParams);
         });
     }
@@ -1430,7 +1463,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void setCollocationContentPlantAndPot(MatchLayout matchLayout, HorizontalViewPager plantViewPager, HorizontalViewPager potViewPager,
                                                  double plantHeight, double potHeight,
-                                                 double plantOffsetRatio, double potOffsetRatio,double productWidth, double augmentedProductWidth) {
+                                                 double plantOffsetRatio, double potOffsetRatio, double productWidth, double augmentedProductWidth) {
         matchLayout.post(() -> {
             int height = matchLayout.getHeight();
             int witdh = matchLayout.getWidth();

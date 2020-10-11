@@ -13,6 +13,8 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -40,9 +42,14 @@ import com.ybw.yibai.module.user.UserPresenterImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.disposables.Disposable;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
@@ -222,15 +229,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
             }
         });
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(DesignActivity.this.getResources(), R.mipmap.share_img);
-//        Bitmap sendBitmap = Bitmap.createScaledBitmap(bitmap, 200, 200, true);
-//        bitmap.recycle();
-//        mediaMessage.thumbData = ImageDispose.Bitmap2Bytes(sendBitmap);
-//        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//        req.transaction = "";
-//        req.scene = SendMessageToWX.Req.WXSceneSession;
-//        req.message = mediaMessage;
-//        YiBaiApplication.getIWXAPI().sendReq(req);
     }
 
     @Override

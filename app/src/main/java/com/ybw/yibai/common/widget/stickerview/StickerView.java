@@ -1125,14 +1125,14 @@ public class StickerView extends FrameLayout {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                addStickerImmediately(null,sticker, x, y, xScale, yScale);
+                addStickerImmediately(null, sticker, x, y, xScale, yScale);
             }
         } else {
             if (0 == x && 0 == y) {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                post(() -> addStickerImmediately(null,sticker, x, y, xScale, yScale));
+                post(() -> addStickerImmediately(null, sticker, x, y, xScale, yScale));
             }
         }
         return this;
@@ -1171,7 +1171,7 @@ public class StickerView extends FrameLayout {
                 // 一开始默认添加在屏幕正中间
                 addStickerImmediately(sticker, BaseSticker.Position.CENTER);
             } else {
-                post(() -> addStickerImmediately(simulationData,sticker, x, y, xScale, yScale));
+                post(() -> addStickerImmediately(simulationData, sticker, x, y, xScale, yScale));
             }
         }
         return this;
@@ -1214,7 +1214,8 @@ public class StickerView extends FrameLayout {
      * @param xScale  X轴的缩放比例
      * @param yScale  Y轴的缩放比例
      */
-    protected void addStickerImmediately(SimulationData simulationData, @NonNull BaseSticker sticker, float x, float y, double xScale, double yScale) {
+    protected void addStickerImmediately(SimulationData simulationData, @NonNull BaseSticker sticker,
+                                         float x, float y, double xScale, double yScale) {
         LogUtil.e(TAG, "贴纸左上角距离屏幕左上角X轴的距离: " + x);
         LogUtil.e(TAG, "贴纸左上角距离屏幕左上角Y轴的距离: " + y);
         LogUtil.e(TAG, "X轴的缩放比例: " + xScale);
@@ -1226,7 +1227,13 @@ public class StickerView extends FrameLayout {
 //        sticker.getMatrix().setTranslate(x, y);
 //        sticker.getMatrix().postScale((float) scaleFactorWidth, (float) scaleFactorHeight, x, y);
 //        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
-
+//        double currentStickerWidth = simulationData.getWidth();
+//        double currentStickerHeight = simulationData.getHeight();
+//        float currentStickerX = x;
+//        if (currentStickerWidth > currentStickerHeight) {
+//        } else {
+//            currentStickerX = (float) (x - ((currentStickerHeight - currentStickerWidth) / 2));
+//        }
 
         setStickerPosition(sticker, x, y);
         /**
@@ -1238,6 +1245,8 @@ public class StickerView extends FrameLayout {
          * float py: Y轴缩放中心点
          */
         sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
+
+//        sticker.getMatrix().postTranslate(x, y);
 
         mHandlingSticker = sticker;
         mStickerList.add(sticker);

@@ -1,5 +1,6 @@
 package com.ybw.yibai.module.sceneedit;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -289,7 +290,7 @@ public interface SceneEditContract {
          * @param stickerView        贴纸View
          * @param simulationDataList 用户保存的"模拟搭配产品"数据
          */
-        void addSticker(StickerView stickerView, List<SimulationData> simulationDataList);
+        void addSticker(int stickerWidth,int stickerHeight, StickerView stickerView, List<SimulationData> simulationDataList);
 
         /**
          * 删除贴纸数据

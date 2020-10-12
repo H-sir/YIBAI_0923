@@ -849,9 +849,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                     yy = myScale;
                 }
 
-                float i1 = Math.abs((intrinsicWidth1 - stickerWidth)) / 2;
-                float i2 = Math.abs((intrinsicHeight1 - stickerHeight)) / 2;
-                stickerView.addSticker(simulationData, drawableSticker, x - i1, y - i2,
+                stickerView.addSticker(simulationData, drawableSticker, x , y,
                         xx,
                         yy,
                         i, finallySkuId, pottedName, pottedHeight);

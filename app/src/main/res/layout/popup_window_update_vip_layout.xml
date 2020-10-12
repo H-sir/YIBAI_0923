@@ -16,10 +16,10 @@
             android:layout_height="360dp">
 
             <ImageView
+                android:id="@+id/update_vip_img"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@null"
-                android:src="@mipmap/update_vip" />
+                android:contentDescription="@null" />
 
             <ImageView
                 android:id="@+id/updateImmediatelyImageView"
@@ -29,7 +29,8 @@
                 android:layout_marginTop="275dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@null"
-                android:src="@mipmap/update_immediately" />
+                android:src="@mipmap/update_immediately"
+                android:visibility="gone" />
 
         </RelativeLayout>
 

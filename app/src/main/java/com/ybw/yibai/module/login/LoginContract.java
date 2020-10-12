@@ -58,6 +58,7 @@ public interface LoginContract {
          * @param code 微信给的code
          */
         void wechatLogin(String code);
+
     }
 
     interface LoginModel {

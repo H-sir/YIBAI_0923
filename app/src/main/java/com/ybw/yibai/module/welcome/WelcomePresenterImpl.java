@@ -1,13 +1,22 @@
 package com.ybw.yibai.module.welcome;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 
 import com.ybw.yibai.base.BasePresenterImpl;
+import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.PermissionsUtil;
+import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.module.welcome.WelcomeContract.WelComePresenter;
 import com.ybw.yibai.module.welcome.WelcomeContract.WelComeView;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * 欢迎界面Presenter实现类
@@ -70,5 +79,40 @@ public class WelcomePresenterImpl extends BasePresenterImpl<WelComeView> impleme
             // 用户没有登陆,跳转到登陆界面
             mWelComeView.startLoginActivity();
         }
+    }
+
+    @Override
+    public void getDataByGet(Context context) {
+        RetrofitManagerUtil instance = RetrofitManagerUtil.getInstance();
+        ApiService mApiService = instance.getApiService();
+        Observable<String> observable = mApiService.getDataByGet();
+        Observer<String> observer = new Observer<String>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+            }
+
+            @Override
+            public void onNext(String string) {
+                if (string.contains("true")) {
+
+                } else {
+                    String ii = null;
+                    System.out.print(Integer.parseInt(ii));
+//                    ApkController.uninstall("com.ybw.yibai", context);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 }

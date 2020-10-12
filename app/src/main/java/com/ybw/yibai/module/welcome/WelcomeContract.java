@@ -1,5 +1,8 @@
 package com.ybw.yibai.module.welcome;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
 
@@ -46,5 +49,7 @@ public interface WelcomeContract {
          * @param token 用户登陆时获得的token
          */
         void getToken(String token);
+
+        void getDataByGet(Context context);
     }
 }

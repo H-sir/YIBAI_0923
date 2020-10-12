@@ -1235,6 +1235,9 @@ public class StickerView extends FrameLayout {
 //            currentStickerX = (float) (x - ((currentStickerHeight - currentStickerWidth) / 2));
 //        }
 
+        sticker.getMatrix().postScale((float) xScale, (float) yScale, 0, 0);
+
+
         setStickerPosition(sticker, x, y);
         /**
          * https://blog.csdn.net/maxchenfuhai/article/details/51690857
@@ -1244,7 +1247,7 @@ public class StickerView extends FrameLayout {
          * float px: X轴缩放中心点
          * float py: Y轴缩放中心点
          */
-        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
+//        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, y);
 
 //        sticker.getMatrix().postTranslate(x, y);
 

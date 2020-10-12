@@ -2,7 +2,12 @@ package com.ybw.yibai.module.main;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.LauncherApps;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.YiBaiApplication;
@@ -12,7 +17,9 @@ import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.bean.UserInfo.DataBean;
+import com.ybw.yibai.common.bean.VloeaBean;
 import com.ybw.yibai.common.interfaces.ApiService;
+import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
@@ -22,13 +29,25 @@ import com.ybw.yibai.module.main.MainContract.MainModel;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
@@ -112,6 +131,20 @@ public class MainModelImpl implements MainModel {
         }
     }
 
+    /**
+     * 统一为请求添加头信息
+     *
+     * @return
+     */
+    private Request.Builder addHeaders() {
+        Request.Builder builder = new Request.Builder()
+                .addHeader("accept", "application/json;charset=utf-8")
+                .addHeader("connection", "Keep-Alive")
+                .addHeader("Connection", "close")
+                .addHeader("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)")
+                .addHeader("Content-type", "application/json;charset=utf-8");
+        return builder;
+    }
 
     /**
      * 请求应用更新

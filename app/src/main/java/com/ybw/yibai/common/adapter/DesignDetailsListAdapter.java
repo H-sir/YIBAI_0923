@@ -65,8 +65,8 @@ public class DesignDetailsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         DesignDetails.DataBean.SchemelistBean schemelistBean = schemelistBeans.get(position);
         myViewHolder.mDesignDetailsName.setText(schemelistBean.getSchemeName());
-
-        ImageUtil.displayImage(mContext, myViewHolder.mDesignBg, schemelistBean.getBgpic());
+        if (schemelistBean.getBgpic() != null && !schemelistBean.getBgpic().isEmpty())
+            ImageUtil.displayImage(mContext, myViewHolder.mDesignBg, schemelistBean.getBgpic());
 
         mDesignListAdapter = new com.ybw.yibai.common.widget.horizontal.adatper.BaseAdapter<>();
         myViewHolder.mDesignDetailsListView.setAdapter(mDesignListAdapter);

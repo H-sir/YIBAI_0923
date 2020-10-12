@@ -298,9 +298,23 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView> implements Ma
             View view = activity.getLayoutInflater().inflate(R.layout.popup_window_update_vip_layout, null);
             mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
+            ImageView updateVipImg = view.findViewById(R.id.update_vip_img);
             ImageView updateImmediatelyImageView = view.findViewById(R.id.updateImmediatelyImageView);
             ImageView closeImageView = view.findViewById(R.id.closeImageView);
 
+            ImageUtil.displayImage(activity.getApplicationContext(), updateVipImg, "http://f.100ybw.com/images/updatevip.png");
+            updateVipImg.setOnClickListener(v -> {
+                SharedPreferences mSharedPreferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                String userVipUrl = mSharedPreferences.getString(USER_VIP_URL, null);
+                if (!TextUtils.isEmpty(userVipUrl)) {
+                    Intent intent = new Intent(activity, BrowserActivity.class);
+                    intent.putExtra(URL, userVipUrl);
+                    activity.startActivity(intent);
+                }
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+            });
             updateImmediatelyImageView.setOnClickListener(v -> {
                 SharedPreferences mSharedPreferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
                 String userVipUrl = mSharedPreferences.getString(USER_VIP_URL, null);

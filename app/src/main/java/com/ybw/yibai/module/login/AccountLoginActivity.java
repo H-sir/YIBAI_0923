@@ -136,6 +136,7 @@ public class AccountLoginActivity extends BaseActivity implements
 
         initLoginButtonClickEvent();
         initWeChatImageViewClickEvent();
+
     }
 
     @Override

@@ -8,6 +8,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.LoginInfo;
 import com.ybw.yibai.common.bean.LoginInfo.DataBean;
 import com.ybw.yibai.common.bean.VerificationCode;
+import com.ybw.yibai.common.bean.VloeaBean;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;

@@ -3,6 +3,7 @@ package com.ybw.yibai.module.scene;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -23,7 +24,10 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1291,14 +1295,15 @@ public class SceneActivity extends BaseActivity implements SceneView,
             return;
         }
 
+        List<PlacementQrQuotationList.DataBean.ListBean> list = data.getList();
+        if (null == list || list.size() == 0) {
+            showBottomDialog();
+            return;
+        }
+
         mPlacementList.clear();
         mRecommendedMatchTypeViewPager.removeAllViews();
         mRecommendedMatchBottomSheetBehavior.setState(STATE_EXPANDED);
-
-        List<PlacementQrQuotationList.DataBean.ListBean> list = data.getList();
-        if (null == list || list.size() == 0) {
-            return;
-        }
         mPlacementList.addAll(list);
         List<List<PlacementQrQuotationList.DataBean.ListBean>> lists = splitList(list, 20);
         if (null == lists || lists.size() == 0) {
@@ -1315,6 +1320,30 @@ public class SceneActivity extends BaseActivity implements SceneView,
         initDots(this, mRecommendedMatchDotLinearLayout, lists.size());
         FragmentManager manager = getSupportFragmentManager();
         mRecommendedMatchTypeViewPager.setAdapter(new FragmentPagerAdapter(manager, fragment));
+    }
+
+    private void showBottomDialog() {
+        //1、使用Dialog、设置style
+        final Dialog dialog = new Dialog(this, R.style.DialogTheme);
+        //2、设置布局
+        View view = View.inflate(this, R.layout.dialog_placement_layout, null);
+        dialog.setContentView(view);
+
+        Window window = dialog.getWindow();
+        //设置弹出位置
+        window.setGravity(Gravity.BOTTOM);
+        //设置弹出动画
+        window.setWindowAnimations(R.style.main_menu_animStyle);
+        //设置对话框大小
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.show();
+        ((TextView) dialog.findViewById(R.id.placementName)).setText(YiBaiApplication.getRoleName());
+        dialog.findViewById(R.id.placementNull).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 
     /**

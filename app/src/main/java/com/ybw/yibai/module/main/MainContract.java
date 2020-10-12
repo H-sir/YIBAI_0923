@@ -137,6 +137,7 @@ public interface MainContract {
          * @param rootLayout View根布局
          */
         void displayUpdateVipPopupWindow(View rootLayout);
+
     }
 
     interface MainModel {
@@ -173,6 +174,7 @@ public interface MainContract {
          * @param callBack 回调方法
          */
         void getProductScreeningParam(CallBack callBack);
+
     }
 
     interface CallBack extends BaseCallBack {

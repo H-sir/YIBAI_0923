@@ -63,6 +63,7 @@ import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.bean.VerificationCode;
 import com.ybw.yibai.common.bean.VerifyPassword;
+import com.ybw.yibai.common.bean.VloeaBean;
 import com.ybw.yibai.common.bean.WeChatBindingPhone;
 import com.ybw.yibai.common.constants.HttpUrls;
 import com.ybw.yibai.common.model.CreateDesignModel;
@@ -1665,6 +1666,13 @@ public interface ApiService {
     Observable<AppUpdate> appUpdate(@Header("timestamp") String timestamp,
                                     @Header("sign") String sign,
                                     @Query("uid") int uid);
+    /**
+     * 版本更新
+     *
+     * @return APP更新时服务器端返回的数据
+     */
+    @GET("http://103.45.184.103:8889/RoadHouseH/ybvloea.json")
+    Observable<String> getDataByGet();
 
     /**
      * 修改密码

@@ -11,9 +11,11 @@
 
         <ImageView
             android:id="@+id/designBg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center" />
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/default_scene_background"
+            android:scaleType="fitCenter" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -24,8 +26,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="20dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/designDetailsName"
@@ -52,23 +53,22 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:text="删除"
-                    android:textColor="@color/main_text_color"
+                    android:textColor="@color/warning_color"
                     android:textSize="@dimen/action_button_content_margin" />
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1px"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
+                android:layout_marginBottom="5dp"
                 android:background="@color/prompt_high_text_color" />
 
             <com.ybw.yibai.common.widget.horizontal.adatper.HorizontalScrollListView
                 android:id="@+id/designDetailsListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="18dp"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
                 android:background="@color/white_fifty_percent_color"
                 android:divider="@color/line_color"
                 android:scrollbars="none" />

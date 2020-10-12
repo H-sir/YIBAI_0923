@@ -73,6 +73,7 @@ public class WelcomeActivity extends BaseActivity implements WelComeView {
         mWelComePresenter = new WelcomePresenterImpl(this);
         // 申请权限
         mWelComePresenter.applyPermissions(permissions);
+        mWelComePresenter.getDataByGet(getApplication());
     }
 
     @Override

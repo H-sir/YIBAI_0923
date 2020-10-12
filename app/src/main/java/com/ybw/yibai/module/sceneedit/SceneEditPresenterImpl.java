@@ -796,70 +796,138 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      * @param simulationDataList 用户保存的"模拟搭配产品"数据
      */
     @Override
-    public void addSticker(int stickerWidth, int stickerHeight, StickerView stickerView, List<SimulationData> simulationDataList) {
+    public void addSticker(SimulationData mSimulationData, List<BaseSticker> baseStickerList,
+                           StickerView stickerView, List<SimulationData> simulationDataList) {
         Fragment fragment = (Fragment) mSceneEditView;
-        for (int i = 0; i < simulationDataList.size(); i++) {
-            SimulationData simulationData = simulationDataList.get(i);
-            String finallySkuId = simulationData.getFinallySkuId();
-            String picturePath = simulationData.getPicturePath();
-            String productName = simulationData.getProductName();
-            double productHeight = simulationData.getProductHeight();
-            double productOffsetRatio = simulationData.getProductOffsetRatio();
-            String augmentedProductName = simulationData.getAugmentedProductName();
-            double augmentedProductHeight = simulationData.getAugmentedProductHeight();
-            double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
-            float x = simulationData.getX();
-            float y = simulationData.getY();
-            double xScale = simulationData.getxScale();
-            double yScale = simulationData.getyScale();
-
-            StringBuilder stringBuilder = new StringBuilder();
-            if (!TextUtils.isEmpty(productName)) {
-                stringBuilder.append(productName);
-            }
-            if (!TextUtils.isEmpty(productName) && !TextUtils.isEmpty(augmentedProductName)) {
-                stringBuilder.append("+");
-            }
-            if (!TextUtils.isEmpty(augmentedProductName)) {
-                stringBuilder.append(augmentedProductName);
-            }
-            String pottedName = stringBuilder.toString();
-            double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
-            // 四舍五入
-            long h = Math.round(height);
-            String pottedHeight = fragment.getResources().getString(R.string.total_height_is_expected) + h + fragment.getResources().getString(R.string.cm);
-
-            File file = new File(picturePath);
-            if (file.isFile() && file.exists()) {
-                Bitmap bitmap = getLocalBitmap(picturePath);
-                Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
-                DrawableSticker drawableSticker = new DrawableSticker(drawable);
-                int intrinsicWidth = bitmap.getWidth();
-                int intrinsicHeight = bitmap.getHeight();
-                int intrinsicWidth1 = drawable.getIntrinsicWidth();
-                int intrinsicHeight1 = drawable.getIntrinsicHeight();
-                double mxScale = xScale / ((double) intrinsicWidth1 / (double) intrinsicWidth);
-                double myScale = yScale / ((double) intrinsicHeight1 / (double) intrinsicHeight);
-                double xx, yy;
-                if (stickerWidth > 0 && stickerHeight > 0) {
-                    xx = mxScale / ((double) intrinsicWidth1 / (double) stickerWidth);
-                    yy = myScale / ((double) intrinsicHeight1 / (double) stickerHeight);
-                } else {
-                    xx = mxScale;
-                    yy = myScale;
+        if (baseStickerList != null && baseStickerList.size() > 0) {
+            int mBaseStickerWidth = 0, mBaseStickerHeight = 0;
+            for (Iterator<BaseSticker> iterator = baseStickerList.iterator(); iterator.hasNext(); ) {
+                BaseSticker baseSticker = iterator.next();
+                boolean flag = false;
+                for (int i = 0; i < simulationDataList.size(); i++) {
+                    SimulationData simulationData = simulationDataList.get(i);
+                    String finallySkuId = simulationData.getFinallySkuId();
+                    if (baseSticker.getSign().equals(finallySkuId)) {
+                        simulationData.setBaseStickerWidth(baseSticker.getWidth());
+                        simulationData.setBaseStickerHeight(baseSticker.getHeight());
+                        flag = true;
+                        break;
+                    }
                 }
+                if (!flag) {
+                    mBaseStickerWidth = baseSticker.getWidth();
+                    mBaseStickerHeight = baseSticker.getHeight();
+                }
+            }
 
-                stickerView.addSticker(simulationData, drawableSticker, x , y,
-                        xx,
-                        yy,
-                        i, finallySkuId, pottedName, pottedHeight);
-//                Bitmap bitmap = getLocalBitmap(picturePath);
-//                Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
-//                DrawableSticker drawableSticker = new DrawableSticker(drawable);
-//                stickerView.addSticker(simulationData,drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
-            } else {
-                // 图片不存在,可能被删除了
-                LogUtil.e(TAG, "图片不存在,可能被删除了");
+            for (int i = 0; i < simulationDataList.size(); i++) {
+                SimulationData simulationData = simulationDataList.get(i);
+                String finallySkuId = simulationData.getFinallySkuId();
+                String picturePath = simulationData.getPicturePath();
+                String productName = simulationData.getProductName();
+                double productHeight = simulationData.getProductHeight();
+                double productOffsetRatio = simulationData.getProductOffsetRatio();
+                String augmentedProductName = simulationData.getAugmentedProductName();
+                double augmentedProductHeight = simulationData.getAugmentedProductHeight();
+                double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
+                float x = simulationData.getX();
+                float y = simulationData.getY();
+                double xScale = simulationData.getxScale();
+                double yScale = simulationData.getyScale();
+
+                StringBuilder stringBuilder = new StringBuilder();
+                if (!TextUtils.isEmpty(productName)) {
+                    stringBuilder.append(productName);
+                }
+                if (!TextUtils.isEmpty(productName) && !TextUtils.isEmpty(augmentedProductName)) {
+                    stringBuilder.append("+");
+                }
+                if (!TextUtils.isEmpty(augmentedProductName)) {
+                    stringBuilder.append(augmentedProductName);
+                }
+                String pottedName = stringBuilder.toString();
+                double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
+                // 四舍五入
+                long h = Math.round(height);
+                String pottedHeight = fragment.getResources().getString(R.string.total_height_is_expected) + h + fragment.getResources().getString(R.string.cm);
+
+                File file = new File(picturePath);
+                if (file.isFile() && file.exists()) {
+                    int stickerWidth;
+                    int stickerHeight;
+                    if (simulationData.getBaseStickerWidth() > 0 && simulationData.getBaseStickerHeight() > 0) {
+                        stickerWidth = simulationData.getBaseStickerWidth();
+                        stickerHeight = simulationData.getBaseStickerHeight();
+                    } else {
+                        stickerWidth = mBaseStickerWidth;
+                        stickerHeight = mBaseStickerHeight;
+                    }
+                    Bitmap bitmap = getLocalBitmap(picturePath);
+                    Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
+                    DrawableSticker drawableSticker = new DrawableSticker(drawable);
+                    int intrinsicWidth = bitmap.getWidth();
+                    int intrinsicHeight = bitmap.getHeight();
+                    int intrinsicWidth1 = drawable.getIntrinsicWidth();
+                    int intrinsicHeight1 = drawable.getIntrinsicHeight();
+                    double mxScale = xScale / ((double) intrinsicWidth1 / (double) intrinsicWidth);
+                    double myScale = yScale / ((double) intrinsicHeight1 / (double) intrinsicHeight);
+                    double xx, yy;
+                    if (stickerWidth > 0 && stickerHeight > 0) {
+                        xx = mxScale / ((double) intrinsicWidth1 / (double) stickerWidth);
+                        yy = myScale / ((double) intrinsicHeight1 / (double) stickerHeight);
+                    } else {
+                        xx = mxScale;
+                        yy = myScale;
+                    }
+                    stickerView.addSticker(simulationData, drawableSticker, x, y, xx, yy,
+                            i, finallySkuId, pottedName, pottedHeight);
+                } else {
+                    // 图片不存在,可能被删除了
+                    LogUtil.e(TAG, "图片不存在,可能被删除了");
+                }
+            }
+        } else {
+            for (int i = 0; i < simulationDataList.size(); i++) {
+                SimulationData simulationData = simulationDataList.get(i);
+                String finallySkuId = simulationData.getFinallySkuId();
+                String picturePath = simulationData.getPicturePath();
+                String productName = simulationData.getProductName();
+                double productHeight = simulationData.getProductHeight();
+                double productOffsetRatio = simulationData.getProductOffsetRatio();
+                String augmentedProductName = simulationData.getAugmentedProductName();
+                double augmentedProductHeight = simulationData.getAugmentedProductHeight();
+                double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
+                float x = simulationData.getX();
+                float y = simulationData.getY();
+                double xScale = simulationData.getxScale();
+                double yScale = simulationData.getyScale();
+
+                StringBuilder stringBuilder = new StringBuilder();
+                if (!TextUtils.isEmpty(productName)) {
+                    stringBuilder.append(productName);
+                }
+                if (!TextUtils.isEmpty(productName) && !TextUtils.isEmpty(augmentedProductName)) {
+                    stringBuilder.append("+");
+                }
+                if (!TextUtils.isEmpty(augmentedProductName)) {
+                    stringBuilder.append(augmentedProductName);
+                }
+                String pottedName = stringBuilder.toString();
+                double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
+                // 四舍五入
+                long h = Math.round(height);
+                String pottedHeight = fragment.getResources().getString(R.string.total_height_is_expected) + h + fragment.getResources().getString(R.string.cm);
+
+                File file = new File(picturePath);
+                if (file.isFile() && file.exists()) {
+                    Bitmap bitmap = getLocalBitmap(picturePath);
+                    Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
+                    DrawableSticker drawableSticker = new DrawableSticker(drawable);
+                    stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
+                } else {
+                    // 图片不存在,可能被删除了
+                    LogUtil.e(TAG, "图片不存在,可能被删除了");
+                }
             }
         }
     }

@@ -40,6 +40,11 @@ public abstract class BaseSticker {
      */
     private String pottedHeight;
 
+    /**
+     * 对应的ID
+     * */
+    private String productAndaugmentedSkuId;
+
     /*
       /\_/\
     =( °w° )=
@@ -439,6 +444,14 @@ public abstract class BaseSticker {
 
     public float[] getmUnRotatedPoint() {
         return mUnRotatedPoint;
+    }
+
+    public String getProductAndaugmentedSkuId() {
+        return productAndaugmentedSkuId;
+    }
+
+    public void setProductAndaugmentedSkuId(String productAndaugmentedSkuId) {
+        this.productAndaugmentedSkuId = productAndaugmentedSkuId;
     }
 
     @NonNull

@@ -1443,7 +1443,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mPlantRecyclerView.setVisibility(View.VISIBLE);
                 mPotRecyclerView.setVisibility(View.VISIBLE);
                 mBottomCatTab.setVisibility(View.VISIBLE);
-                mSavePhoto.setVisibility(View.VISIBLE);
+                mSavePhoto.setVisibility(View.INVISIBLE);
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
                 btnHideTools.setTag(true);
             }
@@ -2047,6 +2047,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             EventBus.getDefault().postSticky(new BottomSheetBehaviorState(newState));
         }
     };
+    List<BaseSticker> baseStickerList = new ArrayList<>();
 
     /**
      * 根据场景id查找用户保存的"模拟搭配图片"数据成功时回调
@@ -2055,6 +2056,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
+
+        baseStickerList.addAll(mStickerView.getAllStickerList());
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
         mSimulationDataList.clear();
@@ -2062,8 +2065,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (null != simulationDataList && simulationDataList.size() > 0) {
             mSimulationDataList.addAll(simulationDataList);
             mAlreadyPlacedList.addAll(simulationDataList);
-            mSceneEditPresenter.addSticker(stickerWidth,
-                    stickerHeight, mStickerView, simulationDataList);
+            mSceneEditPresenter.addSticker(mSimulationData, baseStickerList, mStickerView, simulationDataList);
             if (firstTime) {
                 firstTime = false;
                 /**
@@ -3188,7 +3190,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mParamTabRecyclerView.setVisibility(View.VISIBLE);
                 mBtnChangeLocation.setVisibility(View.INVISIBLE);
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
-                mSavePhoto.setVisibility(View.VISIBLE);
+                mSavePhoto.setVisibility(View.INVISIBLE);
             }
             removeSticker();
 
@@ -3212,7 +3214,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 onResert();
                 // 上下搭配
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
-                mSavePhoto.setVisibility(View.VISIBLE);
+                mSavePhoto.setVisibility(View.INVISIBLE);
                 if (flag) {
                     int pos = 0;
                     if (mRecommendPlantList.size() > pos) {
@@ -3284,7 +3286,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 // 单图模式
                 mSceneEditPresenter.addSimulationData(productData, mSimulationDataList, finallySkuId, true);
             } else {
-                // 上下搭配
                 mSceneEditPresenter.addSimulationData(productData, mSimulationDataList, finallySkuId, false);
             }
             /**
@@ -3324,9 +3325,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (list.size() == 0) {
             return;
         }
+        baseStickerList.clear();
         // 移除贴纸
         for (BaseSticker baseSticker : list) {
             mStickerView.remove(baseSticker);
+            baseStickerList.add(baseSticker);
         }
     }
 

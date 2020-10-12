@@ -269,8 +269,25 @@ public class SimulationData implements Serializable {
      */
     private int number;
 
+    private int baseStickerWidth;
+    private int baseStickerHeight;
     /*----------*/
 
+    public int getBaseStickerWidth() {
+        return baseStickerWidth;
+    }
+
+    public void setBaseStickerWidth(int baseStickerWidth) {
+        this.baseStickerWidth = baseStickerWidth;
+    }
+
+    public int getBaseStickerHeight() {
+        return baseStickerHeight;
+    }
+
+    public void setBaseStickerHeight(int baseStickerHeight) {
+        this.baseStickerHeight = baseStickerHeight;
+    }
 
 //    public double getScaleFactorWidth() {
 //        return scaleFactorWidth;

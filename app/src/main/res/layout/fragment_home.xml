@@ -49,7 +49,7 @@
                 android:drawableTop="@mipmap/my_design"
                 android:drawablePadding="8dp"
                 android:gravity="center"
-                android:text="@string/my_design"
+                android:text="我的设计"
                 android:textColor="@color/main_text_color"
                 android:textSize="10sp"
                 android:textStyle="bold"

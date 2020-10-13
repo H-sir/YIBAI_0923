@@ -11,6 +11,7 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.Recommend;
+import com.ybw.yibai.common.bean.RecommendBean;
 import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.module.imagecontrast.ImageContrastContract.CallBack;
@@ -80,6 +81,11 @@ public class ImageContrastPresenterImpl extends BasePresenterImpl<ImageContrastV
      */
     @Override
     public void onGetRecommendSuccess(Recommend recommend) {
+        mImageContrastView.onGetRecommendSuccess(recommend);
+    }
+
+    @Override
+    public void onGetRecommendSuccess(RecommendBean recommend) {
         mImageContrastView.onGetRecommendSuccess(recommend);
     }
 

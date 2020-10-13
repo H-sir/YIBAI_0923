@@ -2,6 +2,7 @@ package com.ybw.yibai.module.details;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
+import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -53,6 +55,8 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_LIST;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_NAME;
 import static com.ybw.yibai.common.constants.Preferences.SERVICE;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 
 /**
@@ -423,6 +427,12 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
 
         // 看设计
         if (id == R.id.lookDesignTextView) {
+            SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+            if (1 == vipLevel) {
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                return;
+            }
             ProductData productData = new ProductData(
                     productSkuId,
                     productName,

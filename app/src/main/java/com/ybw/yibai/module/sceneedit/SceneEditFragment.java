@@ -3211,6 +3211,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             } else {
                 onResert();
                 // 上下搭配
+                btnHideTools.setVisibility(View.VISIBLE);
                 mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
                 mSavePhoto.setVisibility(View.VISIBLE);
                 if (flag) {
@@ -3251,6 +3252,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             //mPotClassSelectTextView.setVisibility(View.GONE);
             mSavePhoto.setVisibility(View.GONE);
             mMultipleImageContrastTextView.setVisibility(View.GONE);
+            btnHideTools.setVisibility(View.GONE);
             mProductTypeBottomSheetBehavior.setState(STATE_HIDDEN);
             ProductData productData = new ProductData(
                     productSkuId,

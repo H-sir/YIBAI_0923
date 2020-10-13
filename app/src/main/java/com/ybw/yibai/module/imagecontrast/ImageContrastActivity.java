@@ -19,6 +19,7 @@ import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.Recommend.DataBean;
+import com.ybw.yibai.common.bean.RecommendBean;
 import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -211,6 +212,7 @@ public class ImageContrastActivity extends BaseActivity implements
         mImageContrastPresenter = new ImageContrastPresenterImpl(this);
         mImageContrastPresenter.getRecommend(cateCode, productSkuId, augmentedProductSkuId,
                 spec, potTypeId, null, null, null, null);
+
         mBackImageView.setOnClickListener(this);
         mComparisonTextView.setOnClickListener(this);
         mChangeBatchTextView.setOnClickListener(this);
@@ -290,6 +292,11 @@ public class ImageContrastActivity extends BaseActivity implements
         // mImageContrastPresenter.addSimulationData(mSimulationData, listBean, picturePath);
     }
 
+    @Override
+    public void onGetRecommendSuccess(RecommendBean recommend) {
+
+    }
+
     /**
      * 换搭配获取植物花盆列表成功时回调
      *
@@ -297,6 +304,43 @@ public class ImageContrastActivity extends BaseActivity implements
      */
     @Override
     public void onGetRecommendSuccess(Recommend recommend) {
+//        if (CODE_SUCCEED != recommend.getCode()) {
+//            MessageUtil.showMessage(recommend.getMsg());
+//            return;
+//        }
+//        DataBean data = recommend.getData();
+//        if (null == data) {
+//            return;
+//        }
+//        List<ListBean> list = new ArrayList<>();
+//        if (data.getPot() != null) {
+//            list = data.getPot().getList();
+//            cateCode = PLANT;
+//        }
+//        if (data.getPlant() != null) {
+//            list = data.getPlant().getList();
+//            cateCode = POT;
+//        }
+//        if (null == list || list.size() == 0) {
+//            return;
+//        }
+//        mList.clear();
+//        if (PLANT.equals(cateCode)) {
+//            mPlantInfo.setCategoryCode(PLANT);
+//            mList.add(mPlantInfo);
+//        } else {
+//            mPotInfo.setCategoryCode(POT);
+//            mList.add(mPotInfo);
+//        }
+//        for (ListBean listBean : list) {
+//            if (PLANT.equals(cateCode)) {
+//                listBean.setCategoryCode(PLANT);
+//            } else {
+//                listBean.setCategoryCode(POT);
+//            }
+//        }
+//        mList.addAll(list);
+//        mAdapter.notifyDataSetChanged();
         if (CODE_SUCCEED != recommend.getCode()) {
             MessageUtil.showMessage(recommend.getMsg());
             return;
@@ -305,19 +349,12 @@ public class ImageContrastActivity extends BaseActivity implements
         if (null == data) {
             return;
         }
-        List<ListBean> list = new ArrayList<>();
-        if (data.getPot() != null) {
-            list = data.getPot().getList();
-            cateCode = PLANT;
-        }
-        if (data.getPlant() != null) {
-            list = data.getPlant().getList();
-            cateCode = POT;
-        }
+        List<ListBean> list = data.getList();
         if (null == list || list.size() == 0) {
             return;
         }
         mList.clear();
+        cateCode = data.getCateCode();
         if (PLANT.equals(cateCode)) {
             mPlantInfo.setCategoryCode(PLANT);
             mList.add(mPlantInfo);

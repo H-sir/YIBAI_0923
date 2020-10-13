@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.design;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
@@ -28,6 +29,7 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
+import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -54,6 +56,8 @@ import io.reactivex.disposables.Disposable;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 
 /**
  * <pre>
@@ -387,6 +391,12 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 onBackPressed();
                 break;
             case R.id.createDesign:
+                SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+                if (1 == vipLevel) {
+                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                    return;
+                }
                 if (sceneInfo != null) {
                     existSceneInfoPopupWindow(null, sceneInfo);
                 } else {

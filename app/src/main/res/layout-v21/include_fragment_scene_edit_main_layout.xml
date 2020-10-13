@@ -206,39 +206,40 @@
         app:scrollbars="none" />
 
     <TextView
-        android:id="@+id/btnHideTools"
+        android:id="@+id/multipleImageContrastTextView"
         android:layout_width="92dp"
         android:layout_height="32dp"
         android:layout_above="@+id/bonsaiEditLayout"
         android:layout_marginStart="5dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/background_company_name"
+        android:background="@drawable/background_customer_while_s1"
         android:gravity="center"
         android:paddingEnd="4dp"
-        android:text="隐藏工具"
+        android:text="@string/multiple_image_contrast"
         android:textColor="@color/main_text_color"
         android:textSize="10sp"
         android:visibility="gone" />
+        android:textSize="10sp" />
 
-    <TextView
-        android:id="@+id/savePhoto"
+    <ImageView
+        android:id="@+id/btnHideTools"
         android:layout_width="92dp"
         android:layout_height="32dp"
         android:layout_above="@+id/bonsaiEditLayout"
+        android:layout_alignParentEnd="true"
         android:layout_centerInParent="true"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:background="@drawable/background_company_name"
+        android:src="@mipmap/hide_tools_img"
+        android:background="@drawable/background_customer_while_s1"
         android:gravity="center"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:text="保存图片"
+        android:padding="8dp"
+        android:text=""
         android:textColor="@color/main_text_color"
-        android:textSize="10sp"
-        android:visibility="gone" />
+        android:textSize="10sp" />
 
     <TextView
-        android:id="@+id/multipleImageContrastTextView"
+        android:id="@+id/savePhoto"
         android:layout_width="92dp"
         android:layout_height="32dp"
         android:layout_above="@+id/bonsaiEditLayout"
@@ -251,9 +252,10 @@
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         android:visibility="gone"
-        android:text="@string/multiple_image_contrast"
+        android:text="保存图片"
         android:textColor="@color/main_text_color"
         android:textSize="10sp"/>
+
 
     <include layout="@layout/fragment_scene_edit_main_layout_tabs" />
 

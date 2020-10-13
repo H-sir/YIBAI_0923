@@ -223,8 +223,8 @@
     <string name="month_rent_price">月租价</string>
     <string name="trade_price">进货价</string>
     <string name="similar_recommendation">相似推荐</string>
-    <string name="look_design">看设计</string>
-    <string name="replace_collocation">换搭配</string>
+    <string name="look_design">查看设计</string>
+    <string name="replace_collocation">更换搭配</string>
     <string name="join_photo_album">加入相册</string>
     <string name="join_purchase">加入进货</string>
     <string name="join_preselection">加入预选</string>

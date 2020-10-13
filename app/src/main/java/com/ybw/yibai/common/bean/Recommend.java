@@ -1,5 +1,7 @@
 package com.ybw.yibai.common.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 /**
@@ -39,9 +41,45 @@ public class Recommend {
 
     public static class DataBean {
 
+        @SerializedName("count") private int count;
+        @SerializedName("cate_code") private String cateCode;
+        @SerializedName("sql") private String sql;
+        @SerializedName("list") private List<ListBean> list;
         private PlantBean plant;
         private PotBean pot;
         private int specTypeId;
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+
+        public String getCateCode() {
+            return cateCode;
+        }
+
+        public void setCateCode(String cateCode) {
+            this.cateCode = cateCode;
+        }
+
+        public String getSql() {
+            return sql;
+        }
+
+        public void setSql(String sql) {
+            this.sql = sql;
+        }
+
+        public List<ListBean> getList() {
+            return list;
+        }
+
+        public void setList(List<ListBean> list) {
+            this.list = list;
+        }
 
         public int getSpecTypeId() {
             return specTypeId;

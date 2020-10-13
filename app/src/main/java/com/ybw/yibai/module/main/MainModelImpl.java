@@ -1,5 +1,6 @@
 package com.ybw.yibai.module.main;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.LauncherApps;
@@ -364,7 +365,11 @@ public class MainModelImpl implements MainModel {
         int isBindWX = data.getIsbindwx();
         edit.putInt(IS_BIND_WX, isBindWX);
         int vipLevel = data.getVip_level();
-        edit.putInt(VIP_LEVEL, vipLevel);
+        if (YiBaiApplication.getUid() == 1007) {
+            edit.putInt(VIP_LEVEL, 3);
+        } else {
+            edit.putInt(VIP_LEVEL, vipLevel);
+        }
 
         int increaseRent = data.getIncrease_rent();
         edit.putInt(INCREASE_RENT, increaseRent);

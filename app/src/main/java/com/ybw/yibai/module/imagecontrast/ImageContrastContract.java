@@ -8,6 +8,7 @@ import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.Recommend;
+import com.ybw.yibai.common.bean.RecommendBean;
 import com.ybw.yibai.common.bean.SimulationData;
 
 /**
@@ -26,6 +27,13 @@ public interface ImageContrastContract {
          * @param recommend 植物花盆列表
          */
         void onGetRecommendSuccess(Recommend recommend);
+
+        /**
+         * 换搭配获取植物花盆列表成功时回调
+         *
+         * @param recommend 植物花盆列表
+         */
+        void onGetRecommendSuccess(RecommendBean recommend);
 
         /**
          * 在PopupWindow里面的RadioButton被选中时回调
@@ -116,6 +124,13 @@ public interface ImageContrastContract {
          * @param recommend 植物花盆列表
          */
         void onGetRecommendSuccess(Recommend recommend);
+
+        /**
+         * 换搭配获取植物花盆列表成功时回调
+         *
+         * @param recommend 植物花盆列表
+         */
+        void onGetRecommendSuccess(RecommendBean recommend);
 
         /**
          * 添加到模拟列表操作的结果

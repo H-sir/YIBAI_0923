@@ -49,6 +49,7 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.AnimationUtil.CustomTransformer;
 import com.ybw.yibai.common.utils.DensityUtil;
+import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.EncryptionUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
@@ -112,6 +113,7 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_NAME;
 import static com.ybw.yibai.common.constants.Preferences.TYPE;
 import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.utils.AnimationUtil.zoomAnimation;
 
 /**
@@ -503,6 +505,12 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
 
         // 开始设计
         if (id == R.id.startDesignTextView) {
+            SharedPreferences preferences = mContext.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+            if (1 == vipLevel) {
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getActivity(),mRootLayout);
+                return;
+            }
             Intent intent = new Intent(mContext, SceneActivity.class);
             intent.putExtra("location",mLocationTextView.getText().toString());
             startActivity(intent);

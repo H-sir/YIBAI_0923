@@ -2,6 +2,7 @@ package com.ybw.yibai.module.main;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,7 @@ import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.classs.MainPopupMenu;
+import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.DownloadApkUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.module.home.HomeFragment;
@@ -45,6 +47,8 @@ import java.util.List;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_PERMISSIONS_CODE;
 import static com.ybw.yibai.common.constants.Preferences.FILE_PATH;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.utils.OtherUtil.transparentStatusBar;
 
 /**
@@ -229,6 +233,12 @@ public class MainActivity extends BaseActivity implements MainView,
         int id = v.getId();
 
         if (id == R.id.centreLayout) {
+            SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+            if (1 == vipLevel) {
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                return;
+            }
             Intent intent = new Intent(this, StartDesignActivity.class);
             startActivity(intent);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

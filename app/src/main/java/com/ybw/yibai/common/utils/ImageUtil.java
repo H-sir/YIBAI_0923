@@ -888,8 +888,8 @@ public class ImageUtil {
         // 第一个Bitmap向下的偏移量
         int plantOffset = 0;
         if (0 != plantOffsetRatio) {
-            plantOffset = (int) new BigDecimal((float) plantOffsetRatio * newSecondHeight / firstProportion)
-                    .setScale(0, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+            plantOffset = (int) new BigDecimal((float) plantOffsetRatio * newFirstHeight / firstProportion)
+                    .setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
         }
         newBitmapHeight = newFirstHeight + newSecondHeight - potOffset - plantOffset;
         Bitmap newBitmap = Bitmap.createBitmap(newBitmapWidth, newBitmapHeight, Bitmap.Config.ARGB_8888);
@@ -948,7 +948,6 @@ public class ImageUtil {
         } else {
             canvas.drawBitmap(newFirstBitmap, 0, 0, null);
         }
-
         return newBitmap;
     }
 

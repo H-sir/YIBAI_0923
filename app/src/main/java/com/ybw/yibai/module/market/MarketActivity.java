@@ -77,47 +77,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
     @Override
     protected void initData() {
         mMarketPresenter = new MarketPresenterImpl(this);
-
-//        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-//        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1, VERTICAL);
-//        // 设置RecyclerView间距
-//        int gap = DensityUtil.dpToPx(getApplicationContext(), 8);
-//        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(1, gap, false);
-//        // 给RecyclerView设置布局管理器(必须设置)
-//        marketListView.setLayoutManager(manager);
-//        marketListView.addItemDecoration(decoration);
-//        marketListView.setNestedScrollingEnabled(false);
-//        marketListView.setHasFixedSize(false);
-
-
-//        mMarketListAdapter = new MarketListAdapter(this, gateInfoBeanList);
-//        marketListView.setAdapter(mMarketListAdapter);
-//        marketListView.setLayoutManager(new LinearLayoutManager(this));
-//        marketListView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-//        mMarketListAdapter = new MarketListAdapter(this, gateInfoBeanList);
-//        mMarketListAdapter.setOnLayoutListenter(new MarketListAdapter.OnLayoutListenter() {
-//            @Override
-//            public void layoutChild(MarketListAdapter.ParentViewHolder holder, int position) {
-//                for (int i = 0; i < position; i++) {
-//                    holder.gateSkuListView.setLayoutManager(new LinearLayoutManager(MarketActivity.this));
-//                    holder.gateSkuListView.addItemDecoration(new DividerItemDecoration(MarketActivity.this, LinearLayoutManager.VERTICAL));
-//                    MarketSkuListAdapter adapterChild = new MarketSkuListAdapter(MarketActivity.this, gateInfoBeanList.get(position).getGate_sku());
-//                    holder.gateSkuListView.setAdapter(adapterChild);
-//
-//                    adapterChild.setOnChildLayoutListenter(new MarketSkuListAdapter.OnChildLayoutListenter() {
-//                        @Override
-//                        public void layoutChildChild(MarketSkuListAdapter.ChildViewHolder holder, int positions) {
-//                            holder.gateSkuPicListView.setLayoutManager(new GridLayoutManager(MarketActivity.this, 4, LinearLayoutManager.VERTICAL, false));
-//                            holder.gateSkuPicListView.addItemDecoration(new DividerItemDecoration(MarketActivity.this, LinearLayoutManager.HORIZONTAL));
-//                            MarketSkuPicListAdapter childAdapterChild = new MarketSkuPicListAdapter(MarketActivity.this, gateInfoBeanList.get(position).getGate_sku().get(positions).getPic_arr());
-//                            holder.gateSkuPicListView.setAdapter(childAdapterChild);
-//                        }
-//                    });
-//                }
-//            }
-//        });
-//        marketListView.setAdapter(mMarketListAdapter);
-
         mWaitDialog = new WaitDialog(this);
         Intent intent = getIntent();
         if (null != intent) {
@@ -130,12 +89,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
 
     @Override
     protected void initEvent() {
-//        // 注册事件
-//        if (!EventBus.getDefault().isRegistered(this)) {
-//            EventBus.getDefault().register(this);
-//        }
-
-
     }
 
     @Override

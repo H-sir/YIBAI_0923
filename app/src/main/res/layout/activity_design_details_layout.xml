@@ -87,11 +87,24 @@
         android:text="场景及图片列表"
         android:textColor="@color/default_color" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/designDetailsListView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.ybw.yibai.common.widget.nestlistview.NestFullListView
+                android:id="@+id/designDetailsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:showDividers="middle" />
+        </LinearLayout>
+    </ScrollView>
 
     <View
         android:layout_width="match_parent"

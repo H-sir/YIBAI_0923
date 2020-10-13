@@ -41,6 +41,9 @@ import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.user.UserContract;
 import com.ybw.yibai.module.user.UserPresenterImpl;
 
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -202,6 +205,18 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
     public void onDeleteDesignSuccess(BaseBean baseBean) {
         designLists.remove(deleteListBead);
         mDesignListAdapter.notifyDataSetChanged();
+        try {
+            DbManager dbManager = YiBaiApplication.getDbManager();
+            // 查找当前正在编辑的这一个场景
+            List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                    .where("number", "=", deleteListBead.getNumber())
+                    .findAll();
+            if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
+                dbManager.delete(defaultSceneInfoList);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -297,7 +312,8 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     }
 
-    private void existSceneInfoPopupWindow(DesignList.DataBean.ListBean.SchemelistBean schemelistBean, SceneInfo sceneInfo) {
+    private void existSceneInfoPopupWindow(DesignList.DataBean.ListBean.SchemelistBean
+                                                   schemelistBean, SceneInfo sceneInfo) {
         if (null == mPopupWindow) {
             mSchemelistBean = schemelistBean;
             View view = getLayoutInflater().inflate(R.layout.popup_window_exist_scene_layout, null);
@@ -394,7 +410,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
                 int vipLevel = preferences.getInt(VIP_LEVEL, 0);
                 if (1 == vipLevel) {
-                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(), mRootLayout);
                     return;
                 }
                 if (sceneInfo != null) {

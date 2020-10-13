@@ -6,10 +6,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -26,17 +28,26 @@ import com.ybw.yibai.common.bean.DesignDetails;
 import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
+import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
+import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
+import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
 import com.ybw.yibai.module.design.DesignActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.user.UserContract;
 import com.ybw.yibai.module.user.UserPresenterImpl;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,22 +68,19 @@ import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
  * </pre>
  */
 public class DesignDetailsActivity extends BaseActivity implements DesignDetailsContract.DesignDetailsView,
-        DesignDetailsListAdapter.OnDesignDetailsDeleteClickListener,
-        DesignDetailsListAdapter.OnDesignDetailsRenameClickListener,
-        DesignDetailsListAdapter.OnDesignDetailsDeleteListClickListener,
-        DesignDetailsListAdapter.OnSceneItemClickListener, UserContract.UserView {
+       UserContract.UserView {
 
     @BindView(R.id.design_number)
     TextView designNumber;
     @BindView(R.id.designDetailsListView)
-    RecyclerView designDetailsListView;
+    NestFullListView designDetailsListView;
     @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
 
     /**
      * 设计详情列表适配器
      */
-    private DesignDetailsListAdapter mDesignDetailsListAdapter;
+    private NestFullListViewAdapter mNestFullListViewAdapter;
     /**
      * 设计详情列表集合
      */
@@ -105,32 +113,18 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
         mWaitDialog = new WaitDialog(this);
         mDesignDetailsPresenter = new DesignDetailsPresenterImpl(this);
         mUserPresenter = new UserPresenterImpl(this);
-
-        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1, VERTICAL);
-        // 设置RecyclerView间距
-        int gap = DensityUtil.dpToPx(getApplicationContext(), 8);
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(1, gap, false);
-        // 给RecyclerView设置布局管理器(必须设置)
-        designDetailsListView.setLayoutManager(manager);
-        designDetailsListView.addItemDecoration(decoration);
-        designDetailsListView.setNestedScrollingEnabled(false);
-        designDetailsListView.setHasFixedSize(false);
     }
 
     @Override
     protected void initData() {
-        mDesignDetailsListAdapter = new DesignDetailsListAdapter(this, schemelistBeans);
-        designDetailsListView.setAdapter(mDesignDetailsListAdapter);
+
     }
+
+    String mDdesignNumber;
 
     @Override
     protected void initEvent() {
-        mDesignDetailsListAdapter.setSceneItemClickListener(this);
-        mDesignDetailsListAdapter.setOnDesignDetailsDeleteClickListener(this);
-        mDesignDetailsListAdapter.setOnDesignDetailsRenameClickListener(this);
-        mDesignDetailsListAdapter.setOnDesignDetailsListDeleteClickListener(this);
-        String mDdesignNumber = (String) getIntent().getSerializableExtra(DESIGN_NUMBER);
+        mDdesignNumber = (String) getIntent().getSerializableExtra(DESIGN_NUMBER);
         if (null == mDdesignNumber) {
             return;
         }
@@ -146,16 +140,66 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
             MessageUtil.showMessage(designDetails.getMsg());
             return;
         }
+        schemelistBeans.clear();
         mDesignDetails = designDetails;
         designNumber.setText(designDetails.getData().getNumber());
         schemelistBeans.addAll(designDetails.getData().getSchemelist());
-        mDesignDetailsListAdapter.notifyDataSetChanged();
+
+        setAdapter(schemelistBeans);
+    }
+
+    private void setAdapter(List<DesignDetails.DataBean.SchemelistBean> mSchemelistBeans) {
+        mNestFullListViewAdapter = new NestFullListViewAdapter<DesignDetails.DataBean.SchemelistBean>(
+                R.layout.listview_design_details_list_item_layout, mSchemelistBeans) {
+            @Override
+            public void onBind(int pos, DesignDetails.DataBean.SchemelistBean schemelistBean, NestFullViewHolder holder) {
+                ImageView mDesignBg = holder.getView(R.id.designBg);
+                TextView mDesignDetailsName = holder.getView(R.id.designDetailsName);
+                TextView mDesignDetailsRename = holder.getView(R.id.designDetailsRename);
+                TextView mDesignDetailsDelete = holder.getView(R.id.designDetailsDelete);
+                mDesignDetailsName.setText(schemelistBean.getSchemeName());
+                if (schemelistBean.getBgpic() != null && !schemelistBean.getBgpic().isEmpty())
+                    ImageUtil.displayImage(getApplicationContext(), mDesignBg, schemelistBean.getBgpic());
+
+                mDesignDetailsName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SceneHelper.savePhotoNum(getApplicationContext(), schemelistBean.getImglist().size());
+                        onSceneItemClick(schemelistBean);
+                    }
+                });
+
+                mDesignDetailsDelete.setOnClickListener(view -> {
+                    onDesignDetailsListDelete(schemelistBean);
+                });
+
+                mDesignDetailsRename.setOnClickListener(view -> {
+                    onDesignDetailsRename(schemelistBean);
+                });
+
+                //第二层
+                NestFullListView view = (NestFullListView) holder.getView(R.id.designDetailsListView);
+                view.setOrientation(LinearLayout.HORIZONTAL);
+                view.setAdapter(new NestFullListViewAdapter<DesignDetails.DataBean.SchemelistBean.ImaData>
+                        (R.layout.listview_design_scheme_details_list_item_layout,
+                                schemelistBean.getImglist()) {
+                    @Override
+                    public void onBind(int pos, DesignDetails.DataBean.SchemelistBean.ImaData imaData, NestFullViewHolder holder) {
+                        ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
+                        ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, imaData.getPic());
+                        mDesignSchemeImage.setOnClickListener(v -> {
+                            onDesignDetailsDelete(imaData);
+                        });
+                    }
+                });
+            }
+        };
+        designDetailsListView.setAdapter(mNestFullListViewAdapter);
     }
 
     /**
      * 场景点击跳转
      */
-    @Override
     public void onSceneItemClick(DesignDetails.DataBean.SchemelistBean schemelistBean) {
         this.schemelistBean = schemelistBean;
         mUserPresenter.findUserSceneListInfo();
@@ -194,7 +238,6 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     /**
      * 删除设计图片
      */
-    @Override
     public void onDesignDetailsDelete(DesignDetails.DataBean.SchemelistBean.ImaData imaData) {
         mDesignDetailsPresenter.deleteSchemePic(imaData.getId());
     }
@@ -204,35 +247,13 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
      */
     @Override
     public void onDeleteSchemePicSuccess(String pic) {
-        for (Iterator<DesignDetails.DataBean.SchemelistBean> iterator = schemelistBeans.iterator(); iterator.hasNext(); ) {
-            DesignDetails.DataBean.SchemelistBean schemelistBean = iterator.next();
-            boolean flag = false;
-            for (Iterator<DesignDetails.DataBean.SchemelistBean.ImaData> schemelistBeanIterator = schemelistBean.getImglist().iterator(); schemelistBeanIterator.hasNext(); ) {
-                DesignDetails.DataBean.SchemelistBean.ImaData imaData = schemelistBeanIterator.next();
-                if (imaData.getId().equals(pic)) {
-                    schemelistBean.getImglist().remove(imaData);
-                    flag = true;
-                    break;
-                }
-            }
-            if (flag) {
-                break;
-            }
-        }
-        mDesignDetailsListAdapter.notifyDataSetChanged();
-//        /**
-//         * 发送数据到{@link DesignDetailsListAdapter#deleteSchemePicSuccess(String)}
-//         * 使其跳转到对应的Fragment
-//         */
-//        EventBus.getDefault().post(pic);
+        mDesignDetailsPresenter.getDesignDetails(mDdesignNumber);
     }
 
     /**
      * 重新命名
      */
-    @Override
-    public void onDesignDetailsRename(int position) {
-        DesignDetails.DataBean.SchemelistBean schemelistBean = schemelistBeans.get(position);
+    public void onDesignDetailsRename(DesignDetails.DataBean.SchemelistBean schemelistBean) {
         existSceneInfoPopupWindow(schemelistBean);
     }
 
@@ -290,20 +311,19 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     public void editSceneNameSuccess() {
         for (Iterator<DesignDetails.DataBean.SchemelistBean> iterator = schemelistBeans.iterator(); iterator.hasNext(); ) {
             DesignDetails.DataBean.SchemelistBean bean = iterator.next();
-            if(bean.getSchemeId().equals(updateSchemelistBean.getSchemeId())){
+            if (bean.getSchemeId().equals(updateSchemelistBean.getSchemeId())) {
                 bean.setSchemeName(updateSchemelistBean.getSchemeName());
                 break;
             }
         }
-        mDesignDetailsListAdapter.notifyDataSetChanged();
+        setAdapter(schemelistBeans);
     }
 
     /**
      * 删除场景
      */
-    @Override
-    public void onDesignDetailsListDelete(int position) {
-        mDesignDetailsPresenter.deleteScheme(schemelistBeans.get(position));
+    public void onDesignDetailsListDelete(DesignDetails.DataBean.SchemelistBean schemelistBean) {
+        mDesignDetailsPresenter.deleteScheme(schemelistBean);
     }
 
     /**
@@ -312,7 +332,21 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     @Override
     public void onDeleteSchemeSuccess(DesignDetails.DataBean.SchemelistBean schemelistBean) {
         schemelistBeans.remove(schemelistBean);
-        mDesignDetailsListAdapter.notifyDataSetChanged();
+
+        try {
+            DbManager dbManager = YiBaiApplication.getDbManager();
+            // 查找当前正在编辑的这一个场景
+            List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                    .where("scheme_id", "=", schemelistBean.getSchemeId())
+                    .findAll();
+            if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
+                dbManager.delete(defaultSceneInfoList);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+
+        setAdapter(schemelistBeans);
     }
 
     /**
@@ -396,6 +430,7 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.backImageView:
+                SceneHelper.savePhotoNum(getApplicationContext(), schemelistBeans.get(0).getImglist().size());
                 onBackPressed();
                 break;
             case R.id.designDetailsDelete:

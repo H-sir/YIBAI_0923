@@ -63,7 +63,7 @@
                 android:layout_marginBottom="5dp"
                 android:background="@color/prompt_high_text_color" />
 
-            <com.ybw.yibai.common.widget.horizontal.adatper.HorizontalScrollListView
+            <com.ybw.yibai.common.widget.nestlistview.NestFullListView
                 android:id="@+id/designDetailsListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -1779,6 +1779,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mSimulationData = simulationData;
             mSceneEditPresenter.deleteSimulationData(simulationData);
             stickerView.removeCurrentSticker();
+            mStickerView.removeCurrentSticker();
             mSceneEditPresenter.getSimulationData(sceneId);
             productSkuId = 0;
         }
@@ -2056,7 +2057,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
-
         baseStickerList.addAll(mStickerView.getAllStickerList());
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
@@ -2095,6 +2095,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mSceneContainerTool.setVisibility(View.GONE);
             }
         }
+
         if (null == mAlreadyPlacedList || mAlreadyPlacedList.size() == 0) {
             mAlreadyPlacedAdapter.notifyDataSetChanged();
             return;

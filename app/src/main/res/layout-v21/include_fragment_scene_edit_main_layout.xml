@@ -230,6 +230,7 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
+        android:visibility="gone"
         android:src="@mipmap/hide_tools_img"
         android:background="@drawable/background_customer_while_s1"
         android:gravity="center"

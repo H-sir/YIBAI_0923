@@ -805,6 +805,9 @@ public class ImageUtil {
         int firstHeight = firstBitmap.getHeight();
         int secondWidth = secondBitmap.getWidth();
         int secondHeight = secondBitmap.getHeight();
+        if(firstWidth > firstHeight){
+
+        }
 
         LogUtil.e(TAG, "原始第一个Bitmap的宽度: " + firstWidth);
         LogUtil.e(TAG, "原始第一个Bitmap的高度: " + firstHeight);

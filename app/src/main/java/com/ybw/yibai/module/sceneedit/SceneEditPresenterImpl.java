@@ -807,9 +807,22 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 for (int i = 0; i < simulationDataList.size(); i++) {
                     SimulationData simulationData = simulationDataList.get(i);
                     String finallySkuId = simulationData.getFinallySkuId();
-                    if (baseSticker.getSign().equals(finallySkuId)) {
-                        simulationData.setBaseStickerWidth(baseSticker.getWidth());
-                        simulationData.setBaseStickerHeight(baseSticker.getHeight());
+                    Long timeStamp = simulationData.getTimeStamp();
+                    if (baseSticker.getProductAndaugmentedSkuId().equals(finallySkuId + String.valueOf(timeStamp))) {
+                        if (baseSticker.getWidth() == 0 && baseSticker.getHeight() == 0) {
+                            for (Iterator<BaseSticker> baseStickerIterator = baseStickerList.iterator(); baseStickerIterator.hasNext(); ) {
+                                BaseSticker sticker = baseStickerIterator.next();
+                                if (baseSticker.getSign().equals(finallySkuId) && baseSticker.getWidth() > 0 &&
+                                        baseSticker.getHeight() > 0) {
+                                    simulationData.setBaseStickerWidth(sticker.getWidth());
+                                    simulationData.setBaseStickerHeight(sticker.getHeight());
+                                    break;
+                                }
+                            }
+                        } else {
+                            simulationData.setBaseStickerWidth(baseSticker.getWidth());
+                            simulationData.setBaseStickerHeight(baseSticker.getHeight());
+                        }
                         flag = true;
                         break;
                     }

@@ -1159,6 +1159,7 @@ public class StickerView extends FrameLayout {
         sticker.setSign(sign);
         sticker.setPottedName(pottedName);
         sticker.setPottedHeight(pottedHeight);
+        sticker.setProductAndaugmentedSkuId(String.valueOf(sign) + String.valueOf(simulationData.getTimeStamp()));
         if (ViewCompat.isLaidOut(this)) {
             if (0 == x && 0 == y) {
                 // 一开始默认添加在屏幕正中间

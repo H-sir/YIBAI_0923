@@ -19,13 +19,13 @@ public class DrawableSticker extends BaseSticker {
     @Override
     public int getWidth() {
         // 返回可绘制图形的固有宽度
-        return  mDrawable.getIntrinsicWidth();
+        return mDrawable == null ? 0 : mDrawable.getIntrinsicWidth();
     }
 
     @Override
     public int getHeight() {
         // 返回可绘制图形的固有高度
-        return mDrawable.getIntrinsicHeight();
+        return mDrawable == null ? 0 : mDrawable.getIntrinsicHeight();
     }
 
     @NonNull

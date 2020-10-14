@@ -698,6 +698,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
         }
 
+
         // 保存图片
         if (id == R.id.saveTextView) {
             try {

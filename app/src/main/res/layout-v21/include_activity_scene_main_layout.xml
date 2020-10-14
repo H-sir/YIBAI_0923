@@ -48,8 +48,8 @@
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:contentDescription="@null"
             android:padding="10dp"
-            android:visibility="gone"
-            android:src="@mipmap/scene_list" />
+            android:src="@mipmap/scene_list"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/screenRotationImageView"
@@ -88,6 +88,7 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/saveTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -98,31 +99,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/saveTextView"
+                <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@drawable/save_scenarios"
-                    android:drawablePadding="3dp"
-                    android:gravity="center"
-                    android:text="保存设计"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    tools:ignore="SmallSp" />
+                    android:layout_margin="5dp"
+                    android:src="@drawable/save_scenarios" />
 
                 <TextView
                     android:id="@+id/saveTextViewNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:layout_gravity="top|right"
-                    android:background="@drawable/background_customer_blue_s"
+                    android:background="@drawable/shape_text_view"
+                    android:gravity="center"
                     android:text="0"
+                    android:textSize="8dp"
                     android:textColor="@android:color/white" />
             </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="保存设计"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
@@ -133,8 +140,9 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/analog_diagram"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
+            android:padding="5dp"
             android:text="@string/my_design"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
@@ -148,7 +156,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/perspective_default"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="@string/background_image"
             android:textColor="@color/main_text_color"
@@ -163,7 +171,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/application_for_quotation"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="摆放清单"
             android:textColor="@color/main_text_color"
@@ -178,7 +186,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/recommended_match"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="客户预选"
             android:textColor="@color/main_text_color"

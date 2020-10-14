@@ -799,6 +799,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     public void addSticker(SimulationData mSimulationData, List<BaseSticker> baseStickerList,
                            StickerView stickerView, List<SimulationData> simulationDataList) {
         Fragment fragment = (Fragment) mSceneEditView;
+        baseStickerList.clear();
         if (baseStickerList != null && baseStickerList.size() > 0) {
             int mBaseStickerWidth = 0, mBaseStickerHeight = 0;
             for (Iterator<BaseSticker> iterator = baseStickerList.iterator(); iterator.hasNext(); ) {

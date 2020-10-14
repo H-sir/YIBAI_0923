@@ -51,6 +51,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 import static android.app.Activity.RESULT_OK;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_CAMERA_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_PHOTOS_CODE;
 import static com.ybw.yibai.common.utils.FileUtil.judeFileExists;
@@ -62,7 +63,7 @@ import static com.ybw.yibai.common.utils.ImageUtil.createPhotoPath;
  * @author sjl
  * @date 2019/9/14
  */
-public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements ScenePresenter, CallBack{
+public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements ScenePresenter, CallBack {
 
     private static final String TAG = "ScenePresenterImpl";
 
@@ -359,6 +360,13 @@ public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements 
             File file = new File(path);
             mSceneView.returnsTheImageReturnedFromTheCameraOrAlbum(file);
         }
+
+        /**
+         * 设计详情返回
+         * */
+        if (requestCode == 0 && resultCode == REQUEST_DESIGN_DETAILS_CODE) {
+            mSceneView.updateSceneData();
+        }
     }
 
     /**
@@ -448,7 +456,7 @@ public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements 
 
     @Override
     public void createSceneOrPic(String desing_number, String type, String scheme_id, String scheme_name, Map<String, RequestBody> pic, String product_sku_id) {
-        mSceneModel.createSceneOrPic(desing_number,type,scheme_id,scheme_name,pic,product_sku_id,this);
+        mSceneModel.createSceneOrPic(desing_number, type, scheme_id, scheme_name, pic, product_sku_id, this);
     }
 
     @Override
@@ -458,7 +466,7 @@ public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements 
 
     @Override
     public void addDesignAndSceneInfo(List<CreateSceneData> mCreateSceneDataList) {
-        mSceneModel.addDesignAndSceneInfo(mCreateSceneDataList,this);
+        mSceneModel.addDesignAndSceneInfo(mCreateSceneDataList, this);
     }
 
     /**

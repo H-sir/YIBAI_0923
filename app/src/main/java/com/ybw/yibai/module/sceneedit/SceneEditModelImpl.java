@@ -1700,9 +1700,10 @@ public class SceneEditModelImpl implements SceneEditModel {
                     .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
             int showHeight = BigDecimal.valueOf(oldHeight * oldYScale)
                     .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
-            double yScale = oldYScale;
-//                    new BigDecimal(((double)showHeight / (double)height))
-//                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+            double yScale =
+//                    oldYScale;
+                    new BigDecimal(((double)showHeight / (double)height))
+                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             // 新合成的图片距离X轴的距离(要保持新合成的图片的中心点要和当前用户正在操作的贴纸的中心点相同)
             // 算法: 1,原中心点的位置 = 贴纸左上角距离屏幕左上角X轴的距离 + (更换搭配之前贴纸实际的宽度 * 更换搭配之前贴纸的X轴的缩放比例 / 2)
             //      2,新合成的图片距离X轴的距离 = 原中心点的位置 - (新合成的图片宽度 * 新合成的图片Y轴的缩放 / 2)
@@ -1794,15 +1795,15 @@ public class SceneEditModelImpl implements SceneEditModel {
                 if (judeFileExists(picturePath)) {
                     simulationData.setPicturePath(picturePath);
                 }
-                simulationData.setX(x);
+                simulationData.setX(newX);
                 simulationData.setY(y);
                 if (0 < width && 0 < height) {
                     simulationData.setWidth(width);
                     simulationData.setHeight(height);
                 }
                 // 注意: 这里的宽高应该是一样的缩放比例
-                simulationData.setxScale(oldXScale);
-                simulationData.setyScale(oldYScale);
+                simulationData.setxScale(yScale);
+                simulationData.setyScale(yScale);
                 /*----------*/
                 // 保存新的贴纸数据
                 dbManager.save(simulationData);

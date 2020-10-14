@@ -61,7 +61,7 @@ public class MainActivity extends BaseActivity implements MainView,
         View.OnClickListener,
         RadioGroup.OnCheckedChangeListener,
         MainPopupMenu.OnItemClickListener {
-
+    private MainActivity mMainActivity = null;
     private static final String TAG = "MainActivity";
 
     /**
@@ -159,6 +159,7 @@ public class MainActivity extends BaseActivity implements MainView,
 
     @Override
     protected int setLayout() {
+        mMainActivity = this;
         transparentStatusBar(this);
         return R.layout.activity_main;
     }
@@ -236,7 +237,7 @@ public class MainActivity extends BaseActivity implements MainView,
             SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mMainActivity, mRootLayout);
                 return;
             }
             Intent intent = new Intent(this, StartDesignActivity.class);

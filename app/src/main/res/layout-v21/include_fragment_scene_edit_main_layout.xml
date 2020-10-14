@@ -219,7 +219,7 @@
         android:textColor="@color/main_text_color"
         android:textSize="10sp"
         android:visibility="gone" />
-        android:textSize="10sp" />
+    android:textSize="10sp" />
 
     <ImageView
         android:id="@+id/btnHideTools"
@@ -230,14 +230,14 @@
         android:layout_centerInParent="true"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        android:visibility="gone"
-        android:src="@mipmap/hide_tools_img"
         android:background="@drawable/background_customer_while_s1"
         android:gravity="center"
         android:padding="8dp"
+        android:src="@mipmap/hide_tools_img"
         android:text=""
         android:textColor="@color/main_text_color"
-        android:textSize="10sp" />
+        android:textSize="10sp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/savePhoto"
@@ -252,10 +252,10 @@
         android:gravity="center"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:visibility="gone"
         android:text="保存图片"
         android:textColor="@color/main_text_color"
-        android:textSize="10sp"/>
+        android:textSize="10sp"
+        android:visibility="gone" />
 
 
     <include layout="@layout/fragment_scene_edit_main_layout_tabs" />
@@ -285,6 +285,7 @@
             tools:ignore="SmallSp" />
 
         <LinearLayout
+            android:id="@+id/saveScenarios"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
@@ -295,31 +296,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <TextView
-                    android:id="@+id/saveScenarios"
+                <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:button="@null"
-                    android:drawableTop="@mipmap/save_scenarios"
-                    android:drawablePadding="3dp"
-                    android:gravity="center"
-                    android:text="保存设计"
-                    android:textColor="@color/main_text_color"
-                    android:textSize="10sp"
-                    android:textStyle="bold"
-                    tools:ignore="SmallSp" />
+                    android:layout_margin="5dp"
+                    android:src="@drawable/save_scenarios" />
 
                 <TextView
                     android:id="@+id/saveTextViewNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
                     android:layout_gravity="top|right"
-                    android:background="@drawable/background_customer_blue_s"
+                    android:background="@drawable/shape_text_view"
+                    android:gravity="center"
                     android:text="0"
+                    android:textSize="8dp"
                     android:textColor="@android:color/white" />
             </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="保存设计"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
 
         </LinearLayout>
 
@@ -330,13 +337,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:drawableTop="@mipmap/bonsai_info"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
-            android:visibility="gone"
             android:text="@string/bonsai_info"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/addShopping"
@@ -344,9 +351,22 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:drawableTop="@mipmap/add_shopping_img"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="加入预选"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/joinPurchaseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="22dp"
+            android:drawableTop="@mipmap/join_purchase_img"
+            android:drawablePadding="8dp"
+            android:gravity="center"
+            android:text="@string/join_purchase"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -359,24 +379,11 @@
             android:drawableTop="@mipmap/album_replacement"
             android:drawablePadding="3dp"
             android:gravity="center"
-            android:visibility="gone"
             android:text="@string/join_photo_album"
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/joinPurchaseTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="22dp"
-            android:drawableTop="@mipmap/restore_settings"
-            android:drawablePadding="3dp"
-            android:gravity="center"
-            android:text="@string/join_purchase"
-            android:textColor="@color/main_text_color"
-            android:textSize="10sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/skuMarketTextView"
@@ -384,7 +391,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
             android:drawableTop="@mipmap/sku_market_img"
-            android:drawablePadding="3dp"
+            android:drawablePadding="8dp"
             android:gravity="center"
             android:text="查看货源"
             android:textColor="@color/main_text_color"

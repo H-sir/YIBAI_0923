@@ -85,6 +85,15 @@ public class Encoded {
      */
     public static final int REQUEST_OPEN_GPS_CODE = 19;
 
+    /**
+     * 请求码(设计详情返回的请求码)
+     */
+    public static final int REQUEST_DESIGN_DETAILS_CODE = 20;
+    /**
+     * 请求码(设计详情返回的请求码)
+     */
+    public static final String REQUEST_DESIGN_DETAILS = "DesignDetails";
+
     /**********
      * 其他
      **********/

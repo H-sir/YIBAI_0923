@@ -58,7 +58,7 @@ public interface DesignDetailsContract {
         /**
          * 删除场景
          */
-        void deleteScheme(DesignDetails.DataBean.SchemelistBean schemelistBean);
+        void deleteScheme(DesignDetails mDesignDetails,DesignDetails.DataBean.SchemelistBean schemelistBean);
 
         /**
          * 删除设计
@@ -86,7 +86,7 @@ public interface DesignDetailsContract {
         /**
          * 删除场景
          */
-        void deleteScheme(DesignDetails.DataBean.SchemelistBean schemelistBean, CallBack callBack);
+        void deleteScheme(DesignDetails mDesignDetails,DesignDetails.DataBean.SchemelistBean schemelistBean, CallBack callBack);
 
         /**
          * 删除设计

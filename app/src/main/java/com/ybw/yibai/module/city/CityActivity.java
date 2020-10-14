@@ -19,6 +19,7 @@ import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.common.adapter.CityListAdapter;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.NetworkType;
+import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
@@ -30,6 +31,7 @@ import com.ybw.yibai.module.home.HomeFragment;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -127,7 +129,6 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         mCityListAdapter.setOnCityClickListener(this);
 
         mCityPresenter = new CityPresenterImpl(this);
-        mCityPresenter.applyPermissions(permissions);
         mCityPresenter.getCity();
     }
 
@@ -142,6 +143,13 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         mCityPresenter.setUserPosition(listBean.getCode());
     }
 
+    PlaceBean placeBean;
+
+    @Override
+    public void onGetLocationSuccess(PlaceBean placeBean) {
+        this.placeBean = placeBean;
+    }
+
     /**
      * 城市列表
      */
@@ -149,6 +157,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
     public void onGetCitySuccess(CityListBean cityListBean) {
         hotcityList.addAll(cityListBean.getData().getList());
         mCityListAdapter.notifyDataSetChanged();
+        mCityPresenter.applyPermissions(permissions);
     }
 
     /**
@@ -194,15 +203,19 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
     private BDAbstractLocationListener mListener = new BDAbstractLocationListener() {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
-            // 获取省份
-            String province = bdLocation.getProvince();
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+
+            double latitude = bdLocation.getLatitude();    //获取纬度信息
+            double longitude = bdLocation.getLongitude();    //获取经度信息
             // 获取城市
             String city = bdLocation.getCity();
             if (TextUtils.isEmpty(city)) {
                 return;
             }
             cityCurrent.setText(city);
-            mCityPresenter.setUserPosition(province + city);
+            mCityPresenter.getLocation(latitude, longitude);
         }
     };
 
@@ -289,6 +302,9 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
                 finish();
                 break;
             case R.id.cityCurrent:
+                if (placeBean != null) {
+                    mCityPresenter.setUserPosition(placeBean.getData().getCitycode());
+                }
                 cityName = cityCurrent.getText().toString();
                 if (cityName != null) {
                     /**

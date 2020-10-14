@@ -111,6 +111,8 @@ public interface SceneContract {
         void onAddSchemePath(String path, int productSkuId, int augmentedProductSkuId);
 
         void onGetDesignSchemeSuccess(DesignScheme designScheme);
+
+        void updateSceneData();
     }
 
     interface ScenePresenter extends BasePresenter<SceneView> {

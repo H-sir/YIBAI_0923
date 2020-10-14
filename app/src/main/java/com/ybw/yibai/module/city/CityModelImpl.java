@@ -2,6 +2,7 @@ package com.ybw.yibai.module.city;
 
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -15,6 +16,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.SET_USER_POSITION_METHOD;
 
 /**
@@ -34,7 +36,7 @@ public class CityModelImpl implements CityContract.CityModel {
 
     /**
      * 设置货源城市
-     * */
+     */
     @Override
     public void setUserPosition(String code, CityContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
@@ -71,7 +73,7 @@ public class CityModelImpl implements CityContract.CityModel {
 
     /**
      * 获取城市列表
-     * */
+     */
     @Override
     public void getCity(CityContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
@@ -87,6 +89,43 @@ public class CityModelImpl implements CityContract.CityModel {
             @Override
             public void onNext(CityListBean cityListBean) {
                 callBack.onGetCitySuccess(cityListBean);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getLocation(double latitude, double longitude,CityContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<PlaceBean> observable = mApiService.getPlace(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_CITY_PLACE_METHOD),
+                YiBaiApplication.getUid(), String.valueOf(longitude), String.valueOf(latitude));
+        Observer<PlaceBean> observer = new Observer<PlaceBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(PlaceBean placeBean) {
+                if (placeBean.getCode() == 200) {
+                    callBack.onGetLocationSuccess(placeBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(placeBean.getMsg()));
+                }
             }
 
             @Override

@@ -34,6 +34,7 @@ import com.ybw.yibai.common.bean.HotSchemeCategory;
 import com.ybw.yibai.common.bean.HotSchemes;
 import com.ybw.yibai.common.bean.LoginInfo;
 import com.ybw.yibai.common.bean.ModifyPassword;
+import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.ProductScreeningParam;
@@ -43,6 +44,7 @@ import com.ybw.yibai.common.bean.QuotationAgain;
 import com.ybw.yibai.common.bean.QuotationList;
 import com.ybw.yibai.common.bean.QuotationLocation;
 import com.ybw.yibai.common.bean.Recommend;
+import com.ybw.yibai.common.bean.RecommendBean;
 import com.ybw.yibai.common.bean.RecommendProduct;
 import com.ybw.yibai.common.bean.RecommendProductList;
 import com.ybw.yibai.common.bean.SKUList;
@@ -90,6 +92,8 @@ import retrofit2.http.Part;
 import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+
+import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_URL;
 
 /**
  * 这个接口存放所有联网的方法
@@ -1666,6 +1670,7 @@ public interface ApiService {
     Observable<AppUpdate> appUpdate(@Header("timestamp") String timestamp,
                                     @Header("sign") String sign,
                                     @Query("uid") int uid);
+
     /**
      * 版本更新
      *
@@ -1710,6 +1715,17 @@ public interface ApiService {
                                      @Query("uid") int uid);
 
     /**
+     * 经纬度获取城市地区信息
+     */
+    @GET(GET_CITY_PLACE_URL)
+    Observable<PlaceBean> getPlace(
+            @Header("timestamp") String timestamp,
+            @Header("sign") String sign,
+            @Query("uid") int uid,
+            @Query("longitude") String longitude,
+            @Query("latitude") String latitude);
+
+    /**
      * 设置货源城市
      *
      * @param timestamp 时间搓
@@ -1730,6 +1746,7 @@ public interface ApiService {
             @Header("timestamp") String timestamp,
             @Header("sign") String sign,
             @Query("data") String data);
+
 
     @GET("?method=mybw.getcity")
     Observable<BaseResponse<HotCityResponse>> getAllCities(

@@ -68,7 +68,7 @@ import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
  */
 public class ProductDetailsActivity extends BaseActivity implements ProductDetailsView,
         View.OnClickListener, SimilarProductAdapter.OnItemClickListener {
-
+    private ProductDetailsActivity mProductDetailsActivity = null;
     private static final String TAG = "ProductDetailsActivity";
 
     /**
@@ -304,6 +304,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
 
     @Override
     protected int setLayout() {
+        mProductDetailsActivity = this;
         setNativeLightStatusBar(this, true);
         return R.layout.activity_product_details;
     }
@@ -430,7 +431,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
             SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(),mRootLayout);
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mProductDetailsActivity, mRootLayout);
                 return;
             }
             ProductData productData = new ProductData(

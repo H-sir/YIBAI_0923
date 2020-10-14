@@ -74,7 +74,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         DesignListAdapter.OnDesignShareClickListener,
         DesignListAdapter.OnDesignSchemeImageClickListener, UserContract.UserView {
     private String TAG = "DesignActivity";
-
+    private DesignActivity mDesignActivity = null;
     /**
      * 标题
      */
@@ -130,6 +130,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     @Override
     protected int setLayout() {
+        mDesignActivity = this;
         return R.layout.activity_design_layout;
     }
 
@@ -410,7 +411,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
                 int vipLevel = preferences.getInt(VIP_LEVEL, 0);
                 if (1 == vipLevel) {
-                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getParent(), mRootLayout);
+                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
                     return;
                 }
                 if (sceneInfo != null) {

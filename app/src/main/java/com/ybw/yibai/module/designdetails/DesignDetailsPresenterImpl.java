@@ -68,8 +68,8 @@ public class DesignDetailsPresenterImpl extends BasePresenterImpl<DesignDetailsC
      * 删除场景
      */
     @Override
-    public void deleteScheme(DesignDetails.DataBean.SchemelistBean schemelistBean) {
-        mSceneDetailsModel.deleteScheme(schemelistBean, this);
+    public void deleteScheme(DesignDetails mDesignDetails,DesignDetails.DataBean.SchemelistBean schemelistBean) {
+        mSceneDetailsModel.deleteScheme(mDesignDetails,schemelistBean, this);
     }
 
     @Override

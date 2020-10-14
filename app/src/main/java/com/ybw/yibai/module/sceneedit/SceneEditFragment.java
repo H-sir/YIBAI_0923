@@ -568,10 +568,15 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      * 加入进货
      */
     private TextView mJoinPurchaseTextView;
+
+    /**
+     * 加入预选
+     * */
+    private TextView mAddShopping;
     /**
      * 保存设计
      */
-    private TextView mSaveScenarios;
+    private LinearLayout mSaveScenarios;
 
     /**
      * 光亮调整
@@ -723,6 +728,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     private List<String> attridList = new ArrayList<>();
 
+    /**
+     * 保存的数量
+     */
+    private TextView mSaveTextViewNum;
 
     /*
       /\_/\
@@ -868,11 +877,14 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mBonsaiInfoTextView = view.findViewById(R.id.bonsaiInfoTextView);
         mJoinPhotoAlbum = view.findViewById(R.id.joinPhotoAlbum);
         mJoinPurchaseTextView = view.findViewById(R.id.joinPurchaseTextView);
+        mAddShopping = view.findViewById(R.id.addShopping);
         mSaveScenarios = view.findViewById(R.id.saveScenarios);
         mBrightnessAdjustmentTextView = view.findViewById(R.id.brightnessAdjustmentTextView);
         mIntelligentEraseTextView = view.findViewById(R.id.intelligentEraseTextView);
         mRestoreSettingsTextView = view.findViewById(R.id.restoreSettingsTextView);
         mSkuMarketTextView = view.findViewById(R.id.skuMarketTextView);
+
+        mSaveTextViewNum = view.findViewById(R.id.saveTextViewNum);
 
         mPlantPotLayout = view.findViewById(R.id.recommended_plant_pot_layout);
         mFilterTextView = view.findViewById(R.id.filterTextView);
@@ -989,6 +1001,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (null != mSceneInfo) {
             sceneId = mSceneInfo.getSceneId();
             filePath = mSceneInfo.getSceneBackground();
+
+            mSaveTextViewNum.setText(String.valueOf(mSceneInfo.getCount()));
         }
         if (judeFileExists(filePath)) {
             Bitmap bitmap = BitmapFactory.decodeFile(filePath);
@@ -1167,6 +1181,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mAddQuotationTextView.setOnClickListener(this);
         mSkuMarketTextView.setOnClickListener(this);
 
+        mSaveScenarios.setOnClickListener(this);
         mTakePhotoReplacementTextView.setOnClickListener(this);
         mAlbumReplacementTextView.setOnClickListener(this);
         mBackgroundTemplateTextView.setOnClickListener(this);
@@ -1177,6 +1192,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mBonsaiInfoTextView.setOnClickListener(this);
         mJoinPhotoAlbum.setOnClickListener(this);
         mJoinPurchaseTextView.setOnClickListener(this);
+        mAddShopping.setOnClickListener(this);
         mBrightnessAdjustmentTextView.setOnClickListener(this);
         mIntelligentEraseTextView.setOnClickListener(this);
         mRestoreSettingsTextView.setOnClickListener(this);
@@ -1317,6 +1333,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 addSchemePathBead.setPathName(pathName);
                 addSchemePathBead.setAugmentedProductSkuId(augmentedProductSkuId);
                 addSchemePathBead.setProductSkuId(productSkuId);
+                mSaveTextViewNum.setText(String.valueOf(mSceneInfo.getCount()));
                 /**
                  * 发送数据到{@link SceneActivity#onAddSchemePath(AddSchemePathBead)}
                  */
@@ -1953,6 +1970,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             simulationData.setxScale(xScale);
             simulationData.setyScale(yScale);
             mSceneEditPresenter.updateSimulationData(simulationData);
+
+            productSkuId = simulationData.getProductSkuId();
+            augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
         }
     };
 
@@ -3349,6 +3369,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         File file = new File(pathName);
         if (file.isFile() && file.exists()) {
             MessageUtil.showMessage(getResources().getString(R.string.save_successfully_you_can_click_on_my_design_below_to_view));
+
+            mSaveTextViewNum.setText(String.valueOf(mSceneInfo.getCount()));
             sceneView.onAddSchemePath(pathName, productSkuId, augmentedProductSkuId);
 //            /**
 //             * 发送数据到{@link SceneActivity#uploadSceneNum(SceneInfo)}

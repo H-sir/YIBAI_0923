@@ -85,6 +85,7 @@ import com.ybw.yibai.module.quotationdetails.QuotationDetailsFragment;
 import com.ybw.yibai.module.savepricing.SavePricingByCustomerActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.search.SearchActivity;
+import com.ybw.yibai.view.activity.SelectDeliveryCityActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -472,6 +473,8 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
 
         // 定位
         if (id == R.id.locationTextView) {
+//            Intent toIntent = new Intent(getContext(), SelectDeliveryCityActivity.class);
+//            startActivityForResult(toIntent, 1001);
             Intent intent = new Intent(getActivity(), CityActivity.class);
             startActivityForResult(intent, 1);
             /*String locationName = mLocationTextView.getText().toString().trim();

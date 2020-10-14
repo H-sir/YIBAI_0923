@@ -1236,6 +1236,7 @@ public class StickerView extends FrameLayout {
 //            currentStickerX = (float) (x - ((currentStickerHeight - currentStickerWidth) / 2));
 //        }
 
+//        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, x);
         sticker.getMatrix().postScale((float) xScale, (float) yScale, 0, 0);
 
 

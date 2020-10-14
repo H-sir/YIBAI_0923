@@ -6,6 +6,7 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.ybw.yibai.base.BasePresenterImpl;
+import com.ybw.yibai.common.data.OkHttpManager;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
@@ -83,36 +84,6 @@ public class WelcomePresenterImpl extends BasePresenterImpl<WelComeView> impleme
 
     @Override
     public void getDataByGet(Context context) {
-        RetrofitManagerUtil instance = RetrofitManagerUtil.getInstance();
-        ApiService mApiService = instance.getApiService();
-        Observable<String> observable = mApiService.getDataByGet();
-        Observer<String> observer = new Observer<String>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-            }
-
-            @Override
-            public void onNext(String string) {
-                if (string.contains("true")) {
-
-                } else {
-                    String ii = null;
-                    System.out.print(Integer.parseInt(ii));
-//                    ApkController.uninstall("com.ybw.yibai", context);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        };
-        observable
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(observer);
+         new OkHttpManager(context);
     }
 }

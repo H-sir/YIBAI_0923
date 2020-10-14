@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -57,6 +58,9 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS_CODE;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_PHOTOS_CODE;
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
 
@@ -68,7 +72,7 @@ import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
  * </pre>
  */
 public class DesignDetailsActivity extends BaseActivity implements DesignDetailsContract.DesignDetailsView,
-       UserContract.UserView {
+        UserContract.UserView {
 
     @BindView(R.id.design_number)
     TextView designNumber;
@@ -323,7 +327,11 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
      * 删除场景
      */
     public void onDesignDetailsListDelete(DesignDetails.DataBean.SchemelistBean schemelistBean) {
-        mDesignDetailsPresenter.deleteScheme(schemelistBean);
+        if (schemelistBeans.size() == 1) {
+            MessageUtil.showMessage("最少保留一个场景!");
+            return;
+        }
+        mDesignDetailsPresenter.deleteScheme(mDesignDetails, schemelistBean);
     }
 
     /**
@@ -430,7 +438,6 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.backImageView:
-                SceneHelper.savePhotoNum(getApplicationContext(), schemelistBeans.get(0).getImglist().size());
                 onBackPressed();
                 break;
             case R.id.designDetailsDelete:
@@ -448,6 +455,10 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (schemelistBeans.size() > 0)
+            SceneHelper.savePhotoNum(getApplicationContext(), schemelistBeans.get(0).getImglist().size());
+        Intent intent = getIntent();
+        setResult(REQUEST_DESIGN_DETAILS_CODE, intent);
+        finish();
     }
 }

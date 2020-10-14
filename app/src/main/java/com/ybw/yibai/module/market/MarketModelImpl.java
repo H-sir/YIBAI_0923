@@ -1,11 +1,17 @@
 package com.ybw.yibai.module.market;
 
 import com.ybw.yibai.base.YiBaiApplication;
+import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -48,7 +54,11 @@ public class MarketModelImpl implements MarketContract.MarketModel {
 
             @Override
             public void onNext(SkuMarketBean skuMarketBean) {
-                callBack.onGetSkuMarketSuccess(skuMarketBean);
+                if (skuMarketBean.getCode() == 200) {
+                    callBack.onGetSkuMarketSuccess(skuMarketBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(skuMarketBean.getMsg()));
+                }
             }
 
             @Override

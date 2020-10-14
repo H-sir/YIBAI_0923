@@ -12,6 +12,7 @@ import com.ybw.yibai.common.utils.TimeUtil;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
+import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -113,7 +114,7 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
     }
 
     @Override
-    public void deleteScheme(DesignDetails.DataBean.SchemelistBean schemelistBean, DesignDetailsContract.CallBack callBack) {
+    public void deleteScheme(DesignDetails mDesignDetails, DesignDetails.DataBean.SchemelistBean schemelistBean, DesignDetailsContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<BaseBean> observable = mApiService.deleteDesignScheme(timeStamp,
                 OtherUtil.getSign(timeStamp, DELETE_DESIGN_SCHEME_METHOD),
@@ -129,12 +130,29 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
             public void onNext(BaseBean deleteBase) {
                 try {
                     DbManager dbManager = YiBaiApplication.getDbManager();
-                    // 查找当前正在编辑的这一个场景
+
                     List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
-                            .where("scheme_id", "=", schemelistBean.getSchemeId())
+                            .where("number", "=", mDesignDetails.getData().getNumber())
                             .findAll();
                     if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
-                        dbManager.delete(defaultSceneInfoList);
+                        boolean flag = false;
+                        for (Iterator<SceneInfo> iterator = defaultSceneInfoList.iterator(); iterator.hasNext(); ) {
+                            SceneInfo sceneInfo = iterator.next();
+                            if (sceneInfo.getScheme_id().equals(schemelistBean.getSchemeId())) {
+                                if (sceneInfo.isEditScene()) {
+                                    flag = true;
+                                }
+                                defaultSceneInfoList.remove(sceneInfo);
+                                dbManager.delete(defaultSceneInfoList);
+                                break;
+                            }
+                        }
+                        if (flag) {
+                            if (defaultSceneInfoList.size() > 1) {
+                                defaultSceneInfoList.get(0).setEditScene(true);
+                                dbManager.update(defaultSceneInfoList, "editScene");
+                            }
+                        }
                     }
                     callBack.onDeleteSchemeSuccess(schemelistBean);
                 } catch (DbException e) {
@@ -219,7 +237,7 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
                             defaultSceneInfoList.get(0).setSceneName(scnenName);
                             dbManager.update(defaultSceneInfoList, "sceneName");
                         }
-                            callBack.editSceneNameSuccess();
+                        callBack.editSceneNameSuccess();
                     } catch (DbException e) {
                         e.printStackTrace();
                     }

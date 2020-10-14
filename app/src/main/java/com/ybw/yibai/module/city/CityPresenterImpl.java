@@ -9,6 +9,7 @@ import android.view.View;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -142,5 +143,19 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
     @Override
     public void onGetCitySuccess(CityListBean cityListBean) {
         mCityView.onGetCitySuccess(cityListBean);
+    }
+
+
+    /**
+     * 根据经纬度获取定位
+     * */
+    @Override
+    public void getLocation(double latitude, double longitude) {
+        mCityModel.getLocation(latitude,longitude,this);
+    }
+
+    @Override
+    public void onGetLocationSuccess(PlaceBean placeBean) {
+        mCityView.onGetLocationSuccess(placeBean);
     }
 }

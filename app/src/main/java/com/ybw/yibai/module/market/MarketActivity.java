@@ -83,8 +83,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
             int productSkuId = intent.getIntExtra(PRODUCT_SKU_ID, 0);
             mMarketPresenter.getSkuMarket(productSkuId);
         }
-
-
     }
 
     @Override

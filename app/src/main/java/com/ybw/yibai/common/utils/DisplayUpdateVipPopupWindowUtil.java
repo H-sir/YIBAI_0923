@@ -1,6 +1,7 @@
 package com.ybw.yibai.common.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
@@ -28,8 +29,8 @@ import static com.ybw.yibai.common.constants.Preferences.USER_VIP_URL;
  */
 public class DisplayUpdateVipPopupWindowUtil {
 
-    public static void displayUpdateVipPopupWindow(Activity activity,View rootLayout) {
-        View view = activity.getLayoutInflater().inflate(R.layout.popup_window_update_vip_layout, null);
+    public static void displayUpdateVipPopupWindow(Activity activity, View rootLayout) {
+        View view =View.inflate(activity,R.layout.popup_window_update_vip_layout, null);
         PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ImageView updateVipImg = view.findViewById(R.id.update_vip_img);

@@ -219,7 +219,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
     /**
      * 保存
      */
-    private TextView mSaveTextView;
+    private LinearLayout mSaveTextView;
 
     /**
      * 保存的数量
@@ -617,6 +617,14 @@ public class SceneActivity extends BaseActivity implements SceneView,
         }
     }
 
+    /**
+     * 设计详情返回
+     * */
+    @Override
+    public void updateSceneData() {
+        mScenePresenter.findUserSceneListInfo(true);
+    }
+
     @Override
     public void onNetworkStateChange(NetworkType networkType) {
 
@@ -709,7 +717,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         if (id == R.id.myDesignImageTextView) {
             Intent intent = new Intent(this, DesignDetailsActivity.class);
             intent.putExtra(DESIGN_NUMBER, mDesingNumber);
-            startActivity(intent);
+            startActivityForResult(intent,0);//此处的requestCode应与下面结果处理函中调用的requestCode一致
 
 //            Intent intent = new Intent(this, SimulationDrawingActivity.class);
 //            startActivity(intent);

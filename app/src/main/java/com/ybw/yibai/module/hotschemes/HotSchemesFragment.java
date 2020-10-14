@@ -3,6 +3,7 @@ package com.ybw.yibai.module.hotschemes;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.ybw.yibai.common.adapter.PotSelectAdapter;
 import com.ybw.yibai.common.bean.HotSchemes;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
+import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -33,8 +35,11 @@ import com.ybw.yibai.module.scene.SceneActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static com.ybw.yibai.common.constants.Preferences.HOT_SCHEME_INFO;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 
 /**
  * 新热门场景
@@ -106,7 +111,7 @@ public class HotSchemesFragment extends BaseFragment implements HotSchemesView, 
       )   (
      (__ __)
     */
-
+    private View mRootView;
     /**
      * 上下文对象
      */
@@ -185,6 +190,7 @@ public class HotSchemesFragment extends BaseFragment implements HotSchemesView, 
 
     @Override
     protected void findViews(View view) {
+        mRootView = view.findViewById(R.id.mRootView);
         mSceneBackgroundImageView = view.findViewById(R.id.sceneBackgroundImageView);
         mCollocationLayout = view.findViewById(R.id.collocationLayout);
         mProductCodeImageButton = view.findViewById(R.id.productCodeImageButton);
@@ -271,6 +277,13 @@ public class HotSchemesFragment extends BaseFragment implements HotSchemesView, 
 
         // 场景预览
         if (id == R.id.scenePreviewButton) {
+            SharedPreferences preferences = getActivity().getSharedPreferences(USER_INFO, MODE_PRIVATE);
+            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+            if (1 == vipLevel) {
+                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootView);
+                return;
+            }
+
             if (1 == comType) {
                 mHotSchemesPresenter.saveSimulationData(mPlantBean, mPotBean);
             } else {

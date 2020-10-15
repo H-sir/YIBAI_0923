@@ -168,6 +168,11 @@ public interface ProductDetailsContract {
          * @param firstSkuId 主产品 skuId
          */
         void addQuotation(int firstSkuId);
+
+        /**
+         *添加商品到进货列表
+         * */
+        void addpurcart(ProductData productData);
     }
 
     interface ProductDetailsModel {
@@ -221,6 +226,8 @@ public interface ProductDetailsContract {
          * @param callBack   回调方法
          */
         void addQuotation(int firstSkuId, CallBack callBack);
+
+        void addPurcart(ProductData productData, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

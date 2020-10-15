@@ -16,6 +16,8 @@ import com.ybw.yibai.common.broadcast.NetWorkStateReceiver;
 import com.ybw.yibai.common.classs.ConcreteWatched;
 import com.ybw.yibai.common.interfaces.Watcher;
 
+import butterknife.ButterKnife;
+
 /**
  * 基类的Fragment(模板方法模式)
  *
@@ -32,7 +34,7 @@ public abstract class BaseFragment extends Fragment implements Watcher {
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(setLayouts(), container, false);
-
+        ButterKnife.bind(this, view);
         findViews(view);
         initView();
         initData();

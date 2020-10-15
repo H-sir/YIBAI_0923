@@ -278,6 +278,10 @@ public class Preferences {
      * 产品的SKU Id
      */
     public static final String PRODUCT_SKU_ID = "skuId";
+    /**
+     * 产品的SKU Id
+     */
+    public static final String PRODUCT_SKU_ADDORSELECT = "productSkuAddOrSelect";
 
     /**
      * 产品类别Code

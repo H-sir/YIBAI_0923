@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="￥1230.0"
+                android:text="￥"
                 android:textColor="@color/colorPrimary"
                 android:textSize="@dimen/action_button_content_margin" />
 
@@ -30,34 +30,59 @@
                 android:id="@+id/gateNameText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="高手"
+                android:text=""
                 android:textColor="@color/prompt_high_text_color"
                 android:textSize="@dimen/action_button_margin" />
         </LinearLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:gravity="center">
 
-            <ImageView
-                android:id="@+id/gateNameSelectImg"
+            <LinearLayout
+                android:id="@+id/gateNameSelectImgView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/gateNameSelectImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/un_selected_img" />
+
+                <TextView
+                    android:id="@+id/gateNameSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="选用"
+                    android:textColor="#707070"
+                    android:textSize="@dimen/action_button_content_margin" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/addGateName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@mipmap/un_selected_img" />
-
-            <TextView
-                android:id="@+id/gateNameSelect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="选用"
-                android:textColor="#707070"
-                android:textSize="@dimen/action_button_content_margin" />
-        </LinearLayout>
+                android:background="@drawable/background_customer_blue_s"
+                android:paddingLeft="15dp"
+                android:paddingTop="5dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="5dp"
+                android:text="加入进货"
+                android:textColor="@color/white"
+                android:textSize="10dp"
+                android:visibility="gone" />
+        </FrameLayout>
     </LinearLayout>
 
     <com.ybw.yibai.common.widget.nestlistview.NestFullListView
@@ -78,8 +103,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_below="@+id/gateSkuPicListView"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:padding="5dp">
 
@@ -123,6 +148,7 @@
                 android:textSize="@dimen/action_button_margin" />
         </LinearLayout>
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"

@@ -38,6 +38,9 @@
     <!-- 特殊文字(仅用与标签栏文字默认状态)文本颜色 -->
     <color name="special_text_color">#C6D1D1</color>
 
+    <!-- 特殊文字(仅用与标签栏文字默认状态)文本颜色 -->
+    <color name="special_text_color_s">#dce6e6</color>
+
     <!-- toast 文字的颜色(白色)-->
     <color name="toast_text_color">#FFFFFF</color>
 

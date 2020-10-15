@@ -3,6 +3,7 @@ package com.ybw.yibai.module.purchase;
 import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.QuotationData;
 
 import java.util.List;
@@ -44,6 +45,8 @@ public interface PurchaseContract {
          * @param totalTradePrice 总批发价格
          */
         void onGetTotalTradePriceSuccess(double totalTradePrice);
+
+        void onGetPurCartDataSuccess(PurCartBean purCartBean);
     }
 
     interface PurchasePresenter extends BasePresenter<PurchaseView> {
@@ -73,6 +76,12 @@ public interface PurchaseContract {
          * @param quotationDataList 用户保存的"报价"数据列表
          */
         void getTotalTradePrice(List<QuotationData> quotationDataList);
+
+        /**
+         * 获取用户的进货信息
+         */
+        void getPurCartData();
+
     }
 
     interface PurchaseModel {
@@ -99,6 +108,11 @@ public interface PurchaseContract {
          * @param callBack      回调方法
          */
         void deleteQuotationData(QuotationData quotationData, CallBack callBack);
+
+        /**
+         * 获取用户的进货信息
+         * */
+        void getPurCartData(CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -123,5 +137,7 @@ public interface PurchaseContract {
          * @param result 结果 true成功/ false失败
          */
         void onDeleteQuotationDataFinish(boolean result);
+
+        void onGetPurCartDataSuccess(PurCartBean purCartBean);
     }
 }

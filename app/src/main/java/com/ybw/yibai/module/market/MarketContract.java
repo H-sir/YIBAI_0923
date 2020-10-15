@@ -18,6 +18,8 @@ public interface MarketContract {
          * 多货源查询成功回调
          */
         void onGetSkuMarketSuccess(SkuMarketBean designDetails);
+
+        void onAddPurcartSuccess();
     }
 
     interface MarketPresenter extends BasePresenter<MarketView> {
@@ -26,6 +28,11 @@ public interface MarketContract {
          * 多货源查询
          */
         void getSkuMarket(int productSkuId);
+
+        /**
+         * 加入进货
+         * */
+        void addPurcart(int productSkuId, int gateProductId);
     }
 
     interface MarketModel {
@@ -33,6 +40,8 @@ public interface MarketContract {
          * 多货源查询
          */
         void getSkuMarket(int productSkuId, CallBack callBack);
+
+        void addPurcart(int productSkuId, int gateProductId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -40,5 +49,7 @@ public interface MarketContract {
          * 多货源查询成功回调
          */
         void onGetSkuMarketSuccess(SkuMarketBean designDetails);
+
+        void onAddPurcartSuccess();
     }
 }

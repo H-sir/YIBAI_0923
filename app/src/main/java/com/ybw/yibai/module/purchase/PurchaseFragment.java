@@ -17,6 +17,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.PurchaseAdapter;
 import com.ybw.yibai.common.bean.HiddenChanged;
 import com.ybw.yibai.common.bean.NetworkType;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.PurchaseOrder;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -201,8 +202,13 @@ public class PurchaseFragment extends BaseFragment implements PurchaseView, View
         if (hidden) {
             return;
         }
-        // 获取用户保存的"报价"数据
+        // 获取用户的进货数据
         mPurchasePresenter.getQuotationData();
+    }
+
+    @Override
+    public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
+
     }
 
     /**

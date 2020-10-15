@@ -1,18 +1,21 @@
 package com.ybw.yibai.common.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class SkuMarketBean {
 
+
     /**
      * code : 200
      * msg : ok
-     * data : {"product_name":"富贵竹笼","self_info":{"price":"","month_rent":""},"gate_info":[{"gate_id":0,"gate_name":"平台直供","gate_add":"官方优选货源","gate_sku":[{"gate_sku_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"trade_price":"129.00","uptime":"09/04 16:16:43","stock":0}]},{"gate_id":1,"gate_name":"爱花坊","gate_add":"广东省-岭南花卉市场","gate_sku":[{"gate_sku_id":"1","subtitle":"富贵竹笼 特级","pic_arr":[],"trade_price":"50.00","uptime":"08/20 00:02:00","stock":"10"},{"gate_sku_id":"3","subtitle":"富贵竹笼 A级","pic_arr":[],"trade_price":"88.00","uptime":"08/20 14:32:31","stock":"100"}]}]}
+     * data : {"product_name":"富贵竹笼","self_info":{"price":"","month_rent":""},"gate_info":[{"gate_id":0,"gate_name":"平台直供","gate_add":"官方优选货源","gate_sku":[{"gate_product_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"price":129,"uptime":"10/09 14:51:03","stock":0,"delivery":"广州发货至广州市:预计1天后到货"}]}]}
      */
 
-    private int code;
-    private String msg;
-    private DataBean data;
+    @SerializedName("code") private int code;
+    @SerializedName("msg") private String msg;
+    @SerializedName("data") private DataBean data;
 
     public int getCode() {
         return code;
@@ -42,35 +45,35 @@ public class SkuMarketBean {
         /**
          * product_name : 富贵竹笼
          * self_info : {"price":"","month_rent":""}
-         * gate_info : [{"gate_id":0,"gate_name":"平台直供","gate_add":"官方优选货源","gate_sku":[{"gate_sku_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"trade_price":"129.00","uptime":"09/04 16:16:43","stock":0}]},{"gate_id":1,"gate_name":"爱花坊","gate_add":"广东省-岭南花卉市场","gate_sku":[{"gate_sku_id":"1","subtitle":"富贵竹笼 特级","pic_arr":[],"trade_price":"50.00","uptime":"08/20 00:02:00","stock":"10"},{"gate_sku_id":"3","subtitle":"富贵竹笼 A级","pic_arr":[],"trade_price":"88.00","uptime":"08/20 14:32:31","stock":"100"}]}]
+         * gate_info : [{"gate_id":0,"gate_name":"平台直供","gate_add":"官方优选货源","gate_sku":[{"gate_product_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"price":129,"uptime":"10/09 14:51:03","stock":0,"delivery":"广州发货至广州市:预计1天后到货"}]}]
          */
 
-        private String product_name;
-        private SelfInfoBean self_info;
-        private List<GateInfoBean> gate_info;
+        @SerializedName("product_name") private String productName;
+        @SerializedName("self_info") private SelfInfoBean selfInfo;
+        @SerializedName("gate_info") private List<GateInfoBean> gateInfo;
 
-        public String getProduct_name() {
-            return product_name;
+        public String getProductName() {
+            return productName;
         }
 
-        public void setProduct_name(String product_name) {
-            this.product_name = product_name;
+        public void setProductName(String productName) {
+            this.productName = productName;
         }
 
-        public SelfInfoBean getSelf_info() {
-            return self_info;
+        public SelfInfoBean getSelfInfo() {
+            return selfInfo;
         }
 
-        public void setSelf_info(SelfInfoBean self_info) {
-            this.self_info = self_info;
+        public void setSelfInfo(SelfInfoBean selfInfo) {
+            this.selfInfo = selfInfo;
         }
 
-        public List<GateInfoBean> getGate_info() {
-            return gate_info;
+        public List<GateInfoBean> getGateInfo() {
+            return gateInfo;
         }
 
-        public void setGate_info(List<GateInfoBean> gate_info) {
-            this.gate_info = gate_info;
+        public void setGateInfo(List<GateInfoBean> gateInfo) {
+            this.gateInfo = gateInfo;
         }
 
         public static class SelfInfoBean {
@@ -79,8 +82,8 @@ public class SkuMarketBean {
              * month_rent :
              */
 
-            private String price;
-            private String month_rent;
+            @SerializedName("price") private String price;
+            @SerializedName("month_rent") private String monthRent;
 
             public String getPrice() {
                 return price;
@@ -90,12 +93,12 @@ public class SkuMarketBean {
                 this.price = price;
             }
 
-            public String getMonth_rent() {
-                return month_rent;
+            public String getMonthRent() {
+                return monthRent;
             }
 
-            public void setMonth_rent(String month_rent) {
-                this.month_rent = month_rent;
+            public void setMonthRent(String monthRent) {
+                this.monthRent = monthRent;
             }
         }
 
@@ -104,79 +107,80 @@ public class SkuMarketBean {
              * gate_id : 0
              * gate_name : 平台直供
              * gate_add : 官方优选货源
-             * gate_sku : [{"gate_sku_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"trade_price":"129.00","uptime":"09/04 16:16:43","stock":0}]
+             * gate_sku : [{"gate_product_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"price":129,"uptime":"10/09 14:51:03","stock":0,"delivery":"广州发货至广州市:预计1天后到货"}]
              */
 
-            private int gate_id;
-            private String gate_name;
-            private String gate_add;
-            private List<GateSkuBean> gate_sku;
+            @SerializedName("gate_id") private int gateId;
+            @SerializedName("gate_name") private String gateName;
+            @SerializedName("gate_add") private String gateAdd;
+            @SerializedName("gate_sku") private List<GateSkuBean> gateSku;
 
-            public int getGate_id() {
-                return gate_id;
+            public int getGateId() {
+                return gateId;
             }
 
-            public void setGate_id(int gate_id) {
-                this.gate_id = gate_id;
+            public void setGateId(int gateId) {
+                this.gateId = gateId;
             }
 
-            public String getGate_name() {
-                return gate_name;
+            public String getGateName() {
+                return gateName;
             }
 
-            public void setGate_name(String gate_name) {
-                this.gate_name = gate_name;
+            public void setGateName(String gateName) {
+                this.gateName = gateName;
             }
 
-            public String getGate_add() {
-                return gate_add;
+            public String getGateAdd() {
+                return gateAdd;
             }
 
-            public void setGate_add(String gate_add) {
-                this.gate_add = gate_add;
+            public void setGateAdd(String gateAdd) {
+                this.gateAdd = gateAdd;
             }
 
-            public List<GateSkuBean> getGate_sku() {
-                return gate_sku;
+            public List<GateSkuBean> getGateSku() {
+                return gateSku;
             }
 
-            public void setGate_sku(List<GateSkuBean> gate_sku) {
-                this.gate_sku = gate_sku;
+            public void setGateSku(List<GateSkuBean> gateSku) {
+                this.gateSku = gateSku;
             }
 
             public static class GateSkuBean {
                 /**
-                 * gate_sku_id : 0
+                 * gate_product_id : 0
                  * subtitle :
                  * pic_arr : ["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"]
-                 * trade_price : 129.00
-                 * uptime : 09/04 16:16:43
+                 * price : 129
+                 * uptime : 10/09 14:51:03
                  * stock : 0
+                 * delivery : 广州发货至广州市:预计1天后到货
                  */
 
-                private int gate_sku_id;
-                private String subtitle;
-                private String trade_price;
-                private String uptime;
-                private int stock;
-                private boolean isSelect;
-                private List<String> pic_arr;
-
+                @SerializedName("gate_product_id") private int gateProductId;
+                @SerializedName("subtitle") private String subtitle;
+                @SerializedName("price") private int price;
+                @SerializedName("uptime") private String uptime;
+                @SerializedName("stock") private int stock;
+                @SerializedName("delivery") private String delivery;
+                @SerializedName("pic_arr") private List<String> picArr;
+                private boolean select;
 
                 public boolean isSelect() {
-                    return isSelect;
+                    return select;
                 }
 
                 public void setSelect(boolean select) {
-                    isSelect = select;
+                    this.select = select;
                 }
 
-                public int getGate_sku_id() {
-                    return gate_sku_id;
+                public int getGateProductId() {
+                    return gateProductId;
                 }
 
-                public void setGate_sku_id(int gate_sku_id) {
-                    this.gate_sku_id = gate_sku_id;
+                public void setGateProductId(int gateProductId) {
+                    this.gateProductId = gateProductId;
                 }
 
                 public String getSubtitle() {
@@ -187,12 +191,12 @@ public class SkuMarketBean {
                     this.subtitle = subtitle;
                 }
 
-                public String getTrade_price() {
-                    return trade_price;
+                public int getPrice() {
+                    return price;
                 }
 
-                public void setTrade_price(String trade_price) {
-                    this.trade_price = trade_price;
+                public void setPrice(int price) {
+                    this.price = price;
                 }
 
                 public String getUptime() {
@@ -211,12 +215,20 @@ public class SkuMarketBean {
                     this.stock = stock;
                 }
 
-                public List<String> getPic_arr() {
-                    return pic_arr;
+                public String getDelivery() {
+                    return delivery;
                 }
 
-                public void setPic_arr(List<String> pic_arr) {
-                    this.pic_arr = pic_arr;
+                public void setDelivery(String delivery) {
+                    this.delivery = delivery;
+                }
+
+                public List<String> getPicArr() {
+                    return picArr;
+                }
+
+                public void setPicArr(List<String> picArr) {
+                    this.picArr = picArr;
                 }
             }
         }

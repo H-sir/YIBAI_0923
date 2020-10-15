@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.AddQuotation;
+import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.ProductData;
 import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
@@ -24,14 +25,20 @@ import com.ybw.yibai.module.details.ProductDetailsContract.ProductDetailsModel;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
+import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SIMILAR_SUK_LIST_METHOD;
@@ -53,6 +60,50 @@ public class ProductDetailsModelImpl implements ProductDetailsModel {
     public ProductDetailsModelImpl() {
         RetrofitManagerUtil instance = RetrofitManagerUtil.getInstance();
         mApiService = instance.getApiService();
+    }
+
+    @Override
+    public void addPurcart(ProductData productData, CallBack callBack) {
+//        File file = new File(productData.getpa);
+//        Map<String, RequestBody> params = new HashMap<>();
+//        String fileName = file.getName();
+//        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
+//        params.put("com_pic\"; filename=\"" + file.getName(), requestBody);
+
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.addPurcart(timeStamp,
+                OtherUtil.getSign(timeStamp, ADD_PURCART_METHOD),
+                YiBaiApplication.getUid(),
+                productData.getProductSkuId(), 0);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200)
+                    callBack.onSaveQuotationDataDataResult(true);
+                else
+                    callBack.onSaveQuotationDataDataResult(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 
     /**
@@ -424,7 +475,7 @@ public class ProductDetailsModelImpl implements ProductDetailsModel {
             }
         } catch (DbException e) {
             e.printStackTrace();
-            LogUtil.e(TAG,"错误： "+  e.toString());
+            LogUtil.e(TAG, "错误： " + e.toString());
             // 操作失败
             callBack.onSaveQuotationDataDataResult(false);
         }

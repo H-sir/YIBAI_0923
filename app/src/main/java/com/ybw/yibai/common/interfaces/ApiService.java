@@ -38,6 +38,7 @@ import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.ProductScreeningParam;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.PurchaseOrder;
 import com.ybw.yibai.common.bean.PurchaseOrderList;
 import com.ybw.yibai.common.bean.QuotationAgain;
@@ -762,6 +763,62 @@ public interface ApiService {
                                       @Part("item") String item,
                                       @PartMap Map<String, RequestBody> params,
                                       @Part MultipartBody.Part[] parts);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp           时间搓
+     * @param sign                签名
+     * @param uid                 用户的ID
+     * @param firstSkuId          主skuid
+     * @param secondSkuId         附加产品skuid
+     * @param firstGateProductId  主产品档口产品id(货源中获取)
+     * @param secondGateProductId 附加产品档口产品id 附加产品skuid存在时此为必填项
+     * @param params              组合图片,单图表单提交formdata 模式   附加产品skuid存在时此为必填项
+     * @return 场景中产品一键创建并导入时服务器端返回的数据
+     */
+    @Multipart
+    @POST(HttpUrls.ADD_PURCART_URL)
+    Observable<BaseBean> addPurcart(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("first_sku_id") int firstSkuId,
+                                    @Part("second_sku_id") int secondSkuId,
+                                    @Part("first_gate_product_id") int firstGateProductId,
+                                    @Part("second_gate_product_id") int secondGateProductId,
+                                    @PartMap Map<String, RequestBody> params);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp          时间搓
+     * @param sign               签名
+     * @param uid                用户的ID
+     * @param firstSkuId         主skuid
+     * @param firstGateProductId 主产品档口产品id(货源中获取)
+     */
+    @Multipart
+    @POST(HttpUrls.ADD_PURCART_URL)
+    Observable<BaseBean> addPurcart(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("first_sku_id") int firstSkuId,
+                                    @Part("first_gate_product_id") int firstGateProductId);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp          时间搓
+     * @param sign               签名
+     * @param uid                用户的ID
+     */
+    @Multipart
+    @POST(HttpUrls.ADD_PURCART_URL)
+    Observable<BaseBean> upCartGate(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("cart_id") int cartId,
+                                    @Part("num") int num);
 
     /**
      * 根据大中小随机获取组合
@@ -1670,6 +1727,19 @@ public interface ApiService {
     Observable<AppUpdate> appUpdate(@Header("timestamp") String timestamp,
                                     @Header("sign") String sign,
                                     @Query("uid") int uid);
+
+    /**
+     * 获取进货列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return APP更新时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_PURCART_URL)
+    Observable<PurCartBean> getPurCart(@Header("timestamp") String timestamp,
+                                       @Header("sign") String sign,
+                                       @Query("uid") int uid);
 
     /**
      * 版本更新

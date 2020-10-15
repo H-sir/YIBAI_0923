@@ -107,6 +107,11 @@ public class ProductDetailsPresenterImpl extends BasePresenterImpl<ProductDetail
         mSelectsSpecMap = new HashMap<>();
     }
 
+    @Override
+    public void addpurcart(ProductData productData) {
+        mBonsaiDetailsModel.addPurcart(productData,this);
+    }
+
     /**
      * 获取产品详情
      *

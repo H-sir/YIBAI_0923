@@ -31,6 +31,7 @@ import com.ybw.yibai.common.widget.magicindicator.buildins.commonnavigator.indic
 import com.ybw.yibai.common.widget.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 import com.ybw.yibai.common.widget.magicindicator.title.ScaleTransitionPagerTitleView;
 import com.ybw.yibai.module.main.MainActivity;
+import com.ybw.yibai.module.purcart.PurCateFragment;
 import com.ybw.yibai.module.purchase.PurchaseFragment;
 import com.ybw.yibai.module.quotation.QuotationFragment;
 
@@ -221,6 +222,7 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
         super.onHiddenChanged(hidden);
         /**
          * 发送数据到 {@link QuotationFragment#onFragmentHiddenChanged(HiddenChanged)}
+         * 发送数据到 {@link PurCateFragment#onFragmentHiddenChanged(HiddenChanged)}
          * 发送数据到 {@link PurchaseFragment#onFragmentHiddenChanged(HiddenChanged)}
          */
         EventBus.getDefault().postSticky(new HiddenChanged(hidden));
@@ -249,7 +251,7 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
         Fragment[] fragment = new Fragment[mClassList.size()];
         fragment[0] = new QuotationFragment();
         if (!TextUtils.isEmpty(roleName) && roleName.equals(SERVICE)) {
-            fragment[1] = new PurchaseFragment();
+            fragment[1] = new PurCateFragment();
         }
         mCommonNavigatorAdapter.notifyDataSetChanged();
         FragmentManager manager = getChildFragmentManager();

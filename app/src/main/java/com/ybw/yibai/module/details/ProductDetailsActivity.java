@@ -39,6 +39,7 @@ import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.collocation.CollocationActivity;
 import com.ybw.yibai.module.details.ProductDetailsContract.ProductDetailsPresenter;
 import com.ybw.yibai.module.details.ProductDetailsContract.ProductDetailsView;
+import com.ybw.yibai.module.market.MarketActivity;
 import com.ybw.yibai.module.product.ProductFragment;
 import com.ybw.yibai.module.scene.SceneActivity;
 
@@ -51,6 +52,7 @@ import java.util.Map;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_ID;
+import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ADDORSELECT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_LIST;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_NAME;
@@ -465,22 +467,29 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
 
         // 加入进货
         if (id == R.id.joinPurchaseTextView) {
-            ProductData productData = new ProductData(
-                    productSkuId,
-                    productName,
-                    productPrice,
-                    productMonthRent,
-                    productTradePrice,
-                    productPic1,
-                    productPic2,
-                    productPic3,
-                    productSpecText,
-                    productHeight,
-                    productCombinationType,
-                    productPriceCode,
-                    productTradePriceCode
-            );
-            mProductDetailsPresenter.saveQuotationData(productData);
+//            ProductData productData = new ProductData(
+//                    productSkuId,
+//                    productName,
+//                    productPrice,
+//                    productMonthRent,
+//                    productTradePrice,
+//                    productPic1,
+//                    productPic2,
+//                    productPic3,
+//                    productSpecText,
+//                    productHeight,
+//                    productCombinationType,
+//                    productPriceCode,
+//                    productTradePriceCode
+//            );
+//            mProductDetailsPresenter.saveQuotationData(productData);
+//            mProductDetailsPresenter.addpurcart(productData);
+            if (productSkuId != 0) {
+                Intent intent = new Intent(ProductDetailsActivity.this, MarketActivity.class);
+                intent.putExtra(PRODUCT_SKU_ID, productSkuId);
+                intent.putExtra(PRODUCT_SKU_ADDORSELECT, true);
+                startActivity(intent);
+            }
         }
 
         // 加入报价

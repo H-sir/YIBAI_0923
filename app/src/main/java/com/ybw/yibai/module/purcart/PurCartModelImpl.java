@@ -1,65 +1,53 @@
-package com.ybw.yibai.module.market;
+package com.ybw.yibai.module.purcart;
 
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.BaseBean;
-import com.ybw.yibai.common.bean.SceneInfo;
-import com.ybw.yibai.common.bean.SkuMarketBean;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
-
-import org.xutils.DbManager;
-import org.xutils.ex.DbException;
-
-import java.util.List;
-
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
-import static com.ybw.yibai.common.constants.HttpUrls.GET_SKU_MARKET_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
 
 /**
- * <pre>
- *     author : HKR
- *     time   : 2020/09/02
- *     desc   :
- * </pre>
+ * 进货Fragment Model 实现类
+ *
+ * @author sjl
+ * @date 2019/11/5
  */
-public class MarketModelImpl implements MarketContract.MarketModel {
-
-    public static final String TAG = "MarketModelImpl";
+public class PurCartModelImpl implements PurCartContract.PurCartModel {
 
     private ApiService mApiService;
 
-    public MarketModelImpl() {
+    public PurCartModelImpl() {
         RetrofitManagerUtil instance = RetrofitManagerUtil.getInstance();
         mApiService = instance.getApiService();
     }
 
     @Override
-    public void getSkuMarket(int productSkuId, MarketContract.CallBack callBack) {
+    public void getPurCartData(PurCartContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<SkuMarketBean> observable = mApiService.getSkuMarket(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_SKU_MARKET_METHOD),
-                YiBaiApplication.getUid(),
-                productSkuId);
-        Observer<SkuMarketBean> observer = new Observer<SkuMarketBean>() {
+        Observable<PurCartBean> observable = mApiService.getPurCart(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_PURCART_METHOD),
+                YiBaiApplication.getUid());
+        Observer<PurCartBean> observer = new Observer<PurCartBean>() {
             @Override
             public void onSubscribe(Disposable d) {
                 callBack.onRequestBefore(d);
             }
 
             @Override
-            public void onNext(SkuMarketBean skuMarketBean) {
-                if (skuMarketBean.getCode() == 200) {
-                    callBack.onGetSkuMarketSuccess(skuMarketBean);
+            public void onNext(PurCartBean purCartBean) {
+                if (purCartBean.getCode() == 200) {
+                    callBack.onGetPurCartDataSuccess(purCartBean);
                 } else {
-                    callBack.onRequestFailure(new Throwable(skuMarketBean.getMsg()));
+                    callBack.onRequestFailure(new Throwable(purCartBean.getMsg()));
                 }
             }
 
@@ -80,12 +68,11 @@ public class MarketModelImpl implements MarketContract.MarketModel {
     }
 
     @Override
-    public void addPurcart(int productSkuId, int gateProductId, MarketContract.CallBack callBack) {
+    public void updateCartGate(int cartId, int num, PurCartContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<BaseBean> observable = mApiService.addPurcart(timeStamp,
-                OtherUtil.getSign(timeStamp, ADD_PURCART_METHOD),
-                YiBaiApplication.getUid(),
-                productSkuId, gateProductId);
+        Observable<BaseBean> observable = mApiService.upCartGate(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_PURCART_METHOD),
+                YiBaiApplication.getUid(),cartId,num);
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -95,7 +82,7 @@ public class MarketModelImpl implements MarketContract.MarketModel {
             @Override
             public void onNext(BaseBean baseBean) {
                 if (baseBean.getCode() == 200) {
-                    callBack.onAddPurcartSuccess();
+                    callBack.onUpdateCartGateSuccess(num);
                 } else {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }

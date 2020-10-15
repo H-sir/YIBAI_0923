@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BasePresenterImpl;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.widget.CustomDialog;
@@ -150,5 +151,15 @@ public class PurchasePresenterImpl extends BasePresenterImpl<PurchaseView> imple
         BigDecimal bigDecimal = new BigDecimal(totalTradePrice);
         double v = bigDecimal.setScale(2, RoundingMode.HALF_EVEN).doubleValue();
         mPurchaseView.onGetTotalTradePriceSuccess(v);
+    }
+
+    @Override
+    public void getPurCartData() {
+        mPurchaseModel.getPurCartData(this);
+    }
+
+    @Override
+    public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
+        mPurchaseView.onGetPurCartDataSuccess(purCartBean);
     }
 }

@@ -13,6 +13,7 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
+import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ADDORSELECT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 
 /**
@@ -42,11 +44,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
     NestFullListView marketListView;
     @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
-
-    /**
-     * 货源的SKUID
-     */
-    private String productSkuId;
 
     private MarketContract.MarketPresenter mMarketPresenter;
 
@@ -74,13 +71,17 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
 
     }
 
+    private boolean addOrSelect = true;
+    private int productSkuId = 0;
+
     @Override
     protected void initData() {
         mMarketPresenter = new MarketPresenterImpl(this);
         mWaitDialog = new WaitDialog(this);
         Intent intent = getIntent();
         if (null != intent) {
-            int productSkuId = intent.getIntExtra(PRODUCT_SKU_ID, 0);
+            productSkuId = intent.getIntExtra(PRODUCT_SKU_ID, 0);
+            addOrSelect = intent.getBooleanExtra(PRODUCT_SKU_ADDORSELECT, true);
             mMarketPresenter.getSkuMarket(productSkuId);
         }
     }
@@ -91,14 +92,14 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
 
     @Override
     public void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean) {
-        if (skuMarketBean.getData().getProduct_name() != null)
-            marketProduct.setText(skuMarketBean.getData().getProduct_name());
-        if (skuMarketBean.getData().getSelf_info().getMonth_rent() != null)
-            marketMonthRent.setText(skuMarketBean.getData().getSelf_info().getMonth_rent());
-        if (skuMarketBean.getData().getSelf_info().getPrice() != null)
-            marketPrice.setText(skuMarketBean.getData().getSelf_info().getPrice());
-        if (skuMarketBean.getData().getGate_info() != null)
-            gateInfoBeanList.addAll(skuMarketBean.getData().getGate_info());
+        if (skuMarketBean.getData().getProductName() != null)
+            marketProduct.setText(skuMarketBean.getData().getProductName());
+        if (skuMarketBean.getData().getSelfInfo().getMonthRent() != null)
+            marketMonthRent.setText(skuMarketBean.getData().getSelfInfo().getMonthRent());
+        if (skuMarketBean.getData().getSelfInfo().getPrice() != null)
+            marketPrice.setText(skuMarketBean.getData().getSelfInfo().getPrice());
+        if (skuMarketBean.getData().getGateInfo() != null)
+            gateInfoBeanList.addAll(skuMarketBean.getData().getGateInfo());
 
         mNestFullListViewAdapter = new NestFullListViewAdapter<SkuMarketBean.DataBean.GateInfoBean>(
                 R.layout.listview_market_list_item_layout, gateInfoBeanList) {
@@ -107,68 +108,84 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                 Log.d("NullListView", "嵌套第一层ScrollView onBind() called with: pos = [" + pos + "], testBean = [" + gateInfoBean + "], v = [" + holder + "]");
                 TextView gateName = holder.getView(R.id.gateName);//平台
                 TextView gateAdd = holder.getView(R.id.gateAdd);//描述
-                gateName.setText(gateInfoBean.getGate_name());
-                gateAdd.setText(gateInfoBean.getGate_add());
+                gateName.setText(gateInfoBean.getGateName());
+                gateAdd.setText(gateInfoBean.getGateAdd());
 
                 //第二层
                 NestFullListView view = (NestFullListView) holder.getView(R.id.gateSkuListView);
                 view.setOrientation(LinearLayout.VERTICAL);
-                view.setAdapter(
-                        new NestFullListViewAdapter<SkuMarketBean.DataBean.GateInfoBean.GateSkuBean>
-                                (R.layout.listview_market_list_sku_item_layout,
-                                        gateInfoBean.getGate_sku()) {
+                view.setAdapter(new NestFullListViewAdapter<SkuMarketBean.DataBean.GateInfoBean.GateSkuBean>
+                        (R.layout.listview_market_list_sku_item_layout,
+                                gateInfoBean.getGateSku()) {
+                    @Override
+                    public void onBind(int pos, SkuMarketBean.DataBean.GateInfoBean.GateSkuBean gateSkuBean, NestFullViewHolder holder) {
+                        View gateNameSelectImgView = holder.getView(R.id.gateNameSelectImgView);
+                        TextView addGateName = holder.getView(R.id.addGateName);
+                        TextView tradePrice = holder.getView(R.id.tradePrice);
+                        TextView gateNameText = holder.getView(R.id.gateNameText);
+                        TextView gateNameSelect = holder.getView(R.id.gateNameSelect);
+                        ImageView gateNameSelectImg = holder.getView(R.id.gateNameSelectImg);
+                        TextView stockMarket = holder.getView(R.id.stockMarket);
+                        TextView uptime = holder.getView(R.id.uptime);
+
+                        if (addOrSelect) {
+                            addGateName.setVisibility(View.VISIBLE);
+                            gateNameSelectImgView.setVisibility(View.GONE);
+                        } else {
+                            addGateName.setVisibility(View.GONE);
+                            gateNameSelectImgView.setVisibility(View.VISIBLE);
+                        }
+
+                        tradePrice.setText("￥" + String.valueOf(gateSkuBean.getPrice()));
+                        gateNameText.setText("");
+                        stockMarket.setText(String.valueOf(gateSkuBean.getStock()));
+                        uptime.setText(gateSkuBean.getUptime());
+                        gateNameSelect.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onBind(int pos, SkuMarketBean.DataBean.GateInfoBean.GateSkuBean gateSkuBean, NestFullViewHolder holder) {
-                                Log.d("NullListView", "嵌套第二层onBind() called with: pos = [" + pos + "], nestBean = [" + gateSkuBean.getTrade_price() + "], v = [" + holder + "]");
-                                TextView tradePrice = holder.getView(R.id.tradePrice);
-                                TextView gateNameText = holder.getView(R.id.gateNameText);
-                                TextView gateNameSelect = holder.getView(R.id.gateNameSelect);
-                                ImageView gateNameSelectImg = holder.getView(R.id.gateNameSelectImg);
-                                TextView stockMarket = holder.getView(R.id.stockMarket);
-                                TextView uptime = holder.getView(R.id.uptime);
-
-                                tradePrice.setText(gateSkuBean.getTrade_price());
-                                gateNameText.setText("");
-                                stockMarket.setText(String.valueOf(gateSkuBean.getStock()));
-                                uptime.setText(gateSkuBean.getUptime());
-                                gateNameSelect.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        gateSkuBean.setSelect(!gateSkuBean.isSelect());
-                                        if (gateSkuBean.isSelect()) {
-                                            gateNameSelect.setText("已选用");
-                                            gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
-                                        } else {
-                                            gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.un_selected_img));
-                                            gateNameSelect.setText("未选用");
-
-                                        }
-                                    }
-                                });
-
+                            public void onClick(View view) {
+                                gateSkuBean.setSelect(!gateSkuBean.isSelect());
                                 if (gateSkuBean.isSelect()) {
                                     gateNameSelect.setText("已选用");
                                     gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
                                 } else {
                                     gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.un_selected_img));
                                     gateNameSelect.setText("未选用");
+
                                 }
-                                ((NestFullListView) holder.getView(R.id.gateSkuPicListView)).setAdapter(
-                                        new NestFullListViewAdapter<String>(R.layout.listview_market_list_pic_item_layout, gateSkuBean.getPic_arr()) {
-                                            @Override
-                                            public void onBind(int pos, String pic, NestFullViewHolder holder) {
-                                                Log.d("NullListView", "嵌套第三层onBind() called with: pos = [" + pos + "], nestBean = [" + pic + "], v = [" + holder + "]");
-                                                ImageView imagePic = holder.getView(R.id.imagePic);
-                                                if (pic != null && !pic.isEmpty())
-                                                    ImageUtil.displayImage(getApplicationContext(), imagePic, pic);
-                                            }
-                                        }
-                                );
                             }
                         });
+
+                        if (gateSkuBean.isSelect()) {
+                            gateNameSelect.setText("已选用");
+                            gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                        } else {
+                            gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.un_selected_img));
+                            gateNameSelect.setText("未选用");
+                        }
+                        addGateName.setOnClickListener(view1 -> {
+                            mMarketPresenter.addPurcart(productSkuId, gateSkuBean.getGateProductId());
+                        });
+
+                        ((NestFullListView) holder.getView(R.id.gateSkuPicListView)).setAdapter(
+                                new NestFullListViewAdapter<String>(R.layout.listview_market_list_pic_item_layout, gateSkuBean.getPicArr()) {
+                                    @Override
+                                    public void onBind(int pos, String pic, NestFullViewHolder holder) {
+                                        ImageView imagePic = holder.getView(R.id.imagePic);
+                                        if (pic != null && !pic.isEmpty())
+                                            ImageUtil.displayImage(getApplicationContext(), imagePic, pic);
+                                    }
+                                }
+                        );
+                    }
+                });
             }
         };
         marketListView.setAdapter(mNestFullListViewAdapter);
+    }
+
+    @Override
+    public void onAddPurcartSuccess() {
+        MessageUtil.showMessage("加入完成");
     }
 
     /**

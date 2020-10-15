@@ -39,4 +39,14 @@ public class MarketPresenterImpl extends BasePresenterImpl<MarketContract.Market
     public void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean) {
         mMarketView.onGetSkuMarketSuccess(skuMarketBean);
     }
+
+    @Override
+    public void addPurcart(int productSkuId, int gateProductId) {
+        mMarketModel.addPurcart(productSkuId,gateProductId,this);
+    }
+
+    @Override
+    public void onAddPurcartSuccess() {
+        mMarketView.onAddPurcartSuccess();
+    }
 }

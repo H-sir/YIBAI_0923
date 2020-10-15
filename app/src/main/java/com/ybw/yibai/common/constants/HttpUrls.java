@@ -226,6 +226,10 @@ public class HttpUrls {
      * sku加入待摆放清单的方法
      */
     public static final String ADD_QUOTATION_METHOD = "mybw.addquote";
+    /**
+     * 添加商品到进货列表
+     */
+    public static final String ADD_PURCART_METHOD = "mybw.addpurcart";
 
     /**
      * 待摆放清单加入到报价位置的方法
@@ -353,12 +357,22 @@ public class HttpUrls {
      */
     public static final String GET_CITY_PLACE_METHOD = "mybw.getplace";
 
+    /**
+     * 获取进货列表
+     */
+    public static final String GET_PURCART_METHOD = "mybw.getpurcart";
+
     /*
       /\_/\
     =( °w° )=
       )   (
      (__ __)
     */
+
+    /**
+     * 获取进货列表
+     */
+    public static final String GET_PURCART_URL = "?method=" + GET_PURCART_METHOD;
 
     /**
      * 请求根地址的URL
@@ -604,6 +618,10 @@ public class HttpUrls {
      * sku加入待摆放清单的URL
      */
     public static final String ADD_QUOTATION_URL = "?method=" + ADD_QUOTATION_METHOD;
+    /**
+     * 添加商品到进货列表
+     */
+    public static final String ADD_PURCART_URL = "?method=" + ADD_PURCART_METHOD;
 
     /**
      * 待摆放清单加入到报价位置的URL

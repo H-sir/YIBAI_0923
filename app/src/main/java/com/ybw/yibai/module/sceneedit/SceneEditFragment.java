@@ -2070,6 +2070,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     };
     List<BaseSticker> baseStickerList = new ArrayList<>();
 
+    private List<SimulationData> simulationDatas = new ArrayList<>();
     /**
      * 根据场景id查找用户保存的"模拟搭配图片"数据成功时回调
      *
@@ -2077,6 +2078,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
+        simulationDatas.clear();
+        simulationDatas.addAll(simulationDataList);
         baseStickerList.addAll(mStickerView.getAllStickerList());
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
@@ -3133,7 +3136,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         productCombinationType = listBean.getComtype();
         productPriceCode = listBean.getPrice_code();
         productTradePriceCode = listBean.getTrade_price_code();
-
+        baseStickerList.clear();
+        mSceneEditPresenter.addSticker(mSimulationData, baseStickerList, mStickerView, simulationDatas);
     }
 
     /**

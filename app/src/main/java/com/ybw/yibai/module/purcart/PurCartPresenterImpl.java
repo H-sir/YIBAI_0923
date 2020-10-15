@@ -61,6 +61,11 @@ public class PurCartPresenterImpl extends BasePresenterImpl<PurCartContract.PurC
     }
 
     @Override
+    public void updateCartGateCheck(int cartId, int check) {
+        mPurCartModel.updateCartGateCheck(cartId, check, this);
+    }
+
+    @Override
     public void onUpdateCartGateSuccess(int num) {
         mPurCartView.onUpdateCartGateSuccess(num);
     }

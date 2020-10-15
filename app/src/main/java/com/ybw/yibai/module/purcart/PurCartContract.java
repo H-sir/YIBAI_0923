@@ -31,6 +31,11 @@ public interface PurCartContract {
          * 修改购物车信息
          */
         void updateCartGate(int cartId, int num);
+
+        /**
+         * 修改购物车信息
+         */
+        void updateCartGateCheck(int cartId, int check);
     }
 
     interface PurCartModel {
@@ -41,6 +46,8 @@ public interface PurCartContract {
         void getPurCartData(CallBack callBack);
 
         void updateCartGate(int cartId, int num, CallBack callBack);
+
+        void updateCartGateCheck(int cartId, int check, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

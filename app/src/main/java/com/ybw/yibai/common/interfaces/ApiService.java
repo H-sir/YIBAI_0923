@@ -813,12 +813,27 @@ public interface ApiService {
      * @param uid                用户的ID
      */
     @Multipart
-    @POST(HttpUrls.ADD_PURCART_URL)
+    @POST(HttpUrls.UP_CARTGATE_URL)
     Observable<BaseBean> upCartGate(@Header("timestamp") String timestamp,
                                     @Header("sign") String sign,
                                     @Part("uid") int uid,
                                     @Part("cart_id") int cartId,
                                     @Part("num") int num);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp          时间搓
+     * @param sign               签名
+     * @param uid                用户的ID
+     */
+    @Multipart
+    @POST(HttpUrls.UP_CARTGATE_URL)
+    Observable<BaseBean> updateCartGateCheck(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("cart_id") int cartId,
+                                    @Part("checked") int checked);
 
     /**
      * 根据大中小随机获取组合

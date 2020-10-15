@@ -158,6 +158,17 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
          */
         String string = mClassList.get(position);
         EventBus.getDefault().post(new FunctionSwitch(string));
+
+        switch (position) {
+            case 0:
+                break;
+            case 1:
+                /**
+                 * 发送数据到 {@link PurCateFragment#onFragmentHiddenChanged(HiddenChanged)}
+                 */
+                EventBus.getDefault().postSticky(new HiddenChanged(false));
+                break;
+        }
     }
 
     /**

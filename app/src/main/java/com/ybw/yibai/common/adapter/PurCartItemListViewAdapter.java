@@ -6,18 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ybw.yibai.R;
-import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.PurCartBean;
-import com.ybw.yibai.common.bean.PurCartComBean;
 import com.ybw.yibai.common.utils.ImageUtil;
-import com.ybw.yibai.common.utils.TimeUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,10 +62,12 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
         PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
         PurCartBean.DataBean.ItemlistBean.FirstBeanX first = itemlistBean.getFirst();
-
+        boolean isSelect;
         if (itemlistBean.getChecked() == 1) {
+            isSelect = true;
             myViewHolder.purcartComSelect.setImageResource(R.mipmap.selected_img);
         } else {
+            isSelect = false;
             myViewHolder.purcartComSelect.setImageResource(R.mipmap.purcart_no_select);
         }
         if (itemlistBean.getPic() != null)
@@ -82,6 +79,11 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
         myViewHolder.purcartComNum.setText(String.valueOf(itemlistBean.getNum()));
         myViewHolder.titleName.setText(first.getGateName());
         myViewHolder.titleTime.setText("");
+
+        myViewHolder.purcartComSelect.setOnClickListener(view -> {
+            if (onSelectClickListener != null)
+                onSelectClickListener.onItemSelectNum(position, myViewHolder.purcartComSelect, !isSelect);
+        });
 
     }
 
@@ -106,6 +108,7 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
             purcartComSubtract.setOnClickListener(this);
             purcartComAdd.setOnClickListener(this);
+            purcartComSelect.setOnClickListener(this);
         }
 
         @Override
@@ -114,11 +117,11 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
             switch (id) {
                 case R.id.purcartComAdd:
                     if (onItemAddClickListener != null)
-                        onItemAddClickListener.onItemAddNum(getLayoutPosition(),purcartComNum);
+                        onItemAddClickListener.onItemAddNum(getLayoutPosition(), purcartComNum);
                     break;
                 case R.id.purcartComSubtract:
                     if (onItemSubtractClickListener != null)
-                        onItemSubtractClickListener.onItemSubtractNum(getLayoutPosition(),purcartComNum);
+                        onItemSubtractClickListener.onItemSubtractNum(getLayoutPosition(), purcartComNum);
                     break;
             }
         }
@@ -154,6 +157,22 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
 
     public void setOnItemSubtractClickListener(OnItemSubtractClickListener onItemSubtractClickListener) {
         this.onItemSubtractClickListener = onItemSubtractClickListener;
+    }
+
+    public interface OnSelectClickListener {
+
+        /**
+         * 点击-的回调
+         *
+         * @param position 被点击的Item位置
+         */
+        void onItemSelectNum(int position, ImageView purcartComSelect, boolean isSelect);
+    }
+
+    private OnSelectClickListener onSelectClickListener;
+
+    public void setSelectClickListener(OnSelectClickListener onSelectClickListener) {
+        this.onSelectClickListener = onSelectClickListener;
     }
 
 

@@ -7,6 +7,7 @@ import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -14,6 +15,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.UP_CARTGATE_METHOD;
 
 /**
  * 进货Fragment Model 实现类
@@ -71,8 +73,8 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
     public void updateCartGate(int cartId, int num, PurCartContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<BaseBean> observable = mApiService.upCartGate(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_PURCART_METHOD),
-                YiBaiApplication.getUid(),cartId,num);
+                OtherUtil.getSign(timeStamp, UP_CARTGATE_METHOD),
+                YiBaiApplication.getUid(), cartId, num);
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -83,6 +85,43 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.getCode() == 200) {
                     callBack.onUpdateCartGateSuccess(num);
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void updateCartGateCheck(int cartId, int check, PurCartContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.updateCartGateCheck(timeStamp,
+                OtherUtil.getSign(timeStamp, UP_CARTGATE_METHOD),
+                YiBaiApplication.getUid(), cartId, check);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onUpdateCartGateSuccess(check);
                 } else {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }

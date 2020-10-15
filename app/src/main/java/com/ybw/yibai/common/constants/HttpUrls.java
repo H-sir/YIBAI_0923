@@ -230,6 +230,10 @@ public class HttpUrls {
      * 添加商品到进货列表
      */
     public static final String ADD_PURCART_METHOD = "mybw.addpurcart";
+    /**
+     * 修改进货购物车信息
+     */
+    public static final String UP_CARTGATE_METHOD = "mybw.upcartgate";
 
     /**
      * 待摆放清单加入到报价位置的方法
@@ -622,6 +626,11 @@ public class HttpUrls {
      * 添加商品到进货列表
      */
     public static final String ADD_PURCART_URL = "?method=" + ADD_PURCART_METHOD;
+
+    /**
+     * 修改进货购物车信息
+     */
+    public static final String UP_CARTGATE_URL = "?method=" + UP_CARTGATE_METHOD;
 
     /**
      * 待摆放清单加入到报价位置的URL

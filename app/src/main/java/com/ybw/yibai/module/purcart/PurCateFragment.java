@@ -3,6 +3,7 @@ package com.ybw.yibai.module.purcart;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,15 +44,28 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         PurCartComListViewAdapter.OnComAddClickListener,
         PurCartItemListViewAdapter.OnItemAddClickListener,
         PurCartComListViewAdapter.OnComSubtractClickListener,
-        PurCartItemListViewAdapter.OnItemSubtractClickListener {
-    @BindView(R.id.purCartCity) TextView purCartCity;
-    @BindView(R.id.purCartComListView) RecyclerView purCartComListView;
-    @BindView(R.id.purCartItemListView) RecyclerView purCartItemListView;
-    @BindView(R.id.purCartItemView) TextView purCartItemView;
-    @BindView(R.id.purCartComView) TextView purCartComView;
-    @BindView(R.id.purCartAllSelect) TextView purCartAllSelect;
-    @BindView(R.id.purCartAllPrice) TextView purCartAllPrice;
-    @BindView(R.id.rootLayout) LinearLayout rootLayout;
+        PurCartItemListViewAdapter.OnItemSubtractClickListener,
+        PurCartItemListViewAdapter.OnSelectClickListener {
+    @BindView(R.id.purCartCity)
+    TextView purCartCity;
+    @BindView(R.id.purCartComListView)
+    RecyclerView purCartComListView;
+    @BindView(R.id.purCartItemListView)
+    RecyclerView purCartItemListView;
+    @BindView(R.id.purCartItemView)
+    TextView purCartItemView;
+    @BindView(R.id.purCartComView)
+    TextView purCartComView;
+    @BindView(R.id.purCartAllSelect)
+    LinearLayout purCartAllSelect;
+    @BindView(R.id.purCartAllSelectText)
+    TextView purCartAllSelectText;
+    @BindView(R.id.purCartAllSelectImg)
+    ImageView purCartAllSelectImg;
+    @BindView(R.id.purCartAllPrice)
+    TextView purCartAllPrice;
+    @BindView(R.id.rootLayout)
+    LinearLayout rootLayout;
     private PurCartContract.PurCartPresenter mPurCartPresenter;
     /**
      * 自定义等待Dialog
@@ -70,6 +85,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     private List<PurCartBean.DataBean.ComlistBean> comlistBeans = new ArrayList<>();
     private List<PurCartBean.DataBean.ItemlistBean> itemlistBeans = new ArrayList<>();
     private PurCartBean purCartBean;
+    private boolean isAllSelect = true;
+    private float allPrice = 0f;
 
     @Override
     protected int setLayouts() {
@@ -128,7 +145,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         mPurCartItemListViewAdapter.setOnItemSubtractClickListener(this);
         mPurCartComListViewAdapter.setOnComAddClickListener(this);
         mPurCartComListViewAdapter.setOnComSubtractClickListener(this);
-
+        mPurCartItemListViewAdapter.setSelectClickListener(this);
 
     }
 
@@ -150,23 +167,47 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         if (hidden) {
             return;
         }
+        comlistBeans.clear();
+        itemlistBeans.clear();
         // 获取用户的进货数据
-        mPurCartPresenter.getPurCartData();
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.getPurCartData();
     }
 
     @Override
     public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
         this.purCartBean = purCartBean;
-
+        allPrice = 0;
         if (purCartBean.getData().getComlist() != null && purCartBean.getData().getComlist().size() > 0) {
             comlistBeans.addAll(purCartBean.getData().getComlist());
             purCartComView.setVisibility(View.VISIBLE);
+            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = comlistBeans.iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                if (comlistBean.getChecked() == 0) {
+                    isAllSelect = false;
+                    purCartAllSelectText.setText("全选");
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                } else {
+                    allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
+                }
+            }
         }
         if (purCartBean.getData().getItemlist() != null && purCartBean.getData().getItemlist().size() > 0) {
             itemlistBeans.addAll(purCartBean.getData().getItemlist());
             purCartItemView.setVisibility(View.VISIBLE);
+            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = itemlistBeans.iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                if (itemlistBean.getChecked() == 0) {
+                    isAllSelect = false;
+                    purCartAllSelectText.setText("全选");
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                } else {
+                    allPrice = allPrice + (itemlistBean.getPrice() * itemlistBean.getNum());
+                }
+            }
         }
 
+        purCartAllPrice.setText(String.valueOf(allPrice));
         mPurCartComListViewAdapter.notifyDataSetChanged();
         mPurCartItemListViewAdapter.notifyDataSetChanged();
     }
@@ -214,53 +255,169 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.purCartAllSelect:
-
+                purCartAllSelectData();
                 break;
             case R.id.purCartSettlement:
                 break;
         }
     }
 
+    private void purCartAllSelectData() {
+        if (isAllSelect) {
+            isAllSelect = false;
+            purCartAllSelectText.setText("全选");
+            purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+        } else {
+            isAllSelect = true;
+            purCartAllSelectText.setText("全不选");
+            purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
+        }
+    }
+
     TextView purcartComNum;
+    ImageView purcartComSelect;
+    int index = 0;
+    int position = 0;
 
     @Override
     public void onComAddNum(int position, TextView purcartComNum) {
+        index = 1;
+        this.position = position;
         this.purcartComNum = purcartComNum;
         PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
         int num = comlistBean.getNum() + 1;
         int cartId = comlistBean.getCartId();
-        mPurCartPresenter.updateCartGate(cartId, num);
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override
     public void onComSubtractNum(int position, TextView purcartComNum) {
+        index = 2;
+        this.position = position;
         this.purcartComNum = purcartComNum;
         PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
         int num = comlistBean.getNum() - 1;
         int cartId = comlistBean.getCartId();
-        mPurCartPresenter.updateCartGate(cartId, num);
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override
     public void onItemAddNum(int position, TextView purcartComNum) {
+        index = 3;
+        this.position = position;
         this.purcartComNum = purcartComNum;
         PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
         int num = itemlistBean.getNum() + 1;
         int cartId = itemlistBean.getCartId();
-        mPurCartPresenter.updateCartGate(cartId, num);
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override
     public void onItemSubtractNum(int position, TextView purcartComNum) {
+        index = 4;
+        this.position = position;
         this.purcartComNum = purcartComNum;
         PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
         int num = itemlistBean.getNum() - 1;
         int cartId = itemlistBean.getCartId();
-        mPurCartPresenter.updateCartGate(cartId, num);
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGate(cartId, num);
+    }
+
+    @Override
+    public void onItemSelectNum(int position, ImageView purcartComSelect, boolean isSelect) {
+        index = 6;
+        this.position = position;
+        this.purcartComSelect = purcartComSelect;
+        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
+        int check = 0;
+        if (isSelect) {
+            check = 1;
+        }
+        int cartId = itemlistBean.getCartId();
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGateCheck(cartId, check);
     }
 
     @Override
     public void onUpdateCartGateSuccess(int num) {
-        purcartComNum.setText(String.valueOf(num));
+        switch (index) {
+            case 1:
+            case 2:
+                comlistBeans.get(position).setNum(num);
+                purcartComNum.setText(String.valueOf(num));
+                break;
+            case 3:
+            case 4:
+                itemlistBeans.get(position).setNum(num);
+                purcartComNum.setText(String.valueOf(num));
+                break;
+            case 5:
+                PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
+                comlistBean.setChecked(num);
+                if (comlistBean.getChecked() == 1) {
+                    purcartComSelect.setImageResource(R.mipmap.selected_img);
+                } else {
+                    purcartComSelect.setImageResource(R.mipmap.purcart_no_select);
+                }
+                setAllSelect();
+                break;
+            case 6:
+                PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
+                itemlistBean.setChecked(num);
+                if (itemlistBean.getChecked() == 1) {
+                    purcartComSelect.setImageResource(R.mipmap.selected_img);
+                } else {
+                    purcartComSelect.setImageResource(R.mipmap.purcart_no_select);
+                }
+                setAllSelect();
+                break;
+        }
+        index = 0;
+    }
+
+    private void setAllSelect() {
+        isAllSelect = false;
+        purCartAllSelectText.setText("全不选");
+        purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
+
+        allPrice = 0;
+        comlistBeans.clear();
+        itemlistBeans.clear();
+        if (purCartBean.getData().getComlist() != null && purCartBean.getData().getComlist().size() > 0) {
+            comlistBeans.addAll(purCartBean.getData().getComlist());
+            purCartComView.setVisibility(View.VISIBLE);
+            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = comlistBeans.iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                if (comlistBean.getChecked() == 0) {
+                    isAllSelect = false;
+                    purCartAllSelectText.setText("全选");
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                } else {
+                    allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
+                }
+            }
+        }
+        if (purCartBean.getData().getItemlist() != null && purCartBean.getData().getItemlist().size() > 0) {
+            itemlistBeans.addAll(purCartBean.getData().getItemlist());
+            purCartItemView.setVisibility(View.VISIBLE);
+            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = itemlistBeans.iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ItemlistBean itemlistBean1 = iterator.next();
+                if (itemlistBean1.getChecked() == 0) {
+                    isAllSelect = false;
+                    purCartAllSelectText.setText("全选");
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                } else {
+                    allPrice = allPrice + (itemlistBean1.getPrice() * itemlistBean1.getNum());
+                }
+            }
+        }
+
+        purCartAllPrice.setText(String.valueOf(allPrice));
+        mPurCartComListViewAdapter.notifyDataSetChanged();
+        mPurCartItemListViewAdapter.notifyDataSetChanged();
     }
 }

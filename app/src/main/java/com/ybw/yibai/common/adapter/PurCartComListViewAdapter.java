@@ -220,7 +220,7 @@ public class PurCartComListViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private OnComAddClickListener onComAddClickListener;
 
-    public void setOnDesignDeleteClickListener(OnComAddClickListener onComAddClickListener) {
+    public void setOnComAddClickListener(OnComAddClickListener onComAddClickListener) {
         this.onComAddClickListener = onComAddClickListener;
     }
 
@@ -236,7 +236,7 @@ public class PurCartComListViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     private OnComSubtractClickListener onComSubtractClickListener;
 
-    public void setOnSubtractClickListener(OnComSubtractClickListener onComSubtractClickListener) {
+    public void setOnComSubtractClickListener(OnComSubtractClickListener onComSubtractClickListener) {
         this.onComSubtractClickListener = onComSubtractClickListener;
     }
 

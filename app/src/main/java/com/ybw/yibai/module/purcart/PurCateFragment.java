@@ -1,21 +1,15 @@
 package com.ybw.yibai.module.purcart;
 
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseFragment;
-import com.ybw.yibai.common.adapter.DesignListAdapter;
 import com.ybw.yibai.common.adapter.PurCartComListViewAdapter;
 import com.ybw.yibai.common.adapter.PurCartItemListViewAdapter;
-import com.ybw.yibai.common.bean.DesignDetails;
 import com.ybw.yibai.common.bean.HiddenChanged;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PurCartBean;
@@ -33,9 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 
@@ -126,12 +118,17 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             EventBus.getDefault().register(this);
         }
         mPurCartPresenter = new PurCartPresenterImpl(this);
-
         mPurCartComListViewAdapter = new PurCartComListViewAdapter(getActivity(), comlistBeans);
         purCartComListView.setAdapter(mPurCartComListViewAdapter);
 
         mPurCartItemListViewAdapter = new PurCartItemListViewAdapter(getActivity(), itemlistBeans);
         purCartItemListView.setAdapter(mPurCartItemListViewAdapter);
+
+        mPurCartItemListViewAdapter.setOnItemAddClickListener(this);
+        mPurCartItemListViewAdapter.setOnItemSubtractClickListener(this);
+        mPurCartComListViewAdapter.setOnComAddClickListener(this);
+        mPurCartComListViewAdapter.setOnComSubtractClickListener(this);
+
 
     }
 
@@ -237,17 +234,29 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     @Override
     public void onComSubtractNum(int position, TextView purcartComNum) {
-
+        this.purcartComNum = purcartComNum;
+        PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
+        int num = comlistBean.getNum() - 1;
+        int cartId = comlistBean.getCartId();
+        mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override
-    public void onItemAddNum(int position) {
-
+    public void onItemAddNum(int position, TextView purcartComNum) {
+        this.purcartComNum = purcartComNum;
+        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
+        int num = itemlistBean.getNum() + 1;
+        int cartId = itemlistBean.getCartId();
+        mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override
-    public void onItemSubtractNum(int position) {
-
+    public void onItemSubtractNum(int position, TextView purcartComNum) {
+        this.purcartComNum = purcartComNum;
+        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
+        int num = itemlistBean.getNum() - 1;
+        int cartId = itemlistBean.getCartId();
+        mPurCartPresenter.updateCartGate(cartId, num);
     }
 
     @Override

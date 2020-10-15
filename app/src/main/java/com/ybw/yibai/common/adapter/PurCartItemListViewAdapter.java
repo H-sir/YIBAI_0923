@@ -114,11 +114,11 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
             switch (id) {
                 case R.id.purcartComAdd:
                     if (onItemAddClickListener != null)
-                        onItemAddClickListener.onItemAddNum(getLayoutPosition());
+                        onItemAddClickListener.onItemAddNum(getLayoutPosition(),purcartComNum);
                     break;
                 case R.id.purcartComSubtract:
                     if (onItemSubtractClickListener != null)
-                        onItemSubtractClickListener.onItemSubtractNum(getLayoutPosition());
+                        onItemSubtractClickListener.onItemSubtractNum(getLayoutPosition(),purcartComNum);
                     break;
             }
         }
@@ -131,7 +131,7 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
          *
          * @param position 被点击的Item位置
          */
-        void onItemAddNum(int position);
+        void onItemAddNum(int position, TextView purcartComNum);
     }
 
     private OnItemAddClickListener onItemAddClickListener;
@@ -147,7 +147,7 @@ public class PurCartItemListViewAdapter extends RecyclerView.Adapter<RecyclerVie
          *
          * @param position 被点击的Item位置
          */
-        void onItemSubtractNum(int position);
+        void onItemSubtractNum(int position, TextView purcartComNum);
     }
 
     private OnItemSubtractClickListener onItemSubtractClickListener;

@@ -1,7 +1,5 @@
 package com.ybw.yibai.common.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * <pre>
  *     author : HKR
@@ -9,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  *     desc   :
  * </pre>
  */
-public class PurCartComBean {
+public class PurCartChildBean {
     private int skuId;
     private int gateProductId;
     private String price;

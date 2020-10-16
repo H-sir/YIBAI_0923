@@ -234,6 +234,10 @@ public class HttpUrls {
      * 修改进货购物车信息
      */
     public static final String UP_CARTGATE_METHOD = "mybw.upcartgate";
+    /**
+     * 批量修改或删除进货购物车信息
+     */
+    public static final String UP_ALL_CART_METHOD = "mybw.upallcart";
 
     /**
      * 待摆放清单加入到报价位置的方法
@@ -631,6 +635,10 @@ public class HttpUrls {
      * 修改进货购物车信息
      */
     public static final String UP_CARTGATE_URL = "?method=" + UP_CARTGATE_METHOD;
+    /**
+     * 批量修改或删除进货购物车信息
+     */
+    public static final String UP_ALL_CART_URL = "?method=" + UP_ALL_CART_METHOD;
 
     /**
      * 待摆放清单加入到报价位置的URL

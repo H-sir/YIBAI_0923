@@ -8,6 +8,8 @@ import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -15,6 +17,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.UP_ALL_CART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UP_CARTGATE_METHOD;
 
 /**
@@ -122,6 +125,43 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.getCode() == 200) {
                     callBack.onUpdateCartGateSuccess(check);
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void upAllCart(String cartIds, int type, int isCheck, PurCartContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.upAllCart(timeStamp,
+                OtherUtil.getSign(timeStamp, UP_ALL_CART_METHOD),
+                YiBaiApplication.getUid(), cartIds, type,isCheck);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onUpAllCartSuccess(isCheck);
                 } else {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }

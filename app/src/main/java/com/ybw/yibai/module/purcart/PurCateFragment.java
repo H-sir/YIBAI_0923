@@ -3,21 +3,33 @@ package com.ybw.yibai.module.purcart;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseFragment;
+import com.ybw.yibai.base.YiBaiApplication;
+import com.ybw.yibai.common.adapter.PurCartComExtendableListViewAdapter;
 import com.ybw.yibai.common.adapter.PurCartComListViewAdapter;
 import com.ybw.yibai.common.adapter.PurCartItemListViewAdapter;
 import com.ybw.yibai.common.bean.HiddenChanged;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PurCartBean;
+import com.ybw.yibai.common.bean.PurCartChildBean;
+import com.ybw.yibai.common.bean.PurCartHeadBean;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
+import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.module.quotationpurchase.QuotationPurchaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +44,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
 
 /**
  * <pre>
@@ -41,21 +54,19 @@ import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
  * </pre>
  */
 public class PurCateFragment extends BaseFragment implements PurCartContract.PurCartView,
-        PurCartComListViewAdapter.OnComAddClickListener,
-        PurCartItemListViewAdapter.OnItemAddClickListener,
-        PurCartComListViewAdapter.OnComSubtractClickListener,
-        PurCartItemListViewAdapter.OnItemSubtractClickListener,
-        PurCartItemListViewAdapter.OnSelectClickListener {
+        PurCartComExtendableListViewAdapter.OnComAddClickListener,
+        PurCartComExtendableListViewAdapter.OnItemAddClickListener,
+        PurCartComExtendableListViewAdapter.OnComSubtractClickListener,
+        PurCartComExtendableListViewAdapter.OnItemSubtractClickListener,
+        PurCartComExtendableListViewAdapter.OnSelectItemClickListener,
+        PurCartComExtendableListViewAdapter.OnSelectComClickListener {
+
+    private PurCateFragment mPurCateFragment = null;
+
     @BindView(R.id.purCartCity)
     TextView purCartCity;
     @BindView(R.id.purCartComListView)
-    RecyclerView purCartComListView;
-    @BindView(R.id.purCartItemListView)
-    RecyclerView purCartItemListView;
-    @BindView(R.id.purCartItemView)
-    TextView purCartItemView;
-    @BindView(R.id.purCartComView)
-    TextView purCartComView;
+    ExpandableListView purCartComListView;
     @BindView(R.id.purCartAllSelect)
     LinearLayout purCartAllSelect;
     @BindView(R.id.purCartAllSelectText)
@@ -66,30 +77,24 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     TextView purCartAllPrice;
     @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
+
     private PurCartContract.PurCartPresenter mPurCartPresenter;
     /**
      * 自定义等待Dialog
      */
     private WaitDialog mWaitDialog;
-
     /**
-     * 组合列表适配器
+     * 设计详情列表适配器
      */
-    private PurCartComListViewAdapter mPurCartComListViewAdapter;
+    private PurCartComExtendableListViewAdapter mPurCartComExtendableListViewAdapter;
 
-    /**
-     * 单品列表适配器
-     */
-    private PurCartItemListViewAdapter mPurCartItemListViewAdapter;
-
-    private List<PurCartBean.DataBean.ComlistBean> comlistBeans = new ArrayList<>();
-    private List<PurCartBean.DataBean.ItemlistBean> itemlistBeans = new ArrayList<>();
     private PurCartBean purCartBean;
     private boolean isAllSelect = true;
     private float allPrice = 0f;
 
     @Override
     protected int setLayouts() {
+        mPurCateFragment = this;
         return R.layout.fragment_purcart_layout;
     }
 
@@ -103,29 +108,10 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         mWaitDialog = new WaitDialog(getActivity());
     }
 
+
     @Override
     protected void initData() {
-        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager managerCom = new StaggeredGridLayoutManager(1, VERTICAL);
-        // 设置RecyclerView间距
-        int gapCom = DensityUtil.dpToPx(getActivity(), 8);
-        GridSpacingItemDecoration decorationCom = new GridSpacingItemDecoration(1, gapCom, false);
-        // 给RecyclerView设置布局管理器(必须设置)
-        purCartComListView.setLayoutManager(managerCom);
-        purCartComListView.addItemDecoration(decorationCom);
-        purCartComListView.setNestedScrollingEnabled(false);
-        purCartComListView.setHasFixedSize(false);
 
-        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1, VERTICAL);
-        // 设置RecyclerView间距
-        int gap = DensityUtil.dpToPx(getActivity(), 8);
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(1, gap, false);
-        // 给RecyclerView设置布局管理器(必须设置)
-        purCartItemListView.setLayoutManager(manager);
-        purCartItemListView.addItemDecoration(decoration);
-        purCartItemListView.setNestedScrollingEnabled(false);
-        purCartItemListView.setHasFixedSize(false);
     }
 
     @Override
@@ -136,18 +122,12 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         }
         mPurCartPresenter = new PurCartPresenterImpl(this);
 
-        mPurCartComListViewAdapter = new PurCartComListViewAdapter(getActivity(), comlistBeans);
-        purCartComListView.setAdapter(mPurCartComListViewAdapter);
-
-        mPurCartItemListViewAdapter = new PurCartItemListViewAdapter(getActivity(), itemlistBeans);
-        purCartItemListView.setAdapter(mPurCartItemListViewAdapter);
-
-        mPurCartItemListViewAdapter.setOnItemAddClickListener(this);
-        mPurCartItemListViewAdapter.setOnItemSubtractClickListener(this);
-        mPurCartComListViewAdapter.setOnComAddClickListener(this);
-        mPurCartComListViewAdapter.setOnComSubtractClickListener(this);
-        mPurCartItemListViewAdapter.setSelectClickListener(this);
-
+//        mPurCartItemListViewAdapter = new PurCartItemListViewAdapter(getActivity(), itemlistBeans);
+//        purCartItemListView.setAdapter(mPurCartItemListViewAdapter);
+//
+//        mPurCartItemListViewAdapter.setOnItemAddClickListener(this);
+//        mPurCartItemListViewAdapter.setOnItemSubtractClickListener(this);
+//        mPurCartItemListViewAdapter.setSelectClickListener(this);
     }
 
     @Override
@@ -168,20 +148,26 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         if (hidden) {
             return;
         }
-        comlistBeans.clear();
-        itemlistBeans.clear();
         // 获取用户的进货数据
         if (mPurCartPresenter != null)
             mPurCartPresenter.getPurCartData();
     }
 
+
+    List<PurCartHeadBean> mPurCartHeadBean = new ArrayList<>();
+    List<List<PurCartChildBean>> mPurCartChildBean = new ArrayList<>();
+
     @Override
     public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
         this.purCartBean = purCartBean;
         allPrice = 0;
+        int index = 0;
+        mPurCartHeadBean.clear();
+        mPurCartChildBean.clear();
         if (purCartBean.getData().getComlist() != null && purCartBean.getData().getComlist().size() > 0) {
-            comlistBeans.addAll(purCartBean.getData().getComlist());
-            purCartComView.setVisibility(View.VISIBLE);
+            List<PurCartBean.DataBean.ComlistBean> comlistBeans = purCartBean.getData().getComlist();
+            addGroup(0);
+            index++;
             for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = comlistBeans.iterator(); iterator.hasNext(); ) {
                 PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
                 if (comlistBean.getChecked() == 0) {
@@ -191,14 +177,22 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 } else {
                     allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
                 }
+
+                addGroup(1, comlistBean);
+                if (comlistBean.getFirst() != null) {
+                    addChild(index, comlistBean.getFirst());
+                }
+                if (comlistBean.getSecond() != null) {
+                    addChild(index, comlistBean.getSecond());
+                }
+                index++;
             }
-            mPurCartComListViewAdapter = new PurCartComListViewAdapter(getActivity(), comlistBeans);
-            purCartComListView.setAdapter(mPurCartComListViewAdapter);
-            mPurCartComListViewAdapter.notifyDataSetChanged();
         }
         if (purCartBean.getData().getItemlist() != null && purCartBean.getData().getItemlist().size() > 0) {
-            itemlistBeans.addAll(purCartBean.getData().getItemlist());
-            purCartItemView.setVisibility(View.VISIBLE);
+            List<PurCartBean.DataBean.ItemlistBean> itemlistBeans = purCartBean.getData().getItemlist();
+            addGroup(2);
+            index++;
+
             for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = itemlistBeans.iterator(); iterator.hasNext(); ) {
                 PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
                 if (itemlistBean.getChecked() == 0) {
@@ -208,12 +202,179 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 } else {
                     allPrice = allPrice + (itemlistBean.getPrice() * itemlistBean.getNum());
                 }
+                addGroup(3, itemlistBean);
+                index++;
             }
         }
+        mPurCartComExtendableListViewAdapter = new PurCartComExtendableListViewAdapter(getActivity(), mPurCartHeadBean, mPurCartChildBean);
+        purCartComListView.setAdapter(mPurCartComExtendableListViewAdapter);
+        mPurCartComExtendableListViewAdapter.setOnComAddClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setOnComSubtractClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setSelectComClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setOnItemAddClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setOnItemSubtractClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setSelectClickListener(mPurCateFragment);
+        //设置分组的监听
+        purCartComListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return false;
+            }
+        });
+        //设置子项布局监听
+        purCartComListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                return true;
 
+            }
+        });
         purCartAllPrice.setText(String.valueOf(allPrice));
-        mPurCartComListViewAdapter.notifyDataSetChanged();
-        mPurCartItemListViewAdapter.notifyDataSetChanged();
+    }
+
+    //添加组列表项
+    public void addGroup(int type) {
+        PurCartHeadBean purCartHeadBean = new PurCartHeadBean();
+        purCartHeadBean.setType(type);
+        mPurCartHeadBean.add(purCartHeadBean);
+        mPurCartChildBean.add(new ArrayList<>()); //child中添加新数组
+    }
+
+    //添加组列表项
+    public void addGroup(int type, PurCartBean.DataBean.ComlistBean comlistBean) {
+        PurCartHeadBean purCartHeadBean = new PurCartHeadBean();
+        purCartHeadBean.setType(type);
+        purCartHeadBean.setCartId(comlistBean.getCartId());
+        purCartHeadBean.setChecked(comlistBean.getChecked());
+        purCartHeadBean.setNum(comlistBean.getNum());
+        purCartHeadBean.setPic(comlistBean.getPic());
+        purCartHeadBean.setPrice(comlistBean.getPrice());
+
+        PurCartBean.DataBean.ComlistBean.FirstBean first = comlistBean.getFirst();
+        if (first != null) {
+            PurCartHeadBean.DataBean dataBean = new PurCartHeadBean.DataBean();
+            dataBean.setGateId(first.getGateId());
+            dataBean.setGateName(first.getGateName());
+            dataBean.setGateProductId(first.getGateProductId());
+            dataBean.setName(first.getName());
+            dataBean.setPrice(first.getPrice());
+            dataBean.setSkuId(first.getSkuId());
+            purCartHeadBean.setFirst(dataBean);
+        }
+        PurCartBean.DataBean.ComlistBean.SecondBean second = comlistBean.getSecond();
+        if (second != null) {
+            PurCartHeadBean.DataBean dataBean = new PurCartHeadBean.DataBean();
+            dataBean.setGateId(second.getGateId());
+            dataBean.setGateName(second.getGateName());
+            dataBean.setGateProductId(second.getGateProductId());
+            dataBean.setName(second.getName());
+            dataBean.setPrice(second.getFprice());
+            dataBean.setSkuId(second.getSkuId());
+            purCartHeadBean.setSecond(dataBean);
+        }
+        mPurCartHeadBean.add(purCartHeadBean);
+        mPurCartChildBean.add(new ArrayList<>()); //child中添加新数组
+    }
+
+    //添加组列表项
+    public void addGroup(int type, PurCartBean.DataBean.ItemlistBean itemlistBean) {
+        PurCartHeadBean purCartHeadBean = new PurCartHeadBean();
+        purCartHeadBean.setType(type);
+        purCartHeadBean.setCartId(itemlistBean.getCartId());
+        purCartHeadBean.setChecked(itemlistBean.getChecked());
+        purCartHeadBean.setNum(itemlistBean.getNum());
+        purCartHeadBean.setPic(itemlistBean.getPic());
+        purCartHeadBean.setPrice(itemlistBean.getPrice());
+
+        PurCartBean.DataBean.ItemlistBean.FirstBeanX first = itemlistBean.getFirst();
+        if (first != null) {
+            PurCartHeadBean.DataBean dataBean = new PurCartHeadBean.DataBean();
+            dataBean.setGateId(first.getGateId());
+            dataBean.setGateName(first.getGateName());
+            dataBean.setGateProductId(first.getGateProductId());
+            dataBean.setName(first.getName());
+            dataBean.setPrice(first.getPrice());
+            dataBean.setSkuId(first.getSkuId());
+            purCartHeadBean.setFirst(dataBean);
+        }
+        mPurCartHeadBean.add(purCartHeadBean);
+        mPurCartChildBean.add(new ArrayList<>()); //child中添加新数组
+    }
+
+    //添加对应组的自列表项
+    public void addChild(int position, PurCartBean.DataBean.ComlistBean.FirstBean first) {
+        List<PurCartChildBean> purCartChildBeans = mPurCartChildBean.get(position);
+        if (purCartChildBeans != null) {
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(first.getSkuId());
+            purCartChildBean.setName(first.getName());
+            purCartChildBean.setPrice(first.getPrice());
+            purCartChildBean.setGateId(first.getGateId());
+            purCartChildBean.setGateName(first.getGateName());
+            purCartChildBean.setGateProductId(first.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        } else {
+            purCartChildBeans = new ArrayList<>();
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(first.getSkuId());
+            purCartChildBean.setName(first.getName());
+            purCartChildBean.setPrice(first.getPrice());
+            purCartChildBean.setGateId(first.getGateId());
+            purCartChildBean.setGateName(first.getGateName());
+            purCartChildBean.setGateProductId(first.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        }
+    }
+
+    //添加对应组的自列表项
+    public void addChild(int position, PurCartBean.DataBean.ComlistBean.SecondBean second) {
+        List<PurCartChildBean> purCartChildBeans = mPurCartChildBean.get(position);
+        if (purCartChildBeans != null) {
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(second.getSkuId());
+            purCartChildBean.setName(second.getName());
+            purCartChildBean.setPrice(second.getFprice());
+            purCartChildBean.setGateId(second.getGateId());
+            purCartChildBean.setGateName(second.getGateName());
+            purCartChildBean.setGateProductId(second.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        } else {
+            purCartChildBeans = new ArrayList<>();
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(second.getSkuId());
+            purCartChildBean.setName(second.getName());
+            purCartChildBean.setPrice(second.getFprice());
+            purCartChildBean.setGateId(second.getGateId());
+            purCartChildBean.setGateName(second.getGateName());
+            purCartChildBean.setGateProductId(second.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        }
+    }
+
+
+    //添加对应组的自列表项
+    public void addChild(int position, PurCartBean.DataBean.ItemlistBean.FirstBeanX first) {
+        List<PurCartChildBean> purCartChildBeans = mPurCartChildBean.get(position);
+        if (purCartChildBeans != null) {
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(first.getSkuId());
+            purCartChildBean.setName(first.getName());
+            purCartChildBean.setPrice(first.getPrice());
+            purCartChildBean.setGateId(first.getGateId());
+            purCartChildBean.setGateName(first.getGateName());
+            purCartChildBean.setGateProductId(first.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        } else {
+            purCartChildBeans = new ArrayList<>();
+            PurCartChildBean purCartChildBean = new PurCartChildBean();
+            purCartChildBean.setSkuId(first.getSkuId());
+            purCartChildBean.setName(first.getName());
+            purCartChildBean.setPrice(first.getPrice());
+            purCartChildBean.setGateId(first.getGateId());
+            purCartChildBean.setGateName(first.getGateName());
+            purCartChildBean.setGateProductId(first.getGateProductId());
+            purCartChildBeans.add(purCartChildBean);
+        }
     }
 
     /**
@@ -262,20 +423,85 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 purCartAllSelectData();
                 break;
             case R.id.purCartSettlement:
+                WXMiniProgramObject miniProgram = new WXMiniProgramObject();
+                miniProgram.webpageUrl = BASE_URL;//兼容低版本的网页链接
+                miniProgram.userName = "gh_a532df421aeb";//小程序端提供参数
+                miniProgram.path = "/pages/index/index?target=settlement"; //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
+                WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
+                mediaMessage.title = "亲，请进行进货结算~"; //自定义
+                ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
+                    @Override
+                    public void onCallBack(byte[] bytes) {
+                        if (bytes != null)
+                            mediaMessage.thumbData = bytes;
+                        SendMessageToWX.Req req = new SendMessageToWX.Req();
+                        req.transaction = "";
+                        req.scene = SendMessageToWX.Req.WXSceneSession;
+                        req.message = mediaMessage;
+                        YiBaiApplication.getIWXAPI().sendReq(req);
+                    }
+                });
                 break;
         }
     }
 
     private void purCartAllSelectData() {
         if (isAllSelect) {
-            isAllSelect = false;
-            purCartAllSelectText.setText("全选");
-            purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+            String cartIds = "";
+            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                if (itemlistBean.getChecked() == 1) {
+                    cartIds = cartIds + itemlistBean.getCartId() + ",";
+                }
+            }
+            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                if (comlistBean.getChecked() == 1) {
+                    cartIds = cartIds + comlistBean.getCartId() + ",";
+                }
+            }
+            cartIds.substring(0, cartIds.length() - 2);
+            mPurCartPresenter.upAllCart(cartIds, 1, 0);
+
         } else {
+            String cartIds = "";
+            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                if (itemlistBean.getChecked() == 0) {
+                    cartIds = cartIds + itemlistBean.getCartId() + ",";
+                }
+            }
+            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                if (comlistBean.getChecked() == 0) {
+                    cartIds = cartIds + comlistBean.getCartId() + ",";
+                }
+            }
+            cartIds.substring(0, cartIds.length() - 2);
+            mPurCartPresenter.upAllCart(cartIds, 1, 1);
+        }
+    }
+
+    @Override
+    public void onUpAllCartSuccess(int isCheck) {
+        if (isCheck == 1) {
             isAllSelect = true;
             purCartAllSelectText.setText("全不选");
+            purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+        } else {
+            isAllSelect = false;
+            purCartAllSelectText.setText("全选");
             purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
         }
+        for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+            PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+            itemlistBean.setChecked(isCheck);
+        }
+        for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+            PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+            comlistBean.setChecked(isCheck);
+        }
+        onGetPurCartDataSuccess(purCartBean);
     }
 
     TextView purcartComNum;
@@ -288,9 +514,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         index = 1;
         this.position = position;
         this.purcartComNum = purcartComNum;
-        PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
-        int num = comlistBean.getNum() + 1;
-        int cartId = comlistBean.getCartId();
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int num = purCartHeadBean.getNum() + 1;
+        int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
             mPurCartPresenter.updateCartGate(cartId, num);
     }
@@ -300,9 +526,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         index = 2;
         this.position = position;
         this.purcartComNum = purcartComNum;
-        PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
-        int num = comlistBean.getNum() - 1;
-        int cartId = comlistBean.getCartId();
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int num = purCartHeadBean.getNum() - 1;
+        int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
             mPurCartPresenter.updateCartGate(cartId, num);
     }
@@ -312,9 +538,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         index = 3;
         this.position = position;
         this.purcartComNum = purcartComNum;
-        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
-        int num = itemlistBean.getNum() + 1;
-        int cartId = itemlistBean.getCartId();
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int num = purCartHeadBean.getNum() + 1;
+        int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
             mPurCartPresenter.updateCartGate(cartId, num);
     }
@@ -324,11 +550,26 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         index = 4;
         this.position = position;
         this.purcartComNum = purcartComNum;
-        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
-        int num = itemlistBean.getNum() - 1;
-        int cartId = itemlistBean.getCartId();
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int num = purCartHeadBean.getNum() - 1;
+        int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
             mPurCartPresenter.updateCartGate(cartId, num);
+    }
+
+    @Override
+    public void onComSelectNum(int position, ImageView purcartComSelect, boolean isSelect) {
+        index = 5;
+        this.position = position;
+        this.purcartComSelect = purcartComSelect;
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int check = 0;
+        if (isSelect) {
+            check = 1;
+        }
+        int cartId = purCartHeadBean.getCartId();
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.updateCartGateCheck(cartId, check);
     }
 
     @Override
@@ -336,43 +577,61 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         index = 6;
         this.position = position;
         this.purcartComSelect = purcartComSelect;
-        PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
         int check = 0;
         if (isSelect) {
             check = 1;
         }
-        int cartId = itemlistBean.getCartId();
+        int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
             mPurCartPresenter.updateCartGateCheck(cartId, check);
     }
 
     @Override
     public void onUpdateCartGateSuccess(int num) {
+        PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
+        int cartId = purCartHeadBean.getCartId();
+
         switch (index) {
             case 1:
             case 2:
-                comlistBeans.get(position).setNum(num);
-                purcartComNum.setText(String.valueOf(num));
-                break;
             case 3:
             case 4:
-                itemlistBeans.get(position).setNum(num);
+                for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                    PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                    if (comlistBean.getCartId() == cartId) {
+                        comlistBean.setNum(num);
+                        break;
+                    }
+                }
+                for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                    PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                    if (itemlistBean.getCartId() == cartId) {
+                        itemlistBean.setNum(num);
+                        break;
+                    }
+                }
+                purCartHeadBean.setNum(num);
                 purcartComNum.setText(String.valueOf(num));
                 break;
             case 5:
-                PurCartBean.DataBean.ComlistBean comlistBean = comlistBeans.get(position);
-                comlistBean.setChecked(num);
-                if (comlistBean.getChecked() == 1) {
-                    purcartComSelect.setImageResource(R.mipmap.selected_img);
-                } else {
-                    purcartComSelect.setImageResource(R.mipmap.purcart_no_select);
-                }
-                setAllSelect();
-                break;
             case 6:
-                PurCartBean.DataBean.ItemlistBean itemlistBean = itemlistBeans.get(position);
-                itemlistBean.setChecked(num);
-                if (itemlistBean.getChecked() == 1) {
+                for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                    PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                    if (comlistBean.getCartId() == cartId) {
+                        comlistBean.setChecked(num);
+                        break;
+                    }
+                }
+                for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                    PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                    if (itemlistBean.getCartId() == cartId) {
+                        itemlistBean.setChecked(num);
+                        break;
+                    }
+                }
+                purCartHeadBean.setChecked(num);
+                if (purCartHeadBean.getChecked() == 1) {
                     purcartComSelect.setImageResource(R.mipmap.selected_img);
                 } else {
                     purcartComSelect.setImageResource(R.mipmap.purcart_no_select);
@@ -388,40 +647,6 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         purCartAllSelectText.setText("全不选");
         purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
 
-        allPrice = 0;
-        comlistBeans.clear();
-        itemlistBeans.clear();
-        if (purCartBean.getData().getComlist() != null && purCartBean.getData().getComlist().size() > 0) {
-            comlistBeans.addAll(purCartBean.getData().getComlist());
-            purCartComView.setVisibility(View.VISIBLE);
-            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = comlistBeans.iterator(); iterator.hasNext(); ) {
-                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
-                if (comlistBean.getChecked() == 0) {
-                    isAllSelect = false;
-                    purCartAllSelectText.setText("全选");
-                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
-                } else {
-                    allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
-                }
-            }
-        }
-        if (purCartBean.getData().getItemlist() != null && purCartBean.getData().getItemlist().size() > 0) {
-            itemlistBeans.addAll(purCartBean.getData().getItemlist());
-            purCartItemView.setVisibility(View.VISIBLE);
-            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = itemlistBeans.iterator(); iterator.hasNext(); ) {
-                PurCartBean.DataBean.ItemlistBean itemlistBean1 = iterator.next();
-                if (itemlistBean1.getChecked() == 0) {
-                    isAllSelect = false;
-                    purCartAllSelectText.setText("全选");
-                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
-                } else {
-                    allPrice = allPrice + (itemlistBean1.getPrice() * itemlistBean1.getNum());
-                }
-            }
-        }
-
-        purCartAllPrice.setText(String.valueOf(allPrice));
-        mPurCartComListViewAdapter.notifyDataSetChanged();
-        mPurCartItemListViewAdapter.notifyDataSetChanged();
+        onGetPurCartDataSuccess(purCartBean);
     }
 }

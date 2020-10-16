@@ -106,9 +106,70 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ExpandableListView
-        android:id="@+id/purcartComList"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        android:layout_height="wrap_content"
+        android:id="@+id/showView"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:src="@mipmap/purcart_no_select"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/titleName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="分开供应"
+            android:textColor="@color/prompt_low_text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:text="种植并发货预计"
+            android:textColor="@color/prompt_low_text_color" />
+
+        <TextView
+            android:id="@+id/titleTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text=""
+            android:visibility="gone"
+            android:textColor="@color/prompt_low_text_color" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="天"
+            android:visibility="gone"
+            android:textColor="@color/prompt_low_text_color" />
+
+        <ImageView
+            android:id="@+id/titlePhoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:src="@mipmap/down" />
+    </LinearLayout>
+    <com.ybw.yibai.common.widget.nestlistview.NestFullListView
+        android:id="@+id/designDetailsListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp"
+        android:background="@color/white_fifty_percent_color"
+        android:divider="@color/line_color"
+        android:scrollbars="none" />
 </LinearLayout>

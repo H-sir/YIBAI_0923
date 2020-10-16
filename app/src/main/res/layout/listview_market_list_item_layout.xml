@@ -45,4 +45,6 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:background="@color/white_fifty_percent_color" />
+
+
 </LinearLayout>

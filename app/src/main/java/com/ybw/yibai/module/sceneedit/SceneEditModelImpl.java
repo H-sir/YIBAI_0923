@@ -41,6 +41,7 @@ import org.xutils.ex.DbException;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
+import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.EDIT_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.FAST_IMPORT_METHOD;
@@ -552,175 +554,227 @@ public class SceneEditModelImpl implements SceneEditModel {
      */
     @Override
     public void addQuotationData(SimulationData simulationData, CallBack callBack) {
-        int uid = YiBaiApplication.getUid();
-
         int productSkuId = simulationData.getProductSkuId();
-        String productName = simulationData.getProductName();
-        double productPrice = simulationData.getProductPrice();
-        double productMonthRent = simulationData.getProductMonthRent();
-        double productTradePrice = simulationData.getProductTradePrice();
-        String productPic1 = simulationData.getProductPic1();
-        String productPic2 = simulationData.getProductPic2();
-        String productPic3 = simulationData.getProductPic3();
-        String productSpecText = simulationData.getProductSpecText();
-        double productHeight = simulationData.getProductHeight();
-        double productOffsetRatio = simulationData.getProductOffsetRatio();
-        int productCombinationType = simulationData.getProductCombinationType();
-        String productPriceCode = simulationData.getProductPriceCode();
-        String productTradePriceCode = simulationData.getProductTradePriceCode();
-
         int augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
-        String augmentedProductName = simulationData.getAugmentedProductName();
-        double augmentedProductPrice = simulationData.getAugmentedProductPrice();
-        double augmentedProductMonthRent = simulationData.getAugmentedProductMonthRent();
-        double augmentedProductTradePrice = simulationData.getAugmentedProductTradePrice();
-        String augmentedProductPic1 = simulationData.getAugmentedProductPic1();
-        String augmentedProductPic2 = simulationData.getAugmentedProductPic2();
-        String augmentedProductPic3 = simulationData.getAugmentedProductPic3();
-        String augmentedProductSpecText = simulationData.getAugmentedProductSpecText();
-        double augmentedProductHeight = simulationData.getAugmentedProductHeight();
-        double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
-        int augmentedCombinationType = simulationData.getAugmentedCombinationType();
-        String augmentedPriceCode = simulationData.getAugmentedPriceCode();
-        String augmentedTradePriceCode = simulationData.getAugmentedTradePriceCode();
-
-        String finallySkuId = simulationData.getFinallySkuId();
         String picturePath = simulationData.getPicturePath();
 
-        LogUtil.e(TAG, "主产品的款名Id: " + productSkuId);
-        LogUtil.e(TAG, "主产品名称: " + productName);
-        LogUtil.e(TAG, "主产品价格: " + productPrice);
-        LogUtil.e(TAG, "主产品月租: " + productMonthRent);
-        LogUtil.e(TAG, "主产品批发价: " + productTradePrice);
-        LogUtil.e(TAG, "主产品主图url地址: " + productPic1);
-        LogUtil.e(TAG, "主产品模拟图url地址: " + productPic2);
-        LogUtil.e(TAG, "主产品配图url地址: " + productPic3);
-        LogUtil.e(TAG, "主产品的规格: " + productSpecText);
-        LogUtil.e(TAG, "主产品的高度: " + productHeight);
-        LogUtil.e(TAG, "主产品组合模式: 1单图模式,2搭配上部,3搭配下部: " + productCombinationType);
-        LogUtil.e(TAG, "主产品售价代码: " + productPriceCode);
-        LogUtil.e(TAG, "主产品批发价代码: " + productTradePriceCode);
+        File file = new File(picturePath);
+        Map<String, RequestBody> params = new HashMap<>();
+        String fileName = file.getName();
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
+        params.put("com_pic\"; filename=\"" + file.getName(), requestBody);
 
-        LogUtil.e(TAG, "附加产品的款名Id: " + augmentedProductSkuId);
-        LogUtil.e(TAG, "附加产品名称: " + augmentedProductName);
-        LogUtil.e(TAG, "附加产品价格: " + augmentedProductPrice);
-        LogUtil.e(TAG, "附加产品月租: " + augmentedProductMonthRent);
-        LogUtil.e(TAG, "附加产品批发价: " + augmentedProductTradePrice);
-        LogUtil.e(TAG, "附加产品主图url地址: " + augmentedProductPic1);
-        LogUtil.e(TAG, "附加产品模拟图url地址: " + augmentedProductPic2);
-        LogUtil.e(TAG, "附加产品配图url地址: " + augmentedProductPic3);
-        LogUtil.e(TAG, "附加品的规格: " + augmentedProductSpecText);
-        LogUtil.e(TAG, "附加产品的高度: " + augmentedProductHeight);
-        LogUtil.e(TAG, "附加产品组合模式: 1单图模式,2搭配上部,3搭配下部: " + augmentedCombinationType);
-        LogUtil.e(TAG, "附加产品售价代码: " + augmentedPriceCode);
-        LogUtil.e(TAG, "附加产品批发价代码: " + augmentedTradePriceCode);
-
-        LogUtil.e(TAG, "主产品的款名Id+附加产品的款名Id的组合: " + finallySkuId);
-        LogUtil.e(TAG, "偏移量(如果该产品是花盆): " + productOffsetRatio);
-        LogUtil.e(TAG, "偏移量(如果该产品是花盆): " + augmentedProductOffsetRatio);
-        LogUtil.e(TAG, "保存Bitmap为图片到本地的路径: " + picturePath);
-
-        try {
-            DbManager dbManager = YiBaiApplication.getDbManager();
-            QuotationData quotation = dbManager.findById(QuotationData.class, finallySkuId);
-            if (null == quotation) {
-                // 没有报价
-                QuotationData quotationData = new QuotationData();
-                quotationData.setUid(uid);
-                quotationData.setFinallySkuId(finallySkuId);
-                quotationData.setProductSkuId(productSkuId);
-                if (!TextUtils.isEmpty(productName)) {
-                    quotationData.setProductName(productName);
-                }
-                quotationData.setProductPrice(productPrice);
-                quotationData.setProductMonthRent(productMonthRent);
-                quotationData.setProductTradePrice(productTradePrice);
-                if (!TextUtils.isEmpty(productPic1)) {
-                    quotationData.setProductPic1(productPic1);
-                }
-                if (!TextUtils.isEmpty(productPic2)) {
-                    quotationData.setProductPic2(productPic2);
-                }
-                if (!TextUtils.isEmpty(productPic3)) {
-                    quotationData.setProductPic3(productPic3);
-                }
-                if (!TextUtils.isEmpty(productSpecText)) {
-                    quotationData.setProductSpecText(productSpecText);
-                }
-                if (0 != productHeight) {
-                    quotationData.setProductHeight(productHeight);
-                }
-                quotationData.setProductCombinationType(productCombinationType);
-                if (!TextUtils.isEmpty(productPriceCode)) {
-                    quotationData.setProductPriceCode(productPriceCode);
-                }
-                if (!TextUtils.isEmpty(productTradePriceCode)) {
-                    quotationData.setProductTradePriceCode(productTradePriceCode);
-                }
-                /*----------*/
-                if (0 != augmentedProductSkuId) {
-                    quotationData.setAugmentedProductSkuId(augmentedProductSkuId);
-                    if (!TextUtils.isEmpty(augmentedProductName)) {
-                        quotationData.setAugmentedProductName(augmentedProductName);
-                    }
-                    quotationData.setAugmentedProductPrice(augmentedProductPrice);
-                    quotationData.setAugmentedProductMonthRent(augmentedProductMonthRent);
-                    quotationData.setAugmentedProductTradePrice(augmentedProductTradePrice);
-                    if (!TextUtils.isEmpty(augmentedProductPic1)) {
-                        quotationData.setAugmentedProductPic1(augmentedProductPic1);
-                    }
-                    if (!TextUtils.isEmpty(augmentedProductPic2)) {
-                        quotationData.setAugmentedProductPic2(augmentedProductPic2);
-                    }
-                    if (!TextUtils.isEmpty(augmentedProductPic3)) {
-                        quotationData.setAugmentedProductPic3(augmentedProductPic3);
-                    }
-                    if (!TextUtils.isEmpty(augmentedProductSpecText)) {
-                        quotationData.setAugmentedProductSpecText(augmentedProductSpecText);
-                    }
-                    if (0 != augmentedProductHeight) {
-                        quotationData.setAugmentedProductHeight(augmentedProductHeight);
-                    }
-                    quotationData.setAugmentedCombinationType(augmentedCombinationType);
-                    if (!TextUtils.isEmpty(augmentedPriceCode)) {
-                        quotationData.setAugmentedPriceCode(augmentedPriceCode);
-                    }
-                    if (!TextUtils.isEmpty(augmentedTradePriceCode)) {
-                        quotationData.setAugmentedTradePriceCode(augmentedTradePriceCode);
-                    }
-                }
-                /*----------*/
-                quotationData.setNumber(1);
-                quotationData.setTimeStamp(TimeUtil.getNanoTime());
-                if (judeFileExists(picturePath)) {
-                    quotationData.setPicturePath(picturePath);
-                }
-                /*----------*/
-                dbManager.save(quotationData);
-                // 提示用户添加成功
-                callBack.addQuotationDataResult(true);
-            } else {
-                // 已经报过价
-                int number = quotation.getNumber();
-                // 数量+1
-                quotation.setNumber(++number);
-                quotation.setTimeStamp(TimeUtil.getNanoTime());
-                String picPath = quotation.getPicturePath();
-                if (!TextUtils.isEmpty(picPath) && judeFileExists(picPath)) {
-                    FileUtil.deleteFile(picPath);
-                }
-                if (judeFileExists(picturePath)) {
-                    quotation.setPicturePath(picPath);
-                }
-                // 更新quotation列名为number,picturePath,timeStamp的数据
-                dbManager.update(quotation, "number", "timeStamp", "picturePath");
-                // 提示用户添加成功
-                callBack.addQuotationDataResult(true);
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.addPurcart(timeStamp,
+                OtherUtil.getSign(timeStamp, ADD_PURCART_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId,
+                augmentedProductSkuId,
+                0, 0,
+                params);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
             }
-        } catch (DbException e) {
-            e.printStackTrace();
-            callBack.addQuotationDataResult(false);
-        }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    AddQuotation addQuotation = new AddQuotation();
+                    addQuotation.setMsg(baseBean.getMsg());
+                    addQuotation.setCode(baseBean.getCode());
+                    callBack.onAddQuotationSuccess(addQuotation);
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+//        int uid = YiBaiApplication.getUid();
+//
+//        int productSkuId = simulationData.getProductSkuId();
+//        String productName = simulationData.getProductName();
+//        double productPrice = simulationData.getProductPrice();
+//        double productMonthRent = simulationData.getProductMonthRent();
+//        double productTradePrice = simulationData.getProductTradePrice();
+//        String productPic1 = simulationData.getProductPic1();
+//        String productPic2 = simulationData.getProductPic2();
+//        String productPic3 = simulationData.getProductPic3();
+//        String productSpecText = simulationData.getProductSpecText();
+//        double productHeight = simulationData.getProductHeight();
+//        double productOffsetRatio = simulationData.getProductOffsetRatio();
+//        int productCombinationType = simulationData.getProductCombinationType();
+//        String productPriceCode = simulationData.getProductPriceCode();
+//        String productTradePriceCode = simulationData.getProductTradePriceCode();
+//
+//        int augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
+//        String augmentedProductName = simulationData.getAugmentedProductName();
+//        double augmentedProductPrice = simulationData.getAugmentedProductPrice();
+//        double augmentedProductMonthRent = simulationData.getAugmentedProductMonthRent();
+//        double augmentedProductTradePrice = simulationData.getAugmentedProductTradePrice();
+//        String augmentedProductPic1 = simulationData.getAugmentedProductPic1();
+//        String augmentedProductPic2 = simulationData.getAugmentedProductPic2();
+//        String augmentedProductPic3 = simulationData.getAugmentedProductPic3();
+//        String augmentedProductSpecText = simulationData.getAugmentedProductSpecText();
+//        double augmentedProductHeight = simulationData.getAugmentedProductHeight();
+//        double augmentedProductOffsetRatio = simulationData.getAugmentedProductOffsetRatio();
+//        int augmentedCombinationType = simulationData.getAugmentedCombinationType();
+//        String augmentedPriceCode = simulationData.getAugmentedPriceCode();
+//        String augmentedTradePriceCode = simulationData.getAugmentedTradePriceCode();
+//
+//        String finallySkuId = simulationData.getFinallySkuId();
+//        String picturePath = simulationData.getPicturePath();
+//
+//        LogUtil.e(TAG, "主产品的款名Id: " + productSkuId);
+//        LogUtil.e(TAG, "主产品名称: " + productName);
+//        LogUtil.e(TAG, "主产品价格: " + productPrice);
+//        LogUtil.e(TAG, "主产品月租: " + productMonthRent);
+//        LogUtil.e(TAG, "主产品批发价: " + productTradePrice);
+//        LogUtil.e(TAG, "主产品主图url地址: " + productPic1);
+//        LogUtil.e(TAG, "主产品模拟图url地址: " + productPic2);
+//        LogUtil.e(TAG, "主产品配图url地址: " + productPic3);
+//        LogUtil.e(TAG, "主产品的规格: " + productSpecText);
+//        LogUtil.e(TAG, "主产品的高度: " + productHeight);
+//        LogUtil.e(TAG, "主产品组合模式: 1单图模式,2搭配上部,3搭配下部: " + productCombinationType);
+//        LogUtil.e(TAG, "主产品售价代码: " + productPriceCode);
+//        LogUtil.e(TAG, "主产品批发价代码: " + productTradePriceCode);
+//
+//        LogUtil.e(TAG, "附加产品的款名Id: " + augmentedProductSkuId);
+//        LogUtil.e(TAG, "附加产品名称: " + augmentedProductName);
+//        LogUtil.e(TAG, "附加产品价格: " + augmentedProductPrice);
+//        LogUtil.e(TAG, "附加产品月租: " + augmentedProductMonthRent);
+//        LogUtil.e(TAG, "附加产品批发价: " + augmentedProductTradePrice);
+//        LogUtil.e(TAG, "附加产品主图url地址: " + augmentedProductPic1);
+//        LogUtil.e(TAG, "附加产品模拟图url地址: " + augmentedProductPic2);
+//        LogUtil.e(TAG, "附加产品配图url地址: " + augmentedProductPic3);
+//        LogUtil.e(TAG, "附加品的规格: " + augmentedProductSpecText);
+//        LogUtil.e(TAG, "附加产品的高度: " + augmentedProductHeight);
+//        LogUtil.e(TAG, "附加产品组合模式: 1单图模式,2搭配上部,3搭配下部: " + augmentedCombinationType);
+//        LogUtil.e(TAG, "附加产品售价代码: " + augmentedPriceCode);
+//        LogUtil.e(TAG, "附加产品批发价代码: " + augmentedTradePriceCode);
+//
+//        LogUtil.e(TAG, "主产品的款名Id+附加产品的款名Id的组合: " + finallySkuId);
+//        LogUtil.e(TAG, "偏移量(如果该产品是花盆): " + productOffsetRatio);
+//        LogUtil.e(TAG, "偏移量(如果该产品是花盆): " + augmentedProductOffsetRatio);
+//        LogUtil.e(TAG, "保存Bitmap为图片到本地的路径: " + picturePath);
+//
+//        try {
+//            DbManager dbManager = YiBaiApplication.getDbManager();
+//            QuotationData quotation = dbManager.findById(QuotationData.class, finallySkuId);
+//            if (null == quotation) {
+//                // 没有报价
+//                QuotationData quotationData = new QuotationData();
+//                quotationData.setUid(uid);
+//                quotationData.setFinallySkuId(finallySkuId);
+//                quotationData.setProductSkuId(productSkuId);
+//                if (!TextUtils.isEmpty(productName)) {
+//                    quotationData.setProductName(productName);
+//                }
+//                quotationData.setProductPrice(productPrice);
+//                quotationData.setProductMonthRent(productMonthRent);
+//                quotationData.setProductTradePrice(productTradePrice);
+//                if (!TextUtils.isEmpty(productPic1)) {
+//                    quotationData.setProductPic1(productPic1);
+//                }
+//                if (!TextUtils.isEmpty(productPic2)) {
+//                    quotationData.setProductPic2(productPic2);
+//                }
+//                if (!TextUtils.isEmpty(productPic3)) {
+//                    quotationData.setProductPic3(productPic3);
+//                }
+//                if (!TextUtils.isEmpty(productSpecText)) {
+//                    quotationData.setProductSpecText(productSpecText);
+//                }
+//                if (0 != productHeight) {
+//                    quotationData.setProductHeight(productHeight);
+//                }
+//                quotationData.setProductCombinationType(productCombinationType);
+//                if (!TextUtils.isEmpty(productPriceCode)) {
+//                    quotationData.setProductPriceCode(productPriceCode);
+//                }
+//                if (!TextUtils.isEmpty(productTradePriceCode)) {
+//                    quotationData.setProductTradePriceCode(productTradePriceCode);
+//                }
+//                /*----------*/
+//                if (0 != augmentedProductSkuId) {
+//                    quotationData.setAugmentedProductSkuId(augmentedProductSkuId);
+//                    if (!TextUtils.isEmpty(augmentedProductName)) {
+//                        quotationData.setAugmentedProductName(augmentedProductName);
+//                    }
+//                    quotationData.setAugmentedProductPrice(augmentedProductPrice);
+//                    quotationData.setAugmentedProductMonthRent(augmentedProductMonthRent);
+//                    quotationData.setAugmentedProductTradePrice(augmentedProductTradePrice);
+//                    if (!TextUtils.isEmpty(augmentedProductPic1)) {
+//                        quotationData.setAugmentedProductPic1(augmentedProductPic1);
+//                    }
+//                    if (!TextUtils.isEmpty(augmentedProductPic2)) {
+//                        quotationData.setAugmentedProductPic2(augmentedProductPic2);
+//                    }
+//                    if (!TextUtils.isEmpty(augmentedProductPic3)) {
+//                        quotationData.setAugmentedProductPic3(augmentedProductPic3);
+//                    }
+//                    if (!TextUtils.isEmpty(augmentedProductSpecText)) {
+//                        quotationData.setAugmentedProductSpecText(augmentedProductSpecText);
+//                    }
+//                    if (0 != augmentedProductHeight) {
+//                        quotationData.setAugmentedProductHeight(augmentedProductHeight);
+//                    }
+//                    quotationData.setAugmentedCombinationType(augmentedCombinationType);
+//                    if (!TextUtils.isEmpty(augmentedPriceCode)) {
+//                        quotationData.setAugmentedPriceCode(augmentedPriceCode);
+//                    }
+//                    if (!TextUtils.isEmpty(augmentedTradePriceCode)) {
+//                        quotationData.setAugmentedTradePriceCode(augmentedTradePriceCode);
+//                    }
+//                }
+//                /*----------*/
+//                quotationData.setNumber(1);
+//                quotationData.setTimeStamp(TimeUtil.getNanoTime());
+//                if (judeFileExists(picturePath)) {
+//                    quotationData.setPicturePath(picturePath);
+//                }
+//                /*----------*/
+//                dbManager.save(quotationData);
+//                // 提示用户添加成功
+//                callBack.addQuotationDataResult(true);
+//            } else {
+//                // 已经报过价
+//                int number = quotation.getNumber();
+//                // 数量+1
+//                quotation.setNumber(++number);
+//                quotation.setTimeStamp(TimeUtil.getNanoTime());
+//                String picPath = quotation.getPicturePath();
+//                if (!TextUtils.isEmpty(picPath) && judeFileExists(picPath)) {
+//                    FileUtil.deleteFile(picPath);
+//                }
+//                if (judeFileExists(picturePath)) {
+//                    quotation.setPicturePath(picPath);
+//                }
+//                // 更新quotation列名为number,picturePath,timeStamp的数据
+//                dbManager.update(quotation, "number", "timeStamp", "picturePath");
+//                // 提示用户添加成功
+//                callBack.addQuotationDataResult(true);
+//            }
+//        } catch (DbException e) {
+//            e.printStackTrace();
+//            callBack.addQuotationDataResult(false);
+//        }
     }
 
     /**
@@ -1702,8 +1756,8 @@ public class SceneEditModelImpl implements SceneEditModel {
                     .setScale(2, BigDecimal.ROUND_HALF_UP).intValue();
             double yScale =
 //                    oldYScale;
-                    new BigDecimal(((double)showHeight / (double)height))
-                    .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    new BigDecimal(((double) showHeight / (double) height))
+                            .setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
             // 新合成的图片距离X轴的距离(要保持新合成的图片的中心点要和当前用户正在操作的贴纸的中心点相同)
             // 算法: 1,原中心点的位置 = 贴纸左上角距离屏幕左上角X轴的距离 + (更换搭配之前贴纸实际的宽度 * 更换搭配之前贴纸的X轴的缩放比例 / 2)
             //      2,新合成的图片距离X轴的距离 = 原中心点的位置 - (新合成的图片宽度 * 新合成的图片Y轴的缩放 / 2)

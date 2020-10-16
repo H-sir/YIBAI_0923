@@ -34,12 +34,12 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
  */
 public class MarketActivity extends BaseActivity implements MarketContract.MarketView {
 
-    @BindView(R.id.marketProduct)
-    TextView marketProduct;
-    @BindView(R.id.marketMonthRent)
-    TextView marketMonthRent;
-    @BindView(R.id.marketPrice)
-    TextView marketPrice;
+    //    @BindView(R.id.marketProduct)
+//    TextView marketProduct;
+//    @BindView(R.id.marketMonthRent)
+//    TextView marketMonthRent;
+//    @BindView(R.id.marketPrice)
+//    TextView marketPrice;
     @BindView(R.id.marketListView)
     NestFullListView marketListView;
     @BindView(R.id.rootLayout)
@@ -92,12 +92,12 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
 
     @Override
     public void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean) {
-        if (skuMarketBean.getData().getProductName() != null)
-            marketProduct.setText(skuMarketBean.getData().getProductName());
-        if (skuMarketBean.getData().getSelfInfo().getMonthRent() != null)
-            marketMonthRent.setText(skuMarketBean.getData().getSelfInfo().getMonthRent());
-        if (skuMarketBean.getData().getSelfInfo().getPrice() != null)
-            marketPrice.setText(skuMarketBean.getData().getSelfInfo().getPrice());
+//        if (skuMarketBean.getData().getProductName() != null)
+//            marketProduct.setText(skuMarketBean.getData().getProductName());
+//        if (skuMarketBean.getData().getSelfInfo().getMonthRent() != null)
+//            marketMonthRent.setText(skuMarketBean.getData().getSelfInfo().getMonthRent());
+//        if (skuMarketBean.getData().getSelfInfo().getPrice() != null)
+//            marketPrice.setText(skuMarketBean.getData().getSelfInfo().getPrice());
         if (skuMarketBean.getData().getGateInfo() != null)
             gateInfoBeanList.addAll(skuMarketBean.getData().getGateInfo());
 
@@ -126,6 +126,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                         TextView gateNameSelect = holder.getView(R.id.gateNameSelect);
                         ImageView gateNameSelectImg = holder.getView(R.id.gateNameSelectImg);
                         TextView stockMarket = holder.getView(R.id.stockMarket);
+                        TextView deliveryMessage = holder.getView(R.id.deliveryMessage);
                         TextView uptime = holder.getView(R.id.uptime);
 
                         if (addOrSelect) {
@@ -136,6 +137,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                             gateNameSelectImgView.setVisibility(View.VISIBLE);
                         }
 
+                        deliveryMessage.setText(gateSkuBean.getDelivery());
                         tradePrice.setText("￥" + String.valueOf(gateSkuBean.getPrice()));
                         gateNameText.setText("");
                         stockMarket.setText(String.valueOf(gateSkuBean.getStock()));
@@ -186,6 +188,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
     @Override
     public void onAddPurcartSuccess() {
         MessageUtil.showMessage("加入完成");
+        finish();
     }
 
     /**

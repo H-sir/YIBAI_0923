@@ -28,53 +28,49 @@
             android:textColor="@color/blue_s" />
     </LinearLayout>
 
-
-    <ScrollView
+    <ExpandableListView
+        android:id="@+id/purCartComListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:background="@color/special_text_color">
+        android:background="@android:color/white"
+        android:groupIndicator="@null"
+        android:childDivider="@color/trans_grey" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <!--<TextView-->
+        <!--android:id="@+id/purCartComView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="需种植"-->
+        <!--android:textColor="@color/black" />-->
 
-            <TextView
-                android:id="@+id/purCartComView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="需种植"
-                android:textColor="@color/black"
-                android:visibility="gone" />
+    <!--<TextView-->
+        <!--android:id="@+id/purCartItemView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="10dp"-->
+        <!--android:text="单品"-->
+        <!--android:textColor="@color/black"/>-->
+    <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@color/special_text_color">-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:orientation="vertical">-->
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/purCartComListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:showDividers="middle" />
-
-            <TextView
-                android:id="@+id/purCartItemView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="单品"
-                android:textColor="@color/black"
-                android:visibility="gone" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/purCartItemListView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="vertical"
-                android:showDividers="middle" />
-        </LinearLayout>
-    </ScrollView>
+            <!--<android.support.v7.widget.RecyclerView-->
+                <!--android:id="@+id/purCartItemListView"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:background="@android:color/white"-->
+                <!--android:orientation="vertical"-->
+                <!--android:showDividers="middle" />-->
+        <!--</LinearLayout>-->
+    <!--</ScrollView>-->
 
     <LinearLayout
         android:layout_width="match_parent"

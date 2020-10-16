@@ -808,9 +808,9 @@ public interface ApiService {
     /**
      * 添加商品到进货列表
      *
-     * @param timestamp          时间搓
-     * @param sign               签名
-     * @param uid                用户的ID
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
      */
     @Multipart
     @POST(HttpUrls.UP_CARTGATE_URL)
@@ -823,17 +823,33 @@ public interface ApiService {
     /**
      * 添加商品到进货列表
      *
-     * @param timestamp          时间搓
-     * @param sign               签名
-     * @param uid                用户的ID
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
      */
     @Multipart
     @POST(HttpUrls.UP_CARTGATE_URL)
     Observable<BaseBean> updateCartGateCheck(@Header("timestamp") String timestamp,
-                                    @Header("sign") String sign,
-                                    @Part("uid") int uid,
-                                    @Part("cart_id") int cartId,
-                                    @Part("checked") int checked);
+                                             @Header("sign") String sign,
+                                             @Part("uid") int uid,
+                                             @Part("cart_id") int cartId,
+                                             @Part("checked") int checked);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     */
+    @Multipart
+    @POST(HttpUrls.UP_ALL_CART_URL)
+    Observable<BaseBean> upAllCart(@Header("timestamp") String timestamp,
+                                   @Header("sign") String sign,
+                                   @Part("uid") int uid,
+                                   @Part("cart_ids") String cartIds,
+                                   @Part("type") int type,
+                                   @Part("checked") int checked);
 
     /**
      * 根据大中小随机获取组合

@@ -571,7 +571,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     /**
      * 加入预选
-     * */
+     */
     private TextView mAddShopping;
     /**
      * 保存设计
@@ -1446,7 +1446,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 hidden = (boolean) btnHideTools.getTag();
             }
             if (hidden) {
+                mBonsaiEditLayout.setVisibility(View.INVISIBLE);
                 mBtnChangeLocation.setVisibility(View.INVISIBLE);
+                mProductCodeImageButton.setVisibility(View.INVISIBLE);
                 mChangeStyleTextView.setVisibility(View.INVISIBLE);
                 mPlantRecyclerView.setVisibility(View.INVISIBLE);
                 mPotRecyclerView.setVisibility(View.INVISIBLE);
@@ -1455,6 +1457,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mSavePhoto.setVisibility(View.INVISIBLE);
                 btnHideTools.setTag(false);
             } else {
+                mProductCodeImageButton.setVisibility(View.VISIBLE);
+                mBonsaiEditLayout.setVisibility(View.VISIBLE);
                 mBtnChangeLocation.setVisibility(View.INVISIBLE);
                 mChangeStyleTextView.setVisibility(View.VISIBLE);
                 mPlantRecyclerView.setVisibility(View.VISIBLE);
@@ -1538,67 +1542,57 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     /**
      * 弹窗提示
      */
-    private PopupWindow mPopupWindow = null;
-
     private void skuMarketPopupWindow() {
-        if (null == mPopupWindow) {
-            View view = getLayoutInflater().inflate(R.layout.popup_window_sku_market_layout, null);
-            mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        View view = getLayoutInflater().inflate(R.layout.popup_window_sku_market_layout, null);
+        PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            LinearLayout productIdView = view.findViewById(R.id.productIdView);
-            ImageView productIdImg = view.findViewById(R.id.productIdImg);
-            TextView productIdName = view.findViewById(R.id.productIdName);
-            TextView productIdSX = view.findViewById(R.id.productIdSX);
-            if (productPic1 != null && !productPic1.isEmpty())
-                ImageUtil.displayImage(getActivity(), productIdImg, productPic1);
-            productIdName.setText(productName);
-            productIdSX.setText(specTypeName);
+        LinearLayout productIdView = view.findViewById(R.id.productIdView);
+        ImageView productIdImg = view.findViewById(R.id.productIdImg);
+        TextView productIdName = view.findViewById(R.id.productIdName);
+        TextView productIdSX = view.findViewById(R.id.productIdSX);
+        if (productPic1 != null && !productPic1.isEmpty())
+            ImageUtil.displayImage(getActivity(), productIdImg, productPic1);
+        productIdName.setText(productName);
+        productIdSX.setText(specTypeName);
 
-            LinearLayout augmentedProductSkuIdView = view.findViewById(R.id.augmentedProductSkuIdView);
-            ImageView augmentedProductSkuIdImg = view.findViewById(R.id.augmentedProductSkuIdImg);
-            TextView augmentedProductSkuIdName = view.findViewById(R.id.augmentedProductSkuIdName);
-            TextView augmentedProductSkuIdSX = view.findViewById(R.id.augmentedProductSkuIdSX);
-            if (augmentedProductPic1 != null && !augmentedProductPic1.isEmpty())
-                ImageUtil.displayImage(getActivity(), augmentedProductSkuIdImg, augmentedProductPic1);
-            augmentedProductSkuIdName.setText(augmentedProductName);
-            augmentedProductSkuIdSX.setText(specTypeName);
+        LinearLayout augmentedProductSkuIdView = view.findViewById(R.id.augmentedProductSkuIdView);
+        ImageView augmentedProductSkuIdImg = view.findViewById(R.id.augmentedProductSkuIdImg);
+        TextView augmentedProductSkuIdName = view.findViewById(R.id.augmentedProductSkuIdName);
+        TextView augmentedProductSkuIdSX = view.findViewById(R.id.augmentedProductSkuIdSX);
+        if (augmentedProductPic1 != null && !augmentedProductPic1.isEmpty())
+            ImageUtil.displayImage(getActivity(), augmentedProductSkuIdImg, augmentedProductPic1);
+        augmentedProductSkuIdName.setText(augmentedProductName);
+        augmentedProductSkuIdSX.setText(specTypeName);
 
-            augmentedProductSkuIdView.setOnClickListener(v -> {
-                if (null != mPopupWindow && mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                    Intent intent = new Intent(getActivity(), MarketActivity.class);
-                    intent.putExtra(PRODUCT_SKU_ID, augmentedProductSkuId);
-                    startActivity(intent);
-                }
-            });
-            productIdView.setOnClickListener(v -> {
-                if (null != mPopupWindow && mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                    Intent intent = new Intent(getActivity(), MarketActivity.class);
-                    intent.putExtra(PRODUCT_SKU_ID, productSkuId);
-                    startActivity(intent);
-                }
-            });
-            mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-            mPopupWindow.setOutsideTouchable(true);
-            mPopupWindow.setFocusable(true);
+        augmentedProductSkuIdView.setOnClickListener(v -> {
+            if (null != mPopupWindow && mPopupWindow.isShowing()) {
+                mPopupWindow.dismiss();
+                Intent intent = new Intent(getActivity(), MarketActivity.class);
+                intent.putExtra(PRODUCT_SKU_ID, augmentedProductSkuId);
+                startActivity(intent);
+            }
+        });
+        productIdView.setOnClickListener(v -> {
+            if (null != mPopupWindow && mPopupWindow.isShowing()) {
+                mPopupWindow.dismiss();
+                Intent intent = new Intent(getActivity(), MarketActivity.class);
+                intent.putExtra(PRODUCT_SKU_ID, productSkuId);
+                startActivity(intent);
+            }
+        });
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setFocusable(true);
 
-            // 设置一个动画效果
-            mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
+        // 设置一个动画效果
+        mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
 
-            // 在弹出PopupWindow设置屏幕透明度
-            OtherUtil.setBackgroundAlpha(getActivity(), 0.6f);
-            // 添加PopupWindow窗口关闭事件\
+        // 在弹出PopupWindow设置屏幕透明度
+        OtherUtil.setBackgroundAlpha(getActivity(), 0.6f);
+        // 添加PopupWindow窗口关闭事件\
 
-            mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(getActivity(), 1f));
-            mPopupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
-        } else {
-            // 在弹出PopupWindow设置屏幕透明度
-            OtherUtil.setBackgroundAlpha(getActivity(), 0.6f);
-            // 添加PopupWindow窗口关闭事件
-            mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(getActivity(), 1f));
-            mPopupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
-        }
+        mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(getActivity(), 1f));
+        mPopupWindow.showAtLocation(mRootView, Gravity.CENTER, 0, 0);
     }
 
 

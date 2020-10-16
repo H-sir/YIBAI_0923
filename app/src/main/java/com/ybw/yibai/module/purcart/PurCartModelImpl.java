@@ -149,9 +149,16 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
     @Override
     public void upAllCart(String cartIds, int type, int isCheck, PurCartContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<BaseBean> observable = mApiService.upAllCart(timeStamp,
-                OtherUtil.getSign(timeStamp, UP_ALL_CART_METHOD),
-                YiBaiApplication.getUid(), cartIds, type,isCheck);
+        Observable<BaseBean> observable;
+        if (isCheck == 3) {
+            observable = mApiService.upAllCart(timeStamp,
+                    OtherUtil.getSign(timeStamp, UP_ALL_CART_METHOD),
+                    YiBaiApplication.getUid(), cartIds, type, 1);
+        } else {
+            observable = mApiService.upAllCart(timeStamp,
+                    OtherUtil.getSign(timeStamp, UP_ALL_CART_METHOD),
+                    YiBaiApplication.getUid(), cartIds, type, isCheck);
+        }
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -161,7 +168,11 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
             @Override
             public void onNext(BaseBean baseBean) {
                 if (baseBean.getCode() == 200) {
-                    callBack.onUpAllCartSuccess(isCheck);
+                    if (isCheck == 3) {
+                        callBack.onDeleteSuccess();
+                    } else {
+                        callBack.onUpAllCartSuccess(isCheck);
+                    }
                 } else {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }

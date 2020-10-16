@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ADDORSELECT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
@@ -238,6 +239,17 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
             }
             mMarketPresenter.onDetachView();
             mMarketPresenter = null;
+        }
+    }
+
+
+
+    @OnClick({R.id.backImageView})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.backImageView:
+                onBackPressed();
+                break;
         }
     }
 }

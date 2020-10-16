@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="发财树 teda "
+                android:text=""
                 android:textColor="@color/prompt_low_text_color"
                 android:textSize="10dp" />
 
@@ -79,7 +79,7 @@
                     android:background="@color/special_text_color_s"
                     android:gravity="center"
                     android:text="—"
-                    android:textColor="@color/prompt_high_text_color" />
+                    android:textColor="#B7B7B7" />
 
                 <TextView
                     android:id="@+id/purcartComNum"
@@ -87,7 +87,7 @@
                     android:layout_height="20dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp"
-                    android:background="@color/special_text_color"
+                    android:background="#F1F1F1"
                     android:gravity="center"
                     android:text="3"
                     android:textColor="@color/prompt_high_text_color" />
@@ -96,7 +96,7 @@
                     android:id="@+id/purcartComAdd"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:background="@color/prompt_low_text_color"
+                    android:background="#E8E8E8"
                     android:gravity="center"
                     android:text="+"
                     android:textColor="@color/prompt_high_text_color" />
@@ -127,6 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:textSize="10dp"
             android:text="分开供应"
             android:textColor="@color/prompt_low_text_color" />
 

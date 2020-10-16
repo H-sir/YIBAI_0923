@@ -108,7 +108,18 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
         mEditTextView = view.findViewById(R.id.editTextView);
         mMagicIndicator = view.findViewById(R.id.magicIndicator);
         mViewPager = view.findViewById(R.id.viewPager);
+
+        mEditTextView.setVisibility(View.GONE);
+        mEditTextView.setOnClickListener(view1 -> {
+            flag = !flag;
+            /**
+             * 发送数据到 {@link PurCateFragment#onDelete(HiddenChanged)}
+             */
+            EventBus.getDefault().postSticky(new HiddenChanged(flag));
+        });
     }
+
+    boolean flag = false;
 
     @Override
     protected void initView() {
@@ -161,8 +172,10 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
 
         switch (position) {
             case 0:
+                mEditTextView.setVisibility(View.GONE);
                 break;
             case 1:
+                mEditTextView.setVisibility(View.VISIBLE);
                 /**
                  * 发送数据到 {@link PurCateFragment#onFragmentHiddenChanged(HiddenChanged)}
                  */

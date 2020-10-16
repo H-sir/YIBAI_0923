@@ -1,18 +1,23 @@
 package com.ybw.yibai.module.purcart;
 
+import android.Manifest;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.baidu.location.BDAbstractLocationListener;
+import com.baidu.location.BDLocation;
 import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseFragment;
@@ -29,6 +34,7 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
+import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.module.details.ProductDetailsActivity;
@@ -65,7 +71,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         PurCartComExtendableListViewAdapter.OnItemSubtractClickListener,
         PurCartComExtendableListViewAdapter.OnSelectItemClickListener,
         PurCartComExtendableListViewAdapter.OnSelectComClickListener,
-        PurCartComExtendableListViewAdapter.OnChildClickListener {
+        PurCartComExtendableListViewAdapter.OnChildClickListener,
+        PurCartComExtendableListViewAdapter.OnItemViewClickListener {
 
     private PurCateFragment mPurCateFragment = null;
 
@@ -81,6 +88,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     ImageView purCartAllSelectImg;
     @BindView(R.id.purCartAllPrice)
     TextView purCartAllPrice;
+    @BindView(R.id.purCartSettlement)
+    TextView purCartSettlement;
     @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
 
@@ -93,6 +102,18 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
      * 设计详情列表适配器
      */
     private PurCartComExtendableListViewAdapter mPurCartComExtendableListViewAdapter;
+    /**
+     * 要申请的权限(允许一个程序访问CellID或WiFi热点来获取粗略的位置
+     * 允许应用程序访问精确位置(如GPS))
+     */
+    private String[] permissions = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    /**
+     * 百度定位工具类
+     */
+    private LocationUtil mLocationInstance;
 
     private PurCartBean purCartBean;
     private boolean isAllSelect = true;
@@ -127,14 +148,59 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             EventBus.getDefault().register(this);
         }
         mPurCartPresenter = new PurCartPresenterImpl(this);
-
-//        mPurCartItemListViewAdapter = new PurCartItemListViewAdapter(getActivity(), itemlistBeans);
-//        purCartItemListView.setAdapter(mPurCartItemListViewAdapter);
-//
-//        mPurCartItemListViewAdapter.setOnItemAddClickListener(this);
-//        mPurCartItemListViewAdapter.setOnItemSubtractClickListener(this);
-//        mPurCartItemListViewAdapter.setSelectClickListener(this);
+        mPurCartPresenter.applyPermissions(permissions);
     }
+
+    @Override
+    public void applyPermissionsResults(boolean b) {
+        if (b) {
+            mPurCartPresenter.checkIfGpsOpen();
+        }
+    }
+
+    /**
+     * 检查手机是否打开GPS功能的结果
+     *
+     * @param result true 已经打开GPS功能,false 没有打开GPS功能
+     */
+    @Override
+    public void checkIfGpsOpenResult(boolean result) {
+        if (result) {
+            startPositioning();
+        } else {
+            mPurCartPresenter.displayOpenGpsDialog(rootLayout);
+        }
+    }
+
+    /**
+     * 开始定位
+     */
+    private void startPositioning() {
+        if (null != mLocationInstance) {
+            mLocationInstance.stopPositioning();
+        }
+        mLocationInstance = LocationUtil.getInstance();
+        mLocationInstance.startPositioning(mListener);
+    }
+
+    /**
+     * 百度定位侦听器
+     */
+    private BDAbstractLocationListener mListener = new BDAbstractLocationListener() {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+
+            // 获取城市
+            String city = bdLocation.getCity();
+            if (TextUtils.isEmpty(city)) {
+                return;
+            }
+            purCartCity.setText(city);
+        }
+    };
 
     @Override
     public void onNetworkStateChange(NetworkType networkType) {
@@ -157,6 +223,27 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         // 获取用户的进货数据
         if (mPurCartPresenter != null)
             mPurCartPresenter.getPurCartData();
+    }
+
+    boolean isDelete = false;
+
+    /**
+     * EventBus
+     *
+     * @param hiddenChanged Fragment隐藏状态(true Fragment隐藏,false Fragment显示)
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onDelete(HiddenChanged hiddenChanged) {
+        boolean hidden = hiddenChanged.isHidden();
+        if (hidden) {
+            isDelete = true;
+            purCartSettlement.setText("删除");
+            purCartSettlement.setBackgroundColor(getResources().getColor(R.color.red));
+        } else {
+            isDelete = false;
+            purCartSettlement.setText("去结算");
+            purCartSettlement.setBackgroundColor(getResources().getColor(R.color.embellishment_text_color));
+        }
     }
 
 
@@ -221,6 +308,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         mPurCartComExtendableListViewAdapter.setOnItemSubtractClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setSelectClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setChildClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setOnItemViewClickListener(mPurCateFragment);
         purCartAllPrice.setText(String.valueOf(allPrice));
     }
 
@@ -415,24 +503,32 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 purCartAllSelectData();
                 break;
             case R.id.purCartSettlement:
-                WXMiniProgramObject miniProgram = new WXMiniProgramObject();
-                miniProgram.webpageUrl = BASE_URL;//兼容低版本的网页链接
-                miniProgram.userName = "gh_a532df421aeb";//小程序端提供参数
-                miniProgram.path = "/pages/index/index?target=settlement"; //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
-                WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
-                mediaMessage.title = "亲，请进行进货结算~"; //自定义
-                ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
-                    @Override
-                    public void onCallBack(byte[] bytes) {
-                        if (bytes != null)
-                            mediaMessage.thumbData = bytes;
-                        SendMessageToWX.Req req = new SendMessageToWX.Req();
-                        req.transaction = "";
-                        req.scene = SendMessageToWX.Req.WXSceneSession;
-                        req.message = mediaMessage;
-                        YiBaiApplication.getIWXAPI().sendReq(req);
+                if (isDelete) {
+                    String cartIds = "";
+                    for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                        PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                        if (itemlistBean.getChecked() == 1) {
+                            cartIds = cartIds + itemlistBean.getCartId() + ",";
+                        }
                     }
-                });
+                    for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                        PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                        if (comlistBean.getChecked() == 1) {
+                            cartIds = cartIds + comlistBean.getCartId() + ",";
+                        }
+                    }
+                    cartIds.substring(0, cartIds.length() - 2);
+                    mPurCartPresenter.upAllCart(cartIds, 2, 3);
+
+                } else {
+                    String appId = "wx08cd98ecf42af1d7"; // 填应用AppId
+                    IWXAPI wxapi = WXAPIFactory.createWXAPI(getContext(), appId);
+                    WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+                    req.userName = "gh_a532df421aeb"; // 填小程序原始id
+                    req.path = "/pages/index/index?target=settlement";
+                    req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE; // 可选打开 开发版，体验版和正式版
+                    wxapi.sendReq(req);
+                }
                 break;
         }
     }
@@ -494,6 +590,16 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             comlistBean.setChecked(isCheck);
         }
         onGetPurCartDataSuccess(purCartBean);
+    }
+
+    /**
+     * 删除完成
+     */
+    @Override
+    public void onDeleteSuccess() {
+        // 获取用户的进货数据
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.getPurCartData();
     }
 
     TextView purcartComNum;
@@ -649,6 +755,32 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             intent.putExtra(PRODUCT_SKU_ID, purCartChildBean.getSkuId());
             intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onItemViewNum(PurCartHeadBean.DataBean dataBean) {
+        if (dataBean.getSkuId() != 0) {
+            Intent intent = new Intent(getActivity(), MarketActivity.class);
+            intent.putExtra(PRODUCT_SKU_ID, dataBean.getSkuId());
+            intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mPurCartPresenter) {
+            if (EventBus.getDefault().isRegistered(this)) {
+                // 解除注册
+                EventBus.getDefault().unregister(this);
+            }
+            if (null != mLocationInstance) {
+                mLocationInstance.stopPositioning();
+            }
+            mPurCartPresenter.onDetachView();
+            mPurCartPresenter = null;
         }
     }
 }

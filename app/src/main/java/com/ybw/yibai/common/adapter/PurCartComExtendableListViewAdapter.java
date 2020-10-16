@@ -114,6 +114,7 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.listview_purcart_item_list_item_layout, parent, false);
         PurCartHeadBean.DataBean first = purCartHeadBean.getFirst();
 
+        View itemView = convertView.findViewById(R.id.itemView);
         ImageView purcartComSelect = convertView.findViewById(R.id.purcartComSelect);    //是否选择
         ImageView purcartComImage = convertView.findViewById(R.id.purcartComImage);      //图片
         TextView purcartComName = convertView.findViewById(R.id.purcartComName);        //名称
@@ -156,6 +157,10 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
             if (onItemAddClickListener != null)
                 onItemAddClickListener.onItemAddNum(position, purcartComNum);
         });
+        itemView.setOnClickListener(view -> {
+            if (onItemViewClickListener != null)
+                onItemViewClickListener.onItemViewNum(first);
+        });
 
         return convertView;
     }
@@ -197,7 +202,7 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
             purcartComPrice.setText(String.valueOf(allPrice));
         }
         purcartComNum.setText(String.valueOf(purCartHeadBean.getNum()));
-        titleName.setText(first.getGateName());
+        titleName.setText("分开供应");
         titleTime.setText("");
 
         purcartComSelect.setOnClickListener(view -> {
@@ -273,6 +278,22 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
 
     public void setOnItemAddClickListener(OnItemAddClickListener onItemAddClickListener) {
         this.onItemAddClickListener = onItemAddClickListener;
+    }
+
+    public interface OnItemViewClickListener {
+
+        /**
+         * 点击+的回调
+         *
+         * @param position 被点击的Item位置
+         */
+        void onItemViewNum(PurCartHeadBean.DataBean dataBean);
+    }
+
+    private OnItemViewClickListener onItemViewClickListener;
+
+    public void setOnItemViewClickListener(OnItemViewClickListener onItemViewClickListener) {
+        this.onItemViewClickListener = onItemViewClickListener;
     }
 
     public interface OnItemSubtractClickListener {
@@ -359,8 +380,6 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
 
         /**
          * 点击-的回调
-         *
-         * @param position 被点击的Item位置
          */
         void onChild(PurCartChildBean purCartChildBean);
     }

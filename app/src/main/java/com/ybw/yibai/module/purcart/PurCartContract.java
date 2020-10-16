@@ -1,5 +1,7 @@
 package com.ybw.yibai.module.purcart;
 
+import android.widget.LinearLayout;
+
 import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
@@ -21,6 +23,12 @@ public interface PurCartContract {
 
         void onUpdateCartGateSuccess(int num);
         void onUpAllCartSuccess(int isCheck);
+
+        void applyPermissionsResults(boolean b);
+
+        void checkIfGpsOpenResult(boolean gpsOpenResult);
+
+        void onDeleteSuccess();
     }
 
     interface PurCartPresenter extends BasePresenter<PurCartView> {
@@ -44,6 +52,12 @@ public interface PurCartContract {
          * 全选或者全不选
          * */
         void upAllCart(String cartIds, int type, int isCheck);
+
+        void applyPermissions(String[] permissions);
+
+        void checkIfGpsOpen();
+
+        void displayOpenGpsDialog(LinearLayout rootLayout);
     }
 
     interface PurCartModel {
@@ -67,5 +81,7 @@ public interface PurCartContract {
         void onUpdateCartGateSuccess(int num);
 
         void onUpAllCartSuccess(int isCheck);
+
+        void onDeleteSuccess();
     }
 }

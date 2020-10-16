@@ -311,7 +311,7 @@ public class CollocationPresenterImpl extends BasePresenterImpl<CollocationView>
                 joinPhotoAlbum(bitmap);
                 return;
             }
-            if (2 != type) {
+            if (2 != type && 4 != type) {
                 mCollocationModel.saveProductData(productData, bitmap, type, this);
                 return;
             }
@@ -327,7 +327,10 @@ public class CollocationPresenterImpl extends BasePresenterImpl<CollocationView>
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
             params.put("com_pic\"; filename=\"" + file.getName(), requestBody);
 
-            mCollocationModel.addQuotation(productSkuId, augmentedProductSkuId, params, this);
+            if (type == 2)
+                mCollocationModel.addQuotation(productSkuId, augmentedProductSkuId, params, this);
+            else if (type == 4)
+                mCollocationModel.addPurcart(productSkuId, augmentedProductSkuId, params, this);
         }
     }
 

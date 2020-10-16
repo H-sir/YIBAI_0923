@@ -135,6 +135,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             EventBus.getDefault().register(this);
         }
         mPurCartPresenter = new PurCartPresenterImpl(this);
+
         mPurCartComListViewAdapter = new PurCartComListViewAdapter(getActivity(), comlistBeans);
         purCartComListView.setAdapter(mPurCartComListViewAdapter);
 
@@ -191,6 +192,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
                 }
             }
+            mPurCartComListViewAdapter = new PurCartComListViewAdapter(getActivity(), comlistBeans);
+            purCartComListView.setAdapter(mPurCartComListViewAdapter);
+            mPurCartComListViewAdapter.notifyDataSetChanged();
         }
         if (purCartBean.getData().getItemlist() != null && purCartBean.getData().getItemlist().size() > 0) {
             itemlistBeans.addAll(purCartBean.getData().getItemlist());

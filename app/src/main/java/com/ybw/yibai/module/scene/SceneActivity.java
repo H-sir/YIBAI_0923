@@ -572,7 +572,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mScenePresenter = new ScenePresenterImpl(this);
 //        mScenePresenter.setNavigationViewParams(mNavigationView);
 //        mScenePresenter.addSceneInfo(mCreateSceneDataList);
-
+        mNavigationView.setVisibility(View.GONE);
         mBackImageView.setOnClickListener(this);
         mTitleTextView.setOnClickListener(this);
         mScreenRotationImageView.setOnClickListener(this);
@@ -584,6 +584,8 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mJoinQuotationTextView.setOnClickListener(this);
         mSaveTextView.setOnClickListener(this);
         mMyDesignImageTextView.setOnClickListener(this);
+
+        mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//关闭手势滑动
 
         mDrawerLayout.addDrawerListener(mDrawerListener);
         mEditTextView.setOnClickListener(this);

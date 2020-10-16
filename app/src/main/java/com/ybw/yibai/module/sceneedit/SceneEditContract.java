@@ -290,7 +290,7 @@ public interface SceneEditContract {
          * @param stickerView        贴纸View
          * @param simulationDataList 用户保存的"模拟搭配产品"数据
          */
-        void addSticker(SimulationData mSimulationData,List<BaseSticker> baseStickerList, StickerView stickerView, List<SimulationData> simulationDataList);
+        void addSticker(StickerView stickerView, List<SimulationData> simulationDataList);
 
         /**
          * 删除贴纸数据

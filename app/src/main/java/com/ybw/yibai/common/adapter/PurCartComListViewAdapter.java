@@ -102,8 +102,8 @@ public class PurCartComListViewAdapter extends RecyclerView.Adapter<RecyclerView
             addChild(myViewHolder.PurCartComBeanChild, 0, first);
         }
 
-        PurCartComBeanAdapter inventoryEpcSyfcAdapter = new PurCartComBeanAdapter(mContext, myViewHolder.PurCartComBeanHead, myViewHolder.PurCartComBeanChild);
-        myViewHolder.purcartComList.setAdapter(inventoryEpcSyfcAdapter); //设置数据适配器
+        myViewHolder.inventoryEpcSyfcAdapter = new PurCartComBeanAdapter(mContext, myViewHolder.PurCartComBeanHead, myViewHolder.PurCartComBeanChild);
+        myViewHolder.purcartComList.setAdapter(myViewHolder.inventoryEpcSyfcAdapter); //设置数据适配器
         myViewHolder.purcartComList.setCacheColorHint(0);
     }
 
@@ -175,6 +175,7 @@ public class PurCartComListViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         List<PurCartComBean> PurCartComBeanHead = new ArrayList<>();                    //组列表项，每个组都有一个子List
         List<List<PurCartComBean>> PurCartComBeanChild = new ArrayList<>();                   //子列表项
+        PurCartComBeanAdapter inventoryEpcSyfcAdapter;
 
         private MyViewHolder(View itemView) {
             super(itemView);

@@ -2068,9 +2068,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             EventBus.getDefault().postSticky(new BottomSheetBehaviorState(newState));
         }
     };
-    List<BaseSticker> baseStickerList = new ArrayList<>();
 
-    private List<SimulationData> simulationDatas = new ArrayList<>();
+
     /**
      * 根据场景id查找用户保存的"模拟搭配图片"数据成功时回调
      *
@@ -2078,9 +2077,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
-        simulationDatas.clear();
-        simulationDatas.addAll(simulationDataList);
-        baseStickerList.addAll(mStickerView.getAllStickerList());
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
         mSimulationDataList.clear();
@@ -2088,7 +2084,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (null != simulationDataList && simulationDataList.size() > 0) {
             mSimulationDataList.addAll(simulationDataList);
             mAlreadyPlacedList.addAll(simulationDataList);
-            mSceneEditPresenter.addSticker(mSimulationData, baseStickerList, mStickerView, simulationDataList);
+            mSceneEditPresenter.addSticker(mStickerView, simulationDataList);
             if (firstTime) {
                 firstTime = false;
                 /**
@@ -2755,63 +2751,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
     }
 
-    private void setposjg(MatchLayout matchLayout, HorizontalViewPager plantViewPager,
-                          HorizontalViewPager potViewPager, double plantHeight, double potHeight,
-                          double plantOffsetRatio, double potoffsetRatio) {
-        ImageUtil.downloadPicture(getActivity(), new ImageUtil.DownloadCallback() {
-            @Override
-            public void onDownloadStarted() {
-
-            }
-
-            @Override
-            public void onDownloadFinished(List<Bitmap> bitmapList) {
-                // 标记是否存在下载图片失败的情况
-                boolean isFailed = false;
-                Bitmap[] bitmaps = new Bitmap[bitmapList.size()];
-                for (int i = 0; i < bitmapList.size(); i++) {
-                    Bitmap bitmap = bitmapList.get(i);
-                    if (null == bitmap) {
-                        isFailed = true;
-                        break;
-                    } else {
-                        bitmaps[i] = bitmap;
-                    }
-                }
-                if (isFailed) {
-                    // 下载图片失败return
-                    return;
-                }
-                Bitmap bitmap = ImageUtil.pictureSynthesis(productHeight, augmentedProductHeight, productOffsetRatio,
-                        augmentedProductOffsetRatio, bitmaps);
-                if (null == bitmap) {
-                    // 合成图片失败return
-                    return;
-                }
-
-                productParamWidth = bitmap.getWidth();
-                productParamHeight = bitmap.getHeight();
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) matchLayout.getLayoutParams();
-//                ViewGroup.LayoutParams layoutParams = matchLayout.getLayoutParams();
-//                layoutParams.leftMargin = (int) (matchLayout.getCurrentX() - (matchLayout.getCurrentStickerHeight() / 2 - matchLayout.getCurrentStickerWidth() / 2));
-//                layoutParams.leftMargin = (int) matchLayout.getCurrentX();
-//                layoutParams.topMargin = (int) matchLayout.getCurrentY();
-                layoutParams.width = (int) (productParamWidth * matchLayout.getxScale());
-                layoutParams.height = (int) (productParamHeight * matchLayout.getyScale());
-                matchLayout.setLayoutParams(layoutParams);
-
-                mSceneEditPresenter.setCollocationContentPlantAndPot(matchLayout, plantViewPager,
-                        potViewPager, plantHeight, potHeight,
-                        plantOffsetRatio, potoffsetRatio, productParamWidth, augmentedProductWidth);
-            }
-
-            @Override
-            public void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount) {
-
-            }
-        }, productPic3, augmentedProductPic3);
-    }
-
     /**
      * 填充底部筛选栏
      */
@@ -3136,8 +3075,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         productCombinationType = listBean.getComtype();
         productPriceCode = listBean.getPrice_code();
         productTradePriceCode = listBean.getTrade_price_code();
-        baseStickerList.clear();
-        mSceneEditPresenter.addSticker(mSimulationData, baseStickerList, mStickerView, simulationDatas);
     }
 
     /**
@@ -3352,11 +3289,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (list.size() == 0) {
             return;
         }
-        baseStickerList.clear();
         // 移除贴纸
         for (BaseSticker baseSticker : list) {
             mStickerView.remove(baseSticker);
-            baseStickerList.add(baseSticker);
         }
     }
 

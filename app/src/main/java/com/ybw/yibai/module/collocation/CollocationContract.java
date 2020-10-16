@@ -168,6 +168,8 @@ public interface CollocationContract {
          * @param callBack    回调方法
          */
         void addQuotation(int firstSkuId, int secondSkuId, Map<String, RequestBody> params, CallBack callBack);
+
+        void addPurcart(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

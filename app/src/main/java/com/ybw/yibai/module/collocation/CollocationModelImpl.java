@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.AddQuotation;
+import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.ProductData;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.SKUList;
@@ -33,6 +34,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.RequestBody;
 
+import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SIMILAR_PLANT_SUK_LIST_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SUK_LIST_METHOD;
@@ -451,6 +453,51 @@ public class CollocationModelImpl implements CollocationModel {
             @Override
             public void onNext(AddQuotation addQuotation) {
                 callBack.onAddQuotationSuccess(addQuotation);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void addPurcart(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.addPurcart(timeStamp,
+                OtherUtil.getSign(timeStamp, ADD_PURCART_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId,
+                augmentedProductSkuId,
+                0, 0,
+                params);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    AddQuotation addQuotation = new AddQuotation();
+                    addQuotation.setMsg(baseBean.getMsg());
+                    addQuotation.setCode(baseBean.getCode());
+                    callBack.onAddQuotationSuccess(addQuotation);
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+
             }
 
             @Override

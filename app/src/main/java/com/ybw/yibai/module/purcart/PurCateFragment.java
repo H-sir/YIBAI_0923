@@ -1,5 +1,6 @@
 package com.ybw.yibai.module.purcart;
 
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -30,6 +31,8 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
+import com.ybw.yibai.module.details.ProductDetailsActivity;
+import com.ybw.yibai.module.market.MarketActivity;
 import com.ybw.yibai.module.quotationpurchase.QuotationPurchaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -45,6 +48,8 @@ import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
+import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ADDORSELECT;
+import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 
 /**
  * <pre>
@@ -59,7 +64,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         PurCartComExtendableListViewAdapter.OnComSubtractClickListener,
         PurCartComExtendableListViewAdapter.OnItemSubtractClickListener,
         PurCartComExtendableListViewAdapter.OnSelectItemClickListener,
-        PurCartComExtendableListViewAdapter.OnSelectComClickListener {
+        PurCartComExtendableListViewAdapter.OnSelectComClickListener,
+        PurCartComExtendableListViewAdapter.OnChildClickListener {
 
     private PurCateFragment mPurCateFragment = null;
 
@@ -214,21 +220,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         mPurCartComExtendableListViewAdapter.setOnItemAddClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setOnItemSubtractClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setSelectClickListener(mPurCateFragment);
-        //设置分组的监听
-        purCartComListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                return false;
-            }
-        });
-        //设置子项布局监听
-        purCartComListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                return true;
-
-            }
-        });
+        mPurCartComExtendableListViewAdapter.setChildClickListener(mPurCateFragment);
         purCartAllPrice.setText(String.valueOf(allPrice));
     }
 
@@ -648,5 +640,15 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
 
         onGetPurCartDataSuccess(purCartBean);
+    }
+
+    @Override
+    public void onChild(PurCartChildBean purCartChildBean) {
+        if (purCartChildBean.getSkuId() != 0) {
+            Intent intent = new Intent(getActivity(), MarketActivity.class);
+            intent.putExtra(PRODUCT_SKU_ID, purCartChildBean.getSkuId());
+            intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
+            startActivity(intent);
+        }
     }
 }

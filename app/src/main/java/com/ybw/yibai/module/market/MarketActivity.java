@@ -149,6 +149,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                                 if (gateSkuBean.isSelect()) {
                                     gateNameSelect.setText("已选用");
                                     gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                                    mMarketPresenter.addPurcart(productSkuId, gateSkuBean.getGateProductId());
                                 } else {
                                     gateNameSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.un_selected_img));
                                     gateNameSelect.setText("未选用");

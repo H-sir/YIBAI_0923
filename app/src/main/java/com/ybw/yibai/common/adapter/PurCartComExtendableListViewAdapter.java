@@ -246,7 +246,8 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         purcartComTime.setText("");
 
         titleItemView.setOnClickListener(view -> {
-
+            if (onChildClickListener != null)
+                onChildClickListener.onChild(purCartChildBean);
         });
 
         return convertView;
@@ -352,5 +353,21 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
 
     public void setSelectComClickListener(OnSelectComClickListener onSelectComClickListener) {
         this.onSelectComClickListener = onSelectComClickListener;
+    }
+
+    public interface OnChildClickListener {
+
+        /**
+         * 点击-的回调
+         *
+         * @param position 被点击的Item位置
+         */
+        void onChild(PurCartChildBean purCartChildBean);
+    }
+
+    private OnChildClickListener onChildClickListener;
+
+    public void setChildClickListener(OnChildClickListener onChildClickListener) {
+        this.onChildClickListener = onChildClickListener;
     }
 }

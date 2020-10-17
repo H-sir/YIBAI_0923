@@ -2,6 +2,7 @@ package com.ybw.yibai.common.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -27,6 +28,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -49,6 +51,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -618,6 +621,31 @@ public class ImageUtil {
         Glide.with(context).load(file).apply(RequestOptions.bitmapTransform(transformation)).into(imageView);
     }
 
+    /**
+     * 点击放大图片
+     */
+    public static void showImage(Activity context, String url) {
+        // 全屏显示的方法
+        final Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        ImageView imgView = getView(context);
+        displayImage(context, imgView, url);
+        dialog.setContentView(imgView);
+        dialog.show();
+        // 点击图片消失
+        imgView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private static ImageView getView(Context context) {
+        ImageView imgView = new ImageView(context);
+        imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        return imgView;
+    }
+
     /*
       /\_/\
     =( °w° )=
@@ -625,33 +653,34 @@ public class ImageUtil {
      (__ __)
     */
 
+/**
+ * 图片下载回调
+ */
+public interface DownloadCallback {
+
     /**
-     * 图片下载回调
+     * 开始下载图片时回调
      */
-    public interface DownloadCallback {
+    void onDownloadStarted();
 
-        /**
-         * 开始下载图片时回调
-         */
-        void onDownloadStarted();
+    /**
+     * 在下载成功或者失败一张图片时回调
+     *
+     * @param sumTotal        本次要下载的图片总数
+     * @param successesAmount 当前下载图片成功的数量
+     * @param failuresAmount  当前下载图片失败的数量
+     * @param completedAmount 当前下载图片成功或者失败的数量
+     */
+    void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount);
 
-        /**
-         * 在下载成功或者失败一张图片时回调
-         *
-         * @param sumTotal        本次要下载的图片总数
-         * @param successesAmount 当前下载图片成功的数量
-         * @param failuresAmount  当前下载图片失败的数量
-         * @param completedAmount 当前下载图片成功或者失败的数量
-         */
-        void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount);
+    /**
+     * 在下载全部图片完成时回调
+     *
+     * @param bitmapList 下载完成的图片
+     */
+    void onDownloadFinished(List<Bitmap> bitmapList);
 
-        /**
-         * 在下载全部图片完成时回调
-         *
-         * @param bitmapList 下载完成的图片
-         */
-        void onDownloadFinished(List<Bitmap> bitmapList);
-    }
+}
 
     /**
      * 下载图片
@@ -805,7 +834,7 @@ public class ImageUtil {
         int firstHeight = firstBitmap.getHeight();
         int secondWidth = secondBitmap.getWidth();
         int secondHeight = secondBitmap.getHeight();
-        if(firstWidth > firstHeight){
+        if (firstWidth > firstHeight) {
 
         }
 

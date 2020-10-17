@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.market;
 
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -177,6 +178,9 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                                         ImageView imagePic = holder.getView(R.id.imagePic);
                                         if (pic != null && !pic.isEmpty())
                                             ImageUtil.displayImage(getApplicationContext(), imagePic, pic);
+                                        imagePic.setOnClickListener(view1 -> {
+                                            ImageUtil.showImage(MarketActivity.this, pic);
+                                        });
                                     }
                                 }
                         );
@@ -190,7 +194,16 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
     @Override
     public void onAddPurcartSuccess() {
         MessageUtil.showMessage("加入完成");
+        onFinish();
+    }
+
+    private void onFinish() {
+        Intent intent = new Intent("android.intent.action.CART_BROADCAST");
+        intent.putExtra("data", "refresh");
+        LocalBroadcastManager.getInstance(MarketActivity.this).sendBroadcast(intent);
+        sendBroadcast(intent);
         finish();
+
     }
 
     /**
@@ -241,7 +254,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
             mMarketPresenter = null;
         }
     }
-
 
 
     @OnClick({R.id.backImageView})

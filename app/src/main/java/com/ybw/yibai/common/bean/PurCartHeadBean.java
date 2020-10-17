@@ -14,7 +14,7 @@ public class PurCartHeadBean {
     private int num;
     private String pic;
     private int cartId;
-    private int price;
+    private float price;
     private int checked;
     private DataBean first;
     private DataBean second;
@@ -52,11 +52,11 @@ public class PurCartHeadBean {
         this.cartId = cartId;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 

@@ -43,6 +43,7 @@ import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
 import com.ybw.yibai.module.design.DesignActivity;
+import com.ybw.yibai.module.market.MarketActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.user.UserContract;
 import com.ybw.yibai.module.user.UserPresenterImpl;
@@ -165,7 +166,7 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
                 if (schemelistBean.getBgpic() != null && !schemelistBean.getBgpic().isEmpty())
                     ImageUtil.displayImage(getApplicationContext(), mDesignBg, schemelistBean.getBgpic());
 
-                mDesignDetailsName.setOnClickListener(new View.OnClickListener() {
+                mDesignBg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         SceneHelper.savePhotoNum(getApplicationContext(), schemelistBean.getImglist().size());
@@ -189,10 +190,14 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
                                 schemelistBean.getImglist()) {
                     @Override
                     public void onBind(int pos, DesignDetails.DataBean.SchemelistBean.ImaData imaData, NestFullViewHolder holder) {
+                        ImageView designSchemeImageDelete = holder.getView(R.id.designSchemeImageDelete);
                         ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
                         ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, imaData.getPic());
-                        mDesignSchemeImage.setOnClickListener(v -> {
+                        designSchemeImageDelete.setOnClickListener(v -> {
                             onDesignDetailsDelete(imaData);
+                        });
+                        mDesignSchemeImage.setOnClickListener(v -> {
+                            ImageUtil.showImage(DesignDetailsActivity.this, imaData.getPic());
                         });
                     }
                 });

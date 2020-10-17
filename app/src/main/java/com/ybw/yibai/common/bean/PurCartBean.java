@@ -81,7 +81,7 @@ public class PurCartBean {
             @SerializedName("num") private int num;
             @SerializedName("pic") private String pic;
             @SerializedName("cart_id") private int cartId;
-            @SerializedName("price") private int price;
+            @SerializedName("price") private float price;
             @SerializedName("checked") private int checked;
             @SerializedName("first") private FirstBean first;
             @SerializedName("second") private SecondBean second;
@@ -110,11 +110,11 @@ public class PurCartBean {
                 this.cartId = cartId;
             }
 
-            public int getPrice() {
+            public float getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(float price) {
                 this.price = price;
             }
 
@@ -220,7 +220,7 @@ public class PurCartBean {
 
                 @SerializedName("sku_id") private int skuId;
                 @SerializedName("gate_product_id") private int gateProductId;
-                @SerializedName("fprice") private String fprice;
+                @SerializedName("price") private String fprice;
                 @SerializedName("name") private String name;
                 @SerializedName("gate_id") private int gateId;
                 @SerializedName("gate_name") private String gateName;

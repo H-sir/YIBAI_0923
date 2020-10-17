@@ -1967,6 +1967,11 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
             productSkuId = simulationData.getProductSkuId();
             augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
+            productPic1 = simulationData.getProductPic1();
+            augmentedProductPic1 = simulationData.getAugmentedProductPic1();
+            productName = simulationData.getProductName();
+            specTypeName = simulationData.getProductSpecText();
+            augmentedProductName = simulationData.getAugmentedProductName();
         }
     };
 

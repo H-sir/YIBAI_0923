@@ -1,7 +1,12 @@
 package com.ybw.yibai.module.purcart;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
@@ -225,6 +230,27 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             mPurCartPresenter.getPurCartData();
     }
 
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        LocalBroadcastManager broadcastManager = LocalBroadcastManager.getInstance(getActivity());
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.intent.action.CART_BROADCAST");
+        BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent){
+                String msg = intent.getStringExtra("data");
+                if("refresh".equals(msg)){
+                    // 获取用户的进货数据
+                    if (mPurCartPresenter != null)
+                        mPurCartPresenter.getPurCartData();
+                }
+            }
+        };
+        broadcastManager.registerReceiver(mItemViewListClickReceiver, intentFilter);
+    }
+
     boolean isDelete = false;
 
     /**
@@ -266,7 +292,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 if (comlistBean.getChecked() == 0) {
                     isAllSelect = false;
                     purCartAllSelectText.setText("全选");
-                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
                 } else {
                     allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
                 }
@@ -291,7 +317,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 if (itemlistBean.getChecked() == 0) {
                     isAllSelect = false;
                     purCartAllSelectText.setText("全选");
-                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
+                    purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
                 } else {
                     allPrice = allPrice + (itemlistBean.getPrice() * itemlistBean.getNum());
                 }
@@ -517,7 +543,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                             cartIds = cartIds + comlistBean.getCartId() + ",";
                         }
                     }
-                    cartIds.substring(0, cartIds.length() - 2);
+                    if (cartIds.length() > 2)
+                        cartIds.substring(0, cartIds.length() - 2);
                     mPurCartPresenter.upAllCart(cartIds, 2, 3);
 
                 } else {

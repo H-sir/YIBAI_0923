@@ -474,6 +474,10 @@ public interface SceneEditContract {
          * 更新背景图片
          */
         void updateSceneBg(String absolutePath, String sceneName, String scheme_id);
+
+        void addQuotation(ProductData productData);
+
+        void addQuotationData(ProductData productData);
     }
 
     interface SceneEditModel {
@@ -671,6 +675,8 @@ public interface SceneEditContract {
          * 更新背景图片
          */
         void updateSceneBg(String absolutePath, String sceneName, String scheme_id, CallBack callBack);
+
+        void addQuotationData(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

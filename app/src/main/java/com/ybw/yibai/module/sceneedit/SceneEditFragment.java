@@ -1306,12 +1306,41 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         // 加入进货
         if (id == R.id.joinPurchaseTextView) {
             BaseSticker currentSticker = mStickerView.getCurrentSticker();
-            if (null == currentSticker) {
-                return;
+            if (null != currentSticker) {
+                int position = (int) currentSticker.getTag();
+                SimulationData simulationData = mSimulationDataList.get(position);
+                mSceneEditPresenter.addQuotationData(simulationData);
+            } else {
+                ProductData productData = new ProductData(
+                        productSkuId,
+                        productName,
+                        productPrice,
+                        productMonthRent,
+                        productTradePrice,
+                        productPic1,
+                        productPic2,
+                        productPic3,
+                        productHeight,
+                        productOffsetRatio,
+                        productCombinationType,
+                        productPriceCode,
+                        productTradePriceCode,
+                        augmentedProductSkuId,
+                        augmentedProductName,
+                        augmentedProductPrice,
+                        augmentedProductMonthRent,
+                        augmentedProductTradePrice,
+                        augmentedProductPic1,
+                        augmentedProductPic2,
+                        augmentedProductPic3,
+                        augmentedProductHeight,
+                        augmentedProductOffsetRatio,
+                        augmentedCombinationType,
+                        augmentedPriceCode,
+                        augmentedTradePriceCode
+                );
+                mSceneEditPresenter.addQuotationData(productData);
             }
-            int position = (int) currentSticker.getTag();
-            SimulationData simulationData = mSimulationDataList.get(position);
-            mSceneEditPresenter.addQuotationData(simulationData);
         }
 
         // 保存设计
@@ -1346,17 +1375,48 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         // 加入预选
         if (id == R.id.addShopping) {
             BaseSticker currentSticker = mStickerView.getCurrentSticker();
-            if (null == currentSticker) {
-                return;
+            if (null != currentSticker) {
+                int position = (int) currentSticker.getTag();
+                SimulationData simulationData = mSimulationDataList.get(position);
+                mSimulationData = simulationData;
+                mSceneEditPresenter.addQuotation(simulationData);
+            } else {
+                ProductData productData = new ProductData(
+                        productSkuId,
+                        productName,
+                        productPrice,
+                        productMonthRent,
+                        productTradePrice,
+                        productPic1,
+                        productPic2,
+                        productPic3,
+                        productHeight,
+                        productOffsetRatio,
+                        productCombinationType,
+                        productPriceCode,
+                        productTradePriceCode,
+                        augmentedProductSkuId,
+                        augmentedProductName,
+                        augmentedProductPrice,
+                        augmentedProductMonthRent,
+                        augmentedProductTradePrice,
+                        augmentedProductPic1,
+                        augmentedProductPic2,
+                        augmentedProductPic3,
+                        augmentedProductHeight,
+                        augmentedProductOffsetRatio,
+                        augmentedCombinationType,
+                        augmentedPriceCode,
+                        augmentedTradePriceCode
+                );
+                mSceneEditPresenter.addQuotation(productData);
             }
-            int position = (int) currentSticker.getTag();
-            SimulationData simulationData = mSimulationDataList.get(position);
-            mSimulationData = simulationData;
-            mSceneEditPresenter.addQuotation(simulationData);
         }
 
         //查看货源
-        if (id == R.id.skuMarketTextView) {
+        if (id == R.id.skuMarketTextView)
+
+        {
             if (augmentedProductSkuId != 0 && productSkuId != 0) {
                 skuMarketPopupWindow();
             } else {
@@ -1371,22 +1431,30 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         // 光亮调整
-        if (id == R.id.brightnessAdjustmentTextView) {
+        if (id == R.id.brightnessAdjustmentTextView)
+
+        {
 
         }
 
         // 智能擦除
-        if (id == R.id.intelligentEraseTextView) {
+        if (id == R.id.intelligentEraseTextView)
+
+        {
 
         }
 
         // 还原设置
-        if (id == R.id.restoreSettingsTextView) {
+        if (id == R.id.restoreSettingsTextView)
+
+        {
 
         }
 
         // 筛选推荐植物/盆器
-        if (id == R.id.filterTextView) {
+        if (id == R.id.filterTextView)
+
+        {
             Intent intent = new Intent(mActivity, FilterActivity.class);
             intent.putExtra(POSITION, position);
             intent.putExtra(PRODUCT_TYPE, productType);
@@ -1402,7 +1470,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //            }
 //        }
 
-        if (id == R.id.savePhoto) {
+        if (id == R.id.savePhoto)
+
+        {
             String photoName = prefix + TimeUtil.getTimeStamp();
             String pathName = mStickerView.saveSticker(photoName);
             File file = new File(pathName);
@@ -1422,7 +1492,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         // 多图对比
-        if (id == R.id.multipleImageContrastTextView) {
+        if (id == R.id.multipleImageContrastTextView)
+
+        {
             ListBean plantBean = mRecommendPlantList.get(plantPosition);
             ListBean potBean = mRecommendPotList.get(potPosition);
             Intent intent = new Intent(mContext, ImageContrastActivity.class);
@@ -1440,7 +1512,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         // 隐藏工具
-        if (id == R.id.btnHideTools) {
+        if (id == R.id.btnHideTools)
+
+        {
             boolean hidden = false;
             if (btnHideTools.getTag() instanceof Boolean) {
                 hidden = (boolean) btnHideTools.getTag();
@@ -1471,13 +1545,17 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         // 切换地区
-        if (id == R.id.btnChangeLocation) {
+        if (id == R.id.btnChangeLocation)
+
+        {
             Intent toIntent = new Intent(getContext(), SelectDeliveryCityActivity.class);
             startActivityForResult(toIntent, 1001);
         }
 
         // 重置筛选参数
-        if (id == R.id.text1) {
+        if (id == R.id.text1)
+
+        {
             onResert();
 
             mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);
@@ -1487,7 +1565,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         // 添加图片
-        if (id == R.id.btnCreateDesign) {
+        if (id == R.id.btnCreateDesign)
+
+        {
             String title = btnCnAdd.getText().toString();
             if (title.equals("添加图片")) {
                 mSceneEditPresenter.createDesign();
@@ -1899,6 +1979,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //            mSimulationData = simulationData;
 //            mSceneEditPresenter.addQuotation(simulationData);
         }
+
     }
 
     /**

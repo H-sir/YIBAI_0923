@@ -143,7 +143,7 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
                                     flag = true;
                                 }
                                 defaultSceneInfoList.remove(sceneInfo);
-                                dbManager.delete(defaultSceneInfoList);
+                                dbManager.delete(sceneInfo);
                                 break;
                             }
                         }

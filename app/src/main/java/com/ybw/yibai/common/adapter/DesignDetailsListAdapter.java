@@ -80,7 +80,6 @@ public class DesignDetailsListAdapter extends RecyclerView.Adapter<RecyclerView.
         myViewHolder.mDesignDetailsName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SceneHelper.savePhotoNum(mContext, schemelistBean.getImglist().size());
                 if (onSceneItemClickListener != null)
                     onSceneItemClickListener.onSceneItemClick(schemelistBean);
             }

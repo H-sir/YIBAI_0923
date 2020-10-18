@@ -33,26 +33,10 @@ public class SceneHelper {
     private static int mSpecTypeId;
 
     /**
-     * 场景图片数量
-     */
-    private static final String Key_PhotoNum = "PhotoNum";
-    private static int mPhotoNum;
-
-    /**
      * 城市
      */
     private static final String Key_City = "City";
     private static String mCity;
-
-    public static int getPhotoNum(Context context) {
-        mPhotoNum = readPhotoNum(context);
-        return mPhotoNum;
-    }
-
-    private static int readPhotoNum(Context context) {
-        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
-        return pref.getInt(Key_PhotoNum, 0);
-    }
 
     public static int getProductSkuId(Context context) {
         mProductSkuId = readProductSkuId(context);
@@ -104,17 +88,6 @@ public class SceneHelper {
         SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
         SharedPreferences.Editor edit = pref.edit();
         edit.putInt(Key_SpecTypeId, mSpecTypeId);
-        return edit.commit();
-    }
-
-    public static void savePhotoNum(Context context, int mPhotoNum) {
-        savePhotoNumInfo(context, mPhotoNum);
-    }
-
-    private static synchronized boolean savePhotoNumInfo(Context context, int mPhotoNum) {
-        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
-        SharedPreferences.Editor edit = pref.edit();
-        edit.putInt(Key_PhotoNum, mPhotoNum);
         return edit.commit();
     }
 

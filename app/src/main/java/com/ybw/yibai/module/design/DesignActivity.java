@@ -167,6 +167,16 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0)
             sceneInfo = defaultSceneInfoList.get(0);
 
+        mDesignPresenter.getDesignList();
+    }
+
+    @Override
+    public void onGetDesignListSuccess(DesignList designList) {
+        designLists.clear();
+
+        if (designList.getData() != null && designList.getData().getList() != null && designList.getData().getList().size() > 0)
+            designLists.addAll(designList.getData().getList());
+
         mDesignListAdapter = new DesignListAdapter(this, designLists, sceneInfo);
         designListView.setAdapter(mDesignListAdapter);
 
@@ -174,14 +184,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         mDesignListAdapter.setOnDesignDeleteClickListener(this);
         mDesignListAdapter.setOnDesignShareClickListener(this);
 
-        mDesignPresenter.getDesignList();
-    }
-
-    @Override
-    public void onGetDesignListSuccess(DesignList designList) {
-        designLists.clear();
-        if (designList.getData() != null && designList.getData().getList() != null && designList.getData().getList().size() > 0)
-            designLists.addAll(designList.getData().getList());
         mDesignListAdapter.notifyDataSetChanged();
     }
 
@@ -205,7 +207,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
     @Override
     public void onDeleteDesignSuccess(BaseBean baseBean) {
         designLists.remove(deleteListBead);
-        mDesignListAdapter.notifyDataSetChanged();
         try {
             DbManager dbManager = YiBaiApplication.getDbManager();
             // 查找当前正在编辑的这一个场景
@@ -218,6 +219,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         } catch (DbException e) {
             e.printStackTrace();
         }
+        mDesignPresenter.getDesignList();
     }
 
     /**

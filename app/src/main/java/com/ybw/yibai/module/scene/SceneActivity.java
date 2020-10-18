@@ -621,7 +621,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
     /**
      * 设计详情返回
-     * */
+     */
     @Override
     public void updateSceneData() {
         mScenePresenter.findUserSceneListInfo(true);
@@ -700,27 +700,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
         }
 
-
-        // 保存图片
-        if (id == R.id.saveTextView) {
-            try {
-                DbManager manager = YiBaiApplication.getDbManager();
-                mSceneInfo.setCount(mSceneInfo.getCount() + 1);
-                manager.update(mSceneInfo);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            /**
-             * 发送数据到{@link SceneEditFragment#onAddScheme(SceneContract.SceneView)}
-             */
-            EventBus.getDefault().post(this);
-        }
         // 我的设计
         if (id == R.id.myDesignImageTextView) {
             Intent intent = new Intent(this, DesignDetailsActivity.class);
             intent.putExtra(DESIGN_NUMBER, mDesingNumber);
-            startActivityForResult(intent,0);//此处的requestCode应与下面结果处理函中调用的requestCode一致
+            startActivityForResult(intent, 0);//此处的requestCode应与下面结果处理函中调用的requestCode一致
 
 //            Intent intent = new Intent(this, SimulationDrawingActivity.class);
 //            startActivity(intent);
@@ -901,18 +885,6 @@ public class SceneActivity extends BaseActivity implements SceneView,
             mCheckBox.setChecked(false);
         }
     }
-
-
-    /**
-     * EventBus
-     * 接收用户从{@link SceneEditFragment}传递过来的数据
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
-    public void uploadSceneNum(SceneInfo sceneInfo) {
-        mSaveTextViewNum.setVisibility(View.VISIBLE);
-        mSaveTextViewNum.setText(String.valueOf(SceneHelper.getPhotoNum(getApplicationContext())));
-    }
-
 
     /**
      * 场景列表中的场景名称点击时回调
@@ -1180,7 +1152,6 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
     @Override
     public void onGetAddDesignSchemeSuccess(DesignScheme designScheme) {
-        SceneHelper.savePhotoNum(getApplicationContext(), SceneHelper.getPhotoNum(getApplicationContext()) + 1);
         MessageUtil.showMessage("添加完成");
         for (Iterator<SceneDesign> iterator = mSceneDesignDataList.iterator(); iterator.hasNext(); ) {
             SceneDesign sceneDesign = iterator.next();
@@ -1543,15 +1514,20 @@ public class SceneActivity extends BaseActivity implements SceneView,
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stickerViewSelected(@NonNull StickerViewSelected stickerViewSelected) {
         boolean selected = stickerViewSelected.isSelected();
+        BaseSticker baseSticker = stickerViewSelected.getBaseSticker();
         if (selected) {
+            if (baseSticker != null) {
+                mTitleTextView.setText(String.valueOf(baseSticker.getPottedName()));
+            }
             mArcMenu.hide();
             mFloatingActionButton.hide();
             mFunctionLayout.setVisibility(View.GONE);
         } else {
+            mTitleTextView.setText(mSceneInfo.getSceneName());
             mArcMenu.show();
             mFunctionLayout.setVisibility(View.VISIBLE);
-            if (mComType != null && mComType.equals("1")) return;
             mFloatingActionButton.show();
+            if (mComType != null && mComType.equals("1")) return;
         }
     }
 

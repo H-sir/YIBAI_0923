@@ -92,6 +92,8 @@ public class PurchaseOrderAdapter extends RecyclerView.Adapter<RecyclerView.View
         String goodsNumString = mContext.getResources().getString(R.string.sum) + goodsNum + mContext.getResources().getString(R.string.items_commodity);
         myViewHolder.mNumberTextView.setText(goodsNumString);
 
+        myViewHolder.mNameTextView.setText(listBean.getOrder_number());
+
         String payableAmountString = YiBaiApplication.getCurrencySymbol() + payableAmount;
         myViewHolder.mPrice.setText(payableAmountString);
 

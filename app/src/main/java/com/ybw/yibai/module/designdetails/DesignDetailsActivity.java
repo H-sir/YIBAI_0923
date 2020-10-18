@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -54,6 +56,7 @@ import org.xutils.ex.DbException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -169,7 +172,6 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
                 mDesignBg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        SceneHelper.savePhotoNum(getApplicationContext(), schemelistBean.getImglist().size());
                         onSceneItemClick(schemelistBean);
                     }
                 });
@@ -188,16 +190,19 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
                 view.setAdapter(new NestFullListViewAdapter<DesignDetails.DataBean.SchemelistBean.ImaData>
                         (R.layout.listview_design_scheme_details_list_item_layout,
                                 schemelistBean.getImglist()) {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onBind(int pos, DesignDetails.DataBean.SchemelistBean.ImaData imaData, NestFullViewHolder holder) {
                         ImageView designSchemeImageDelete = holder.getView(R.id.designSchemeImageDelete);
                         ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
                         ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, imaData.getPic());
                         designSchemeImageDelete.setOnClickListener(v -> {
-                            onDesignDetailsDelete(imaData);
+                            onDesignDetailsDelete(schemelistBean, imaData);
                         });
                         mDesignSchemeImage.setOnClickListener(v -> {
-                            ImageUtil.showImage(DesignDetailsActivity.this, imaData.getPic());
+                            List<String> urls = schemelistBean.getImglist().stream().
+                                    map(DesignDetails.DataBean.SchemelistBean.ImaData::getPic).collect(Collectors.toList());
+                            ImageUtil.showImage(DesignDetailsActivity.this, urls, pos);
                         });
                     }
                 });
@@ -222,12 +227,13 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
         if (sceneInfoList != null && sceneInfoList.size() > 0) {
             for (Iterator<SceneInfo> iterator = sceneInfoList.iterator(); iterator.hasNext(); ) {
                 SceneInfo info = iterator.next();
+                info.setEditScene(false);
                 if (schemelistBean.getSchemeId().equals(String.valueOf(info.getScheme_id()))) {
+                    info.setCount(schemelistBean.getImglist().size());
                     info.setEditScene(true);
-                    mUserPresenter.updateUserScene(info);
-                    break;
                 }
             }
+            mUserPresenter.updateUserScene(sceneInfoList);
         } else {
             MessageUtil.showMessage("该场景已经删除，请重新创建");
         }
@@ -247,8 +253,8 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
     /**
      * 删除设计图片
      */
-    public void onDesignDetailsDelete(DesignDetails.DataBean.SchemelistBean.ImaData imaData) {
-        mDesignDetailsPresenter.deleteSchemePic(imaData.getId());
+    public void onDesignDetailsDelete(DesignDetails.DataBean.SchemelistBean schemelistBean, DesignDetails.DataBean.SchemelistBean.ImaData imaData) {
+        mDesignDetailsPresenter.deleteSchemePic(schemelistBean, imaData.getId());
     }
 
     /**
@@ -460,8 +466,6 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
 
     @Override
     public void onBackPressed() {
-        if (schemelistBeans.size() > 0)
-            SceneHelper.savePhotoNum(getApplicationContext(), schemelistBeans.get(0).getImglist().size());
         Intent intent = getIntent();
         setResult(REQUEST_DESIGN_DETAILS_CODE, intent);
         finish();

@@ -26,6 +26,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -627,7 +629,7 @@ public class ImageUtil {
     public static void showImage(Activity context, String url) {
         // 全屏显示的方法
         final Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
-        ImageView imgView = getView(context);
+        ImageView imgView = getImageView(context);
         displayImage(context, imgView, url);
         dialog.setContentView(imgView);
         dialog.show();
@@ -640,10 +642,68 @@ public class ImageUtil {
         });
     }
 
-    private static ImageView getView(Context context) {
+    private static ImageView getImageView(Context context) {
         ImageView imgView = new ImageView(context);
         imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         return imgView;
+    }
+
+    /**
+     * 点击放大图片
+     */
+    public static void showImage(Activity context, List<String> urls,int position) {
+        // 全屏显示的方法
+        final Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        View view = View.inflate(context, R.layout.show_image_layout, null);
+        ViewPager viewPager = view.findViewById(R.id.view_pager);
+        dialog.setContentView(view);
+        dialog.show();
+        PagerAdapter adapter = new ViewAdapter(dialog,context,urls);
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(position);
+    }
+
+    static class ViewAdapter extends PagerAdapter {
+        private List<String> datas;
+        private Context context;
+        private Dialog dialog;
+        public ViewAdapter(Dialog dialog, Context context, List<String> list) {
+            this.dialog = dialog;
+            this.context = context;
+            datas = list;
+        }
+
+        @Override
+        public int getCount() {
+            return datas.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
+            return view == object;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ImageView imgView = new ImageView(context);
+            imgView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            displayImage(context, imgView, datas.get(position));
+            container.addView(imgView);
+
+            // 点击图片消失
+            imgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            return imgView;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView((View) object);
+        }
     }
 
     /*
@@ -653,34 +713,34 @@ public class ImageUtil {
      (__ __)
     */
 
-/**
- * 图片下载回调
- */
-public interface DownloadCallback {
-
     /**
-     * 开始下载图片时回调
+     * 图片下载回调
      */
-    void onDownloadStarted();
+    public interface DownloadCallback {
 
-    /**
-     * 在下载成功或者失败一张图片时回调
-     *
-     * @param sumTotal        本次要下载的图片总数
-     * @param successesAmount 当前下载图片成功的数量
-     * @param failuresAmount  当前下载图片失败的数量
-     * @param completedAmount 当前下载图片成功或者失败的数量
-     */
-    void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount);
+        /**
+         * 开始下载图片时回调
+         */
+        void onDownloadStarted();
 
-    /**
-     * 在下载全部图片完成时回调
-     *
-     * @param bitmapList 下载完成的图片
-     */
-    void onDownloadFinished(List<Bitmap> bitmapList);
+        /**
+         * 在下载成功或者失败一张图片时回调
+         *
+         * @param sumTotal        本次要下载的图片总数
+         * @param successesAmount 当前下载图片成功的数量
+         * @param failuresAmount  当前下载图片失败的数量
+         * @param completedAmount 当前下载图片成功或者失败的数量
+         */
+        void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount);
 
-}
+        /**
+         * 在下载全部图片完成时回调
+         *
+         * @param bitmapList 下载完成的图片
+         */
+        void onDownloadFinished(List<Bitmap> bitmapList);
+
+    }
 
     /**
      * 下载图片

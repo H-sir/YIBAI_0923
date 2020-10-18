@@ -52,11 +52,12 @@ public class DesignDetailsPresenterImpl extends BasePresenterImpl<DesignDetailsC
     /**
      * 删除设计图片
      *
+     * @param schemelistBean
      * @param picId 图片ID
      */
     @Override
-    public void deleteSchemePic(String picId) {
-        mSceneDetailsModel.deleteSchemePic(picId, this);
+    public void deleteSchemePic(DesignDetails.DataBean.SchemelistBean schemelistBean, String picId) {
+        mSceneDetailsModel.deleteSchemePic(schemelistBean,picId, this);
     }
 
     @Override

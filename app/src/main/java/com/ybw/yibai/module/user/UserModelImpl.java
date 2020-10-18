@@ -58,10 +58,6 @@ public class UserModelImpl implements UserContract.UserModel {
                     .where("uid", "=", YiBaiApplication.getUid())
                     .findAll();
             callBack.onFindUserUserInfoSuccess(sceneInfoList);
-//            if (null != sceneInfoList && sceneInfoList.size() > 0) {
-//                return;
-//            }
-//            createNewDesign(manager, callBack);
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -173,24 +169,27 @@ public class UserModelImpl implements UserContract.UserModel {
     }
 
     @Override
+    public void updateUserScene(List<SceneInfo> sceneInfoList, UserContract.CallBack callBack) {
+        try {
+            DbManager manager = YiBaiApplication.getDbManager();
+            if (null == manager) {
+                return;
+            }
+            manager.update(sceneInfoList, "editScene","count");
+            callBack.onUpdateUserSceneListSuccess();
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void updateUserScene(SceneInfo sceneInfo, UserContract.CallBack callBack) {
         try {
             DbManager manager = YiBaiApplication.getDbManager();
             if (null == manager) {
                 return;
             }
-            List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
-                    .where("uid", "=", YiBaiApplication.getUid())
-                    .findAll();
-            for (Iterator<SceneInfo> iterator = sceneInfoList.iterator(); iterator.hasNext(); ) {
-                SceneInfo info = iterator.next();
-                if (info.getScheme_id() != null && info.getScheme_id().equals(sceneInfo.getScheme_id())) {
-                    info.setEditScene(true);
-                } else {
-                    info.setEditScene(false);
-                }
-            }
-            manager.update(sceneInfoList, "editScene");
+            manager.update(sceneInfo, "editScene","count");
             callBack.onUpdateUserSceneListSuccess();
         } catch (DbException e) {
             e.printStackTrace();

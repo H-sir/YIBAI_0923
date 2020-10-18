@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center"
-                android:text="全不选"
+                android:text="全选"
                 android:textColor="@color/black" />
         </LinearLayout>
 

@@ -5,10 +5,10 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/itemView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:id="@+id/itemView"
         android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
@@ -99,6 +99,7 @@
                     android:id="@+id/purcartComAdd"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
                     android:background="#E8E8E8"
                     android:gravity="center"
                     android:text="+"

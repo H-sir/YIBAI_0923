@@ -239,9 +239,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         intentFilter.addAction("android.intent.action.CART_BROADCAST");
         BroadcastReceiver mItemViewListClickReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent){
+            public void onReceive(Context context, Intent intent) {
                 String msg = intent.getStringExtra("data");
-                if("refresh".equals(msg)){
+                if ("refresh".equals(msg)) {
                     // 获取用户的进货数据
                     if (mPurCartPresenter != null)
                         mPurCartPresenter.getPurCartData();
@@ -291,7 +291,6 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
                 if (comlistBean.getChecked() == 0) {
                     isAllSelect = false;
-                    purCartAllSelectText.setText("全选");
                     purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
                 } else {
                     allPrice = allPrice + (comlistBean.getPrice() * comlistBean.getNum());
@@ -316,7 +315,6 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                 PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
                 if (itemlistBean.getChecked() == 0) {
                     isAllSelect = false;
-                    purCartAllSelectText.setText("全选");
                     purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
                 } else {
                     allPrice = allPrice + (itemlistBean.getPrice() * itemlistBean.getNum());
@@ -562,21 +560,21 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     private void purCartAllSelectData() {
         if (isAllSelect) {
-            String cartIds = "";
-            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
-                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
-                if (itemlistBean.getChecked() == 1) {
-                    cartIds = cartIds + itemlistBean.getCartId() + ",";
-                }
-            }
-            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
-                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
-                if (comlistBean.getChecked() == 1) {
-                    cartIds = cartIds + comlistBean.getCartId() + ",";
-                }
-            }
-            cartIds.substring(0, cartIds.length() - 2);
-            mPurCartPresenter.upAllCart(cartIds, 1, 0);
+//            String cartIds = "";
+//            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+//                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+//                if (itemlistBean.getChecked() == 1) {
+//                    cartIds = cartIds + itemlistBean.getCartId() + ",";
+//                }
+//            }
+//            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+//                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+//                if (comlistBean.getChecked() == 1) {
+//                    cartIds = cartIds + comlistBean.getCartId() + ",";
+//                }
+//            }
+//            cartIds.substring(0, cartIds.length() - 2);
+//            mPurCartPresenter.upAllCart(cartIds, 1, 0);
 
         } else {
             String cartIds = "";
@@ -592,8 +590,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     cartIds = cartIds + comlistBean.getCartId() + ",";
                 }
             }
-            cartIds.substring(0, cartIds.length() - 2);
-            mPurCartPresenter.upAllCart(cartIds, 1, 1);
+            if (!cartIds.isEmpty())
+                mPurCartPresenter.upAllCart(cartIds, 1, 1);
         }
     }
 
@@ -601,11 +599,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     public void onUpAllCartSuccess(int isCheck) {
         if (isCheck == 1) {
             isAllSelect = true;
-            purCartAllSelectText.setText("全不选");
             purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.selected_img));
         } else {
             isAllSelect = false;
-            purCartAllSelectText.setText("全选");
             purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
         }
         for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
@@ -769,7 +765,6 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     private void setAllSelect() {
         isAllSelect = false;
-        purCartAllSelectText.setText("全不选");
         purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
 
         onGetPurCartDataSuccess(purCartBean);

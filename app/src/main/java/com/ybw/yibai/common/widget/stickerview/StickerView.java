@@ -8,7 +8,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -463,19 +465,24 @@ public class StickerView extends FrameLayout {
         }
 
         // 绘制盆栽名称背景
-        mPottedHeightRectF.left = x1;
-        mPottedHeightRectF.right = x2;
-        mPottedHeightRectF.top = y1 - iconWidth / 2 - DensityUtil.dpToPx(mContext, 20);
-        mPottedHeightRectF.bottom = y1 - iconWidth / 2;
+//        mPottedHeightRectF.left = x1;
+//        mPottedHeightRectF.right = x2;
+//        mPottedHeightRectF.top = y1 - iconWidth / 2 - DensityUtil.dpToPx(mContext, 20);
+//        mPottedHeightRectF.bottom = y1 - iconWidth / 2;
 
         // 绘制盆栽高度背景
-        mPottedNameRectF.left = x1;
-        mPottedNameRectF.right = x2;
-        mPottedNameRectF.top = mPottedHeightRectF.top - DensityUtil.dpToPx(mContext, 18);
-        mPottedNameRectF.bottom = mPottedHeightRectF.top;
+        mPottedHeightRectF.left = x2-100;
+        mPottedHeightRectF.right = x2 + 300;
+        mPottedHeightRectF.top = ((y4 - y2) / 2 + y2) - 50;
+        mPottedHeightRectF.bottom = ((y4 - y2) / 2 + y2) + 50;
+//        mPottedNameRectF.left = x1;
+//        mPottedNameRectF.right = x2;
+//        mPottedNameRectF.top = mPottedHeightRectF.top - DensityUtil.dpToPx(mContext, 18);
+//        mPottedNameRectF.bottom = mPottedHeightRectF.top;
 
         // 先裁切画布(裁切方法之后的绘制内容,都会被限制在裁切范围内)
-        canvas.clipRect(mPottedNameRectF.left, mPottedNameRectF.top, mPottedNameRectF.right, mPottedHeightRectF.bottom);
+        canvas.clipRect(mPottedHeightRectF.left, mPottedHeightRectF.top, mPottedHeightRectF.right, mPottedHeightRectF.bottom);
+//        canvas.clipRect(mPottedNameRectF.left, mPottedNameRectF.top, mPottedNameRectF.right, mPottedHeightRectF.bottom);
 
         // 在绘制文字
         if (null == mHandlingSticker) {
@@ -487,12 +494,14 @@ public class StickerView extends FrameLayout {
         }
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
         float distances = (fontMetrics.bottom - fontMetrics.top) / 2 - fontMetrics.bottom;
-        float baseline = mPottedNameRectF.centerY() + distances;
-        canvas.drawText(pottedName, mPottedNameRectF.left, baseline, mTextPaint);
+//        float baseline = mPottedNameRectF.centerY() + distances;
+//        canvas.drawText(pottedName, mPottedNameRectF.left, baseline, mTextPaint);
+
 
         String pottedHeight = mHandlingSticker.getPottedHeight();
         if (!TextUtils.isEmpty(pottedHeight)) {
             float baselines = mPottedHeightRectF.centerY() + distances;
+            canvas.drawColor(getResources().getColor(R.color.white_fifty_percent_color));//绘制透明色
             canvas.drawText(pottedHeight, mPottedHeightRectF.left, baselines, mTextPaint);
         }
     }

@@ -57,13 +57,18 @@ public class UserPresenterImpl extends BasePresenterImpl<UserContract.UserView> 
     }
 
     @Override
+    public void updateUserScene(SceneInfo sceneInfo) {
+        mUserModel.updateUserScene(sceneInfo,this);
+    }
+
+    @Override
     public void onUpdateUserSceneListSuccess() {
         mUserView.onUpdateUserSceneListSuccess();
     }
 
     @Override
-    public void updateUserScene(SceneInfo sceneInfo) {
-        mUserModel.updateUserScene(sceneInfo,this);
+    public void updateUserScene(List<SceneInfo> sceneInfoList) {
+        mUserModel.updateUserScene(sceneInfoList,this);
     }
 
     @Override

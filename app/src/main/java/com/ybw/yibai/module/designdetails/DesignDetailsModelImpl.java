@@ -80,7 +80,7 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
     }
 
     @Override
-    public void deleteSchemePic(String picId, DesignDetailsContract.CallBack callBack) {
+    public void deleteSchemePic(DesignDetails.DataBean.SchemelistBean schemelistBean, String picId, DesignDetailsContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<BaseBean> observable = mApiService.deleteDesignSchemePic(timeStamp,
                 OtherUtil.getSign(timeStamp, DELETE_DESIGN_SCHEME_PIC_METHOD),
@@ -94,7 +94,25 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
 
             @Override
             public void onNext(BaseBean deleteBase) {
-                callBack.onDeleteSchemePicSuccess(picId);
+                if (deleteBase.getCode() == 200) {
+                    String schemeId = schemelistBean.getSchemeId();
+                    try {
+                        DbManager dbManager = YiBaiApplication.getDbManager();
+
+                        List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                                .where("scheme_id", "=", schemeId)
+                                .findAll();
+                        if (defaultSceneInfoList != null && defaultSceneInfoList.size() > 0) {
+                            defaultSceneInfoList.get(0).setCount(defaultSceneInfoList.get(0).getCount() - 1);
+                            dbManager.update(defaultSceneInfoList, "count");
+                        }
+                        callBack.onDeleteSchemePicSuccess(picId);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    callBack.onRequestFailure(new Throwable(deleteBase.getMsg()));
+                }
             }
 
             @Override
@@ -148,7 +166,7 @@ public class DesignDetailsModelImpl implements DesignDetailsContract.DesignDetai
                             }
                         }
                         if (flag) {
-                            if (defaultSceneInfoList.size() > 1) {
+                            if (defaultSceneInfoList.size() > 0) {
                                 defaultSceneInfoList.get(0).setEditScene(true);
                                 dbManager.update(defaultSceneInfoList, "editScene");
                             }

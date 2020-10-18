@@ -170,7 +170,6 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                         addGateName.setOnClickListener(view1 -> {
                             mMarketPresenter.addPurcart(productSkuId, gateSkuBean.getGateProductId());
                         });
-
                         ((NestFullListView) holder.getView(R.id.gateSkuPicListView)).setAdapter(
                                 new NestFullListViewAdapter<String>(R.layout.listview_market_list_pic_item_layout, gateSkuBean.getPicArr()) {
                                     @Override
@@ -179,7 +178,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                                         if (pic != null && !pic.isEmpty())
                                             ImageUtil.displayImage(getApplicationContext(), imagePic, pic);
                                         imagePic.setOnClickListener(view1 -> {
-                                            ImageUtil.showImage(MarketActivity.this, pic);
+                                            ImageUtil.showImage(MarketActivity.this, gateSkuBean.getPicArr(),pos);
                                         });
                                     }
                                 }

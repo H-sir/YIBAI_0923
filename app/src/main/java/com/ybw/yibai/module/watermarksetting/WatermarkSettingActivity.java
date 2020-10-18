@@ -109,7 +109,7 @@ public class WatermarkSettingActivity extends BaseActivity implements WatermarkS
     protected void initData() {
         mPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
         int vipLevel = mPreferences.getInt(VIP_LEVEL, 0);
-        boolean openWatermark = mPreferences.getBoolean(OPEN_WATERMARK, true);
+        boolean openWatermark = mPreferences.getBoolean(OPEN_WATERMARK, false);
         watermarkPic = mPreferences.getString(WATERMARK_PIC, null);
         if (1 == vipLevel) {
             mToggleButton.setClickable(false);

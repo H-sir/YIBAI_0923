@@ -8,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.tencent.mm.opensdk.modelbiz.WXLaunchMiniProgram;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.analytics.MobclickAgent;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseFragment;
@@ -171,9 +174,17 @@ public class PurchaseOrderFragment extends BaseFragment implements PurchaseOrder
         if (TextUtils.isEmpty(share)) {
             return;
         }
-        Intent intent = new Intent(mContext, BrowserActivity.class);
-        intent.putExtra(URL, share);
-        startActivity(intent);
+//        Intent intent = new Intent(mContext, BrowserActivity.class);
+//        intent.putExtra(URL, share);
+//        startActivity(intent);
+
+        String appId = "wx08cd98ecf42af1d7"; // 填应用AppId
+        IWXAPI wxapi = WXAPIFactory.createWXAPI(getContext(), appId);
+        WXLaunchMiniProgram.Req req = new WXLaunchMiniProgram.Req();
+        req.userName = "gh_a532df421aeb"; // 填小程序原始id
+        req.path = share;
+        req.miniprogramType = WXLaunchMiniProgram.Req.MINIPTOGRAM_TYPE_RELEASE; // 可选打开 开发版，体验版和正式版
+        wxapi.sendReq(req);
     }
 
     /**

@@ -88,10 +88,9 @@
     <com.ybw.yibai.common.widget.nestlistview.NestFullListView
         android:id="@+id/gateSkuPicListView"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="72dp"
         android:layout_below="@+id/tradeName"
-        android:fillViewport="true"
-        android:padding="5dp" />
+        android:fillViewport="true" />
 
     <LinearLayout
         android:layout_width="match_parent"

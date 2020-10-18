@@ -112,6 +112,8 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
         mEditTextView.setVisibility(View.GONE);
         mEditTextView.setOnClickListener(view1 -> {
             flag = !flag;
+            if (flag) mEditTextView.setText("完成");
+            else mEditTextView.setText("编辑");
             /**
              * 发送数据到 {@link PurCateFragment#onDelete(HiddenChanged)}
              */

@@ -7,6 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -96,6 +98,7 @@
                     android:id="@+id/purcartComAdd"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
                     android:background="#E8E8E8"
                     android:gravity="center"
                     android:text="+"
@@ -107,9 +110,9 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/showView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/showView"
         android:orientation="horizontal">
 
 
@@ -127,17 +130,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:textSize="10dp"
             android:text="分开供应"
-            android:textColor="@color/prompt_low_text_color" />
+            android:textColor="@color/prompt_low_text_color"
+            android:textSize="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_gravity="center"
             android:text="种植并发货预计"
-            android:textColor="@color/prompt_low_text_color" />
+            android:textColor="@color/prompt_low_text_color"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/titleTime"
@@ -145,16 +148,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text=""
-            android:visibility="gone"
-            android:textColor="@color/prompt_low_text_color" />
+            android:textColor="@color/prompt_low_text_color"
+            android:visibility="gone" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="天"
-            android:visibility="gone"
-            android:textColor="@color/prompt_low_text_color" />
+            android:textColor="@color/prompt_low_text_color"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/titlePhoto"
@@ -164,6 +167,7 @@
             android:padding="10dp"
             android:src="@mipmap/down" />
     </LinearLayout>
+
     <com.ybw.yibai.common.widget.nestlistview.NestFullListView
         android:id="@+id/designDetailsListView"
         android:layout_width="match_parent"

@@ -53,7 +53,7 @@ public interface DesignDetailsContract {
         /**
          * 删除设计图片
          */
-        void deleteSchemePic(String picId);
+        void deleteSchemePic(DesignDetails.DataBean.SchemelistBean schemelistBean, String picId);
 
         /**
          * 删除场景
@@ -81,7 +81,7 @@ public interface DesignDetailsContract {
         /**
          * 删除设计图片
          */
-        void deleteSchemePic(String picId, CallBack callBack);
+        void deleteSchemePic(DesignDetails.DataBean.SchemelistBean schemelistBean, String picId, CallBack callBack);
 
         /**
          * 删除场景

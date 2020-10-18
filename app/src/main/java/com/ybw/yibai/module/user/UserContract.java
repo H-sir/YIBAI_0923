@@ -47,6 +47,8 @@ public interface UserContract {
         /**
          * 更新用户单个的场景信息启动编辑
          */
+        void updateUserScene(List<SceneInfo> sceneInfoList);
+
         void updateUserScene(SceneInfo sceneInfo);
     }
 
@@ -68,6 +70,8 @@ public interface UserContract {
          * 更新用户单个的场景信息启动编辑
          */
         void updateUserScene(SceneInfo sceneInfo, CallBack callBack);
+
+        void updateUserScene(List<SceneInfo> sceneInfoList, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

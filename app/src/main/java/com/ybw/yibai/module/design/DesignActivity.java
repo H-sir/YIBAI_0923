@@ -5,10 +5,13 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -24,6 +27,7 @@ import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.DesignListAdapter;
 import com.ybw.yibai.common.bean.BaseBean;
+import com.ybw.yibai.common.bean.DesignDetails;
 import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
@@ -32,9 +36,15 @@ import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
+import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
+import com.ybw.yibai.common.utils.TimeUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
+import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
+import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
@@ -70,9 +80,7 @@ import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
  * </pre>
  */
 public class DesignActivity extends BaseActivity implements DesignContract.DesignView,
-        DesignListAdapter.OnDesignDeleteClickListener,
-        DesignListAdapter.OnDesignShareClickListener,
-        DesignListAdapter.OnDesignSchemeImageClickListener, UserContract.UserView {
+        UserContract.UserView {
     private String TAG = "DesignActivity";
     private DesignActivity mDesignActivity = null;
     /**
@@ -88,16 +96,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
      * 设计列表
      */
     @BindView(R.id.designListView)
-    RecyclerView designListView;
-
-    /**
-     * 设计列表适配器
-     */
-    private DesignListAdapter mDesignListAdapter;
-    /**
-     * 设计列表集合
-     */
-    private List<DesignList.DataBean.ListBean> designLists = new ArrayList<>();
+    NestFullListView designListView;
 
     /**
      * 删除的设计
@@ -128,6 +127,11 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
      */
     private DesignList.DataBean.ListBean.SchemelistBean mSchemelistBean;
 
+    /**
+     * 设计详情列表适配器
+     */
+    private NestFullListViewAdapter mNestFullListViewAdapter;
+
     @Override
     protected int setLayout() {
         mDesignActivity = this;
@@ -144,17 +148,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         mWaitDialog = new WaitDialog(this);
         mDesignPresenter = new DesignPresenterImpl(this);
         mUserPresenter = new UserPresenterImpl(this);
-        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1, VERTICAL);
-        // 设置RecyclerView间距
-        int gap = DensityUtil.dpToPx(getApplicationContext(), 8);
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(1, gap, false);
-        // 给RecyclerView设置布局管理器(必须设置)
-        designListView.setLayoutManager(manager);
-        designListView.addItemDecoration(decoration);
-        designListView.setNestedScrollingEnabled(false);
-        designListView.setHasFixedSize(false);
-
     }
 
     @Override
@@ -172,19 +165,69 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     @Override
     public void onGetDesignListSuccess(DesignList designList) {
-        designLists.clear();
+        mNestFullListViewAdapter = new NestFullListViewAdapter<DesignList.DataBean.ListBean>(
+                R.layout.listview_design_list_item_layout, designList.getData().getList()) {
+            @Override
+            public void onBind(int pos, DesignList.DataBean.ListBean dataBean, NestFullViewHolder holder) {
+                TextView mDesignName = holder.getView(R.id.designName);
+                TextView mDesignStats = holder.getView(R.id.designStats);
+                TextView mDesignDelete = holder.getView(R.id.designDelete);
+                TextView mDesignShare = holder.getView(R.id.designShare);
 
-        if (designList.getData() != null && designList.getData().getList() != null && designList.getData().getList().size() > 0)
-            designLists.addAll(designList.getData().getList());
+                mDesignName.setText(dataBean.getNumber());
+                String twoDay = TimeUtil.getTwoDay(TimeUtil.getStringToday(), dataBean.getLasttime());
 
-        mDesignListAdapter = new DesignListAdapter(this, designLists, sceneInfo);
-        designListView.setAdapter(mDesignListAdapter);
+                boolean sceneInfoFlag = false;
+                boolean flag = false;
+                for (Iterator<DesignList.DataBean.ListBean.SchemelistBean> iterator = dataBean.getSchemelist().iterator(); iterator.hasNext(); ) {
+                    DesignList.DataBean.ListBean.SchemelistBean schemelistBean = iterator.next();
+                    if (sceneInfo != null && schemelistBean.getSchemeId().equals(sceneInfo.getScheme_id())) {
+                        mDesignStats.setText("正在编辑");
+                        sceneInfoFlag = true;
+                        flag = true;
+                    }
+                }
+                if (!flag) {
+                    if (twoDay != null && !twoDay.isEmpty() && Integer.parseInt(twoDay) < 5) {
+                        mDesignStats.setText("完成于" + twoDay + "天前");
+                    } else {
+                        mDesignStats.setText(dataBean.getLasttime());
+                    }
+                }
+                mDesignDelete.setOnClickListener(view -> {
+                    onDesignDelete(dataBean);
+                });
+                mDesignShare.setOnClickListener(view -> {
+                    onDesignShare(dataBean);
+                });
 
-        mDesignListAdapter.setDesignSchemeImageClickListener(this);
-        mDesignListAdapter.setOnDesignDeleteClickListener(this);
-        mDesignListAdapter.setOnDesignShareClickListener(this);
+                //第二层
+                NestFullListView view = (NestFullListView) holder.getView(R.id.designListView);
+                view.setOrientation(LinearLayout.HORIZONTAL);
+                boolean finalSceneInfoFlag = sceneInfoFlag;
+                view.setAdapter(new NestFullListViewAdapter<DesignList.DataBean.ListBean.SchemelistBean>
+                        (R.layout.listview_design_scheme_list_item_layout,
+                                dataBean.getSchemelist()) {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onBind(int pos, DesignList.DataBean.ListBean.SchemelistBean schemelistBean, NestFullViewHolder holder) {
+                        ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
+                        TextView mDesignSchemeName = holder.getView(R.id.designSchemeName);
 
-        mDesignListAdapter.notifyDataSetChanged();
+                        mDesignSchemeName.setText(schemelistBean.getSchemeName());
+
+                        ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, schemelistBean.getBgpic());
+                        mDesignSchemeImage.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                onDesignSchemeImage(schemelistBean, finalSceneInfoFlag);
+                            }
+                        });
+                    }
+                });
+            }
+        };
+        designListView.setAdapter(mNestFullListViewAdapter);
     }
 
     @Override
@@ -195,9 +238,8 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
     /**
      * 调用删除按钮
      */
-    @Override
-    public void onDesignDelete(int position) {
-        deleteListBead = designLists.get(position);
+    public void onDesignDelete(DesignList.DataBean.ListBean dataBean) {
+        deleteListBead = dataBean;
         mDesignPresenter.deleteDesign(deleteListBead);
     }
 
@@ -206,7 +248,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
      */
     @Override
     public void onDeleteDesignSuccess(BaseBean baseBean) {
-        designLists.remove(deleteListBead);
         try {
             DbManager dbManager = YiBaiApplication.getDbManager();
             // 查找当前正在编辑的这一个场景
@@ -229,15 +270,14 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
      * SendMessageToWX.Req.WXSceneTimeline；分享到微信朋友圈
      * SendMessageToWX.Req.WXSceneFavorite；添加到微信收藏夹
      */
-    @Override
-    public void onDesignShare(int position) {
+    public void onDesignShare(DesignList.DataBean.ListBean dataBean) {
         WXMiniProgramObject miniProgram = new WXMiniProgramObject();
         miniProgram.webpageUrl = BASE_URL;//兼容低版本的网页链接
         miniProgram.userName = "gh_a532df421aeb";//小程序端提供参数
-        miniProgram.path = "/pages/index/index?number=" + designLists.get(position).getNumber(); //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
+        miniProgram.path = "/pages/index/index?number=" + dataBean.getNumber(); //小程序页面路径；对于小游戏，可以只传入 query 部分，来实现传参效果，如：传入 "?foo=bar"
         WXMediaMessage mediaMessage = new WXMediaMessage(miniProgram);
-        mediaMessage.title = "亲，请查看您的绿植设计方案~" + designLists.get(position).getNumber();//自定义
-        mediaMessage.description = designLists.get(position).getNumber();//自定义
+        mediaMessage.title = "亲，请查看您的绿植设计方案~" + dataBean.getNumber();//自定义
+        mediaMessage.description = dataBean.getNumber();//自定义
         ImageDispose.returnBitMap("http://f.100ybw.com/images/wxminiprogramshare.png", new ImageDispose.CallBack() {
             @Override
             public void onCallBack(byte[] bytes) {
@@ -253,7 +293,6 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     }
 
-    @Override
     public void onDesignSchemeImage(DesignList.DataBean.ListBean.SchemelistBean schemelistBean,
                                     boolean sceneInfoFlag) {
         if (sceneInfoFlag) {

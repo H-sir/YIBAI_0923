@@ -1349,12 +1349,18 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 DbManager manager = YiBaiApplication.getDbManager();
                 mSceneInfo.setCount(mSceneInfo.getCount() + 1);
                 manager.update(mSceneInfo);
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String photoName = prefix + TimeUtil.getTimeStamp();
-            String pathName = mStickerView.saveSticker(photoName);
+            String photoName;
+            String pathName;
+            if (isChangeCollocation) {
+                photoName = prefix + TimeUtil.getTimeStamp();
+                pathName = mStickerView.saveSticker(mCollocationLayout,mSceneBackgroundImageView, photoName);
+            } else {
+                photoName = prefix + TimeUtil.getTimeStamp();
+                pathName = mStickerView.saveSticker(photoName);
+            }
             File file = new File(pathName);
             if (file.isFile() && file.exists()) {
                 MessageUtil.showMessage(getResources().getString(R.string.save_successfully_you_can_click_on_my_design_below_to_view));
@@ -3167,6 +3173,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     boolean isChangeFlagOne = false;
     int stickerWidth;
     int stickerHeight;
+    boolean isChangeCollocation = false;
 
     /**
      * 更换搭配操作
@@ -3176,6 +3183,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     private void replaceCollocation(boolean flag) {
         String text = mChangeStyleTextView.getText().toString();
         if (text.equals(mContext.getResources().getString(R.string.change_style))) {
+            isChangeCollocation = true;
             if (flag) isChangeFlagOne = true;
             else isChangeFlagOne = false;
             isChangeFlag = true;
@@ -3262,6 +3270,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             String label = getClass().getSimpleName() + "Three";
             GuideUtil.showGuideView(this, R.layout.guide_scene_edit_three_layout, label);
         } else {
+            isChangeCollocation = false;
             isChangeFlagOne = false;
             mProductCodeImageButton.setVisibility(View.GONE);
             mChangeStyleTextView.setText(mContext.getResources().getString(R.string.change_style));

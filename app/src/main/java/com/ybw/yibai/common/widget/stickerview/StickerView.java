@@ -26,6 +26,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 
@@ -1359,6 +1360,56 @@ public class StickerView extends FrameLayout {
             ignored.fillInStackTrace();
             return null;
         }
+    }
+
+    /**
+     * 保存贴纸
+     *
+     * @param name 贴纸保存后的路径名称
+     */
+    public String saveSticker(View v,View bg,@NonNull String name) {
+        String pathName = SDCardHelperUtil.getSDCardPrivateFilesDir(YiBaiApplication.getContext(), DIRECTORY_PICTURES) + "/" + name + ".jpg";
+        File file = new File(pathName);
+        try {
+            Bitmap bitmap = viewConversionBitmap(bg,v);
+            File saveImageFile = StickerUtils.saveImage(file, bitmap);
+            return saveImageFile.getAbsolutePath();
+        } catch (IllegalArgumentException | IllegalStateException ignored) {
+            ignored.fillInStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * view转bitmap
+     */
+    public Bitmap viewConversionBitmap(View bg,View v) {
+        int w = v.getWidth();
+        int h = v.getHeight();
+
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+        Bitmap bitmap = loadBitmapFromView(bg);
+
+        c.drawBitmap(bitmap,0,0,null);
+
+        v.layout(0, 0, w, h);
+        v.draw(c);
+
+        return bmp;
+    }
+
+    public Bitmap loadBitmapFromView(View v) {
+        int w = v.getWidth();
+        int h = v.getHeight();
+
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bmp);
+
+        c.drawColor(Color.WHITE);
+        /** 如果不设置canvas画布为白色，则生成透明 */
+        v.draw(c);
+        return bmp;
     }
 
     /**

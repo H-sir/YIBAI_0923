@@ -200,9 +200,18 @@ public class DesignDetailsActivity extends BaseActivity implements DesignDetails
                             onDesignDetailsDelete(schemelistBean, imaData);
                         });
                         mDesignSchemeImage.setOnClickListener(v -> {
-                            List<String> urls = schemelistBean.getImglist().stream().
-                                    map(DesignDetails.DataBean.SchemelistBean.ImaData::getPic).collect(Collectors.toList());
-                            ImageUtil.showImage(DesignDetailsActivity.this, urls, pos);
+                            if (schemelistBean.getImglist().size() > 1) {
+                                List<String> urls = new ArrayList<>();
+                                for (Iterator<DesignDetails.DataBean.SchemelistBean.ImaData> iterator = schemelistBean.getImglist().iterator(); iterator.hasNext(); ) {
+                                    DesignDetails.DataBean.SchemelistBean.ImaData data = iterator.next();
+                                    urls.add(data.getPic());
+                                }
+//                                schemelistBean.getImglist().stream().
+//                                        map(DesignDetails.DataBean.SchemelistBean.ImaData::getPic).collect(Collectors.toList());
+                                ImageUtil.showImage(DesignDetailsActivity.this, urls, pos);
+                            } else {
+                                ImageUtil.showImage(DesignDetailsActivity.this, imaData.getPic());
+                            }
                         });
                     }
                 });

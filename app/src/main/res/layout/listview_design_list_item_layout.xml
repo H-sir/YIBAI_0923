@@ -40,15 +40,27 @@
         android:layout_marginRight="18dp"
         android:background="@color/prompt_high_text_color" />
 
-    <com.ybw.yibai.common.widget.horizontal.adatper.HorizontalScrollListView
-        android:id="@+id/designListView"
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
-        android:background="@color/white_fifty_percent_color"
-        android:divider="@color/line_color"
-        android:scrollbars="none" />
+        android:scrollbars="none"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.ybw.yibai.common.widget.nestlistview.NestFullListView
+                android:id="@+id/designListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:layout_marginRight="3dp"
+                android:background="@color/white_fifty_percent_color"
+                android:divider="@color/line_color"
+                android:scrollbars="none" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <View
         android:layout_width="match_parent"

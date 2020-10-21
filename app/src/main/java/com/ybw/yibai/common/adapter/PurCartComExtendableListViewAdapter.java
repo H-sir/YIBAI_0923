@@ -198,8 +198,13 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         purcartComPrice.setText(first.getPrice());
         if (second != null) {
             purcartComType.setText(second.getName());
-            float allPrice = Float.parseFloat(first.getPrice()) + Float.parseFloat(second.getPrice());
-            purcartComPrice.setText(String.valueOf(allPrice));
+            if (first.getPrice() != null && second.getPrice() != null) {
+                float allPrice = Float.parseFloat(first.getPrice()) + Float.parseFloat(second.getPrice());
+                purcartComPrice.setText(String.valueOf(allPrice));
+            } else {
+                float allPrice = Float.parseFloat(second.getPrice());
+                purcartComPrice.setText(String.valueOf(allPrice));
+            }
         }
         purcartComNum.setText(String.valueOf(purCartHeadBean.getNum()));
         titleName.setText("分开供应");

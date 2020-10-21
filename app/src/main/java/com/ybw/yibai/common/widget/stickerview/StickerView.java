@@ -472,8 +472,8 @@ public class StickerView extends FrameLayout {
 //        mPottedHeightRectF.bottom = y1 - iconWidth / 2;
 
         // 绘制盆栽高度背景
-        mPottedHeightRectF.left = x2-100;
-        mPottedHeightRectF.right = x2 + 300;
+        mPottedHeightRectF.left = x2-50;
+        mPottedHeightRectF.right = x2 + 150;
         mPottedHeightRectF.top = ((y4 - y2) / 2 + y2) - 50;
         mPottedHeightRectF.bottom = ((y4 - y2) / 2 + y2) + 50;
 //        mPottedNameRectF.left = x1;
@@ -1247,7 +1247,7 @@ public class StickerView extends FrameLayout {
 //        }
 
 //        sticker.getMatrix().postScale((float) xScale, (float) yScale, x, x);
-        sticker.getMatrix().postScale((float) xScale, (float) yScale, 0, 0);
+        sticker.getMatrix().postScale((float) xScale/2, (float) yScale/2, 0, 0);
 
 
         setStickerPosition(sticker, x, y);

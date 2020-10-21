@@ -893,7 +893,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
             double height = productHeight + augmentedProductHeight - augmentedProductOffsetRatio - productOffsetRatio;
             // 四舍五入
             long h = Math.round(height);
-            String pottedHeight = fragment.getResources().getString(R.string.total_height_is_expected) + h + fragment.getResources().getString(R.string.cm);
+            String pottedHeight = h + fragment.getResources().getString(R.string.cm);
 
             File file = new File(picturePath);
             if (file.isFile() && file.exists()) {

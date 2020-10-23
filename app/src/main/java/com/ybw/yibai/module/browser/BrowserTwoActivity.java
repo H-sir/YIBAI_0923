@@ -2,7 +2,6 @@ package com.ybw.yibai.module.browser;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,9 +15,13 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -35,7 +38,8 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.NetworkType;
-import com.ybw.yibai.common.classs.RoundCornersTransformation.CornerType;
+import com.ybw.yibai.common.classs.RoundCornersTransformation;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.FileUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -67,12 +71,13 @@ import static com.ybw.yibai.common.utils.SDCardHelperUtil.getSDCardPrivateFilesD
 import static com.ybw.yibai.common.utils.SDCardHelperUtil.isSDCardMounted;
 
 /**
- * 浏览器
- *
- * @author sjl
- * @date 2019/10/14
+ * <pre>
+ *     author : HKR
+ *     time   : 2020/10/23
+ *     desc   :
+ * </pre>
  */
-public class BrowserActivity extends BaseActivity implements View.OnClickListener {
+public class BrowserTwoActivity extends BaseActivity implements View.OnClickListener {
 
     /**
      * 租摆订单的客户名称
@@ -103,7 +108,7 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
     /**
      * 网页链接地址
      */
-    private String url;
+    private String url = "http://mybw.100ybw.com/index/detailed.html?number=2020102398484998";
 
     /**
      * 余额提现地址
@@ -186,9 +191,9 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
         mWebView = findViewById(R.id.webView);
         mSeeTheCaseButton = findViewById(R.id.seeTheCaseButton);
 
-        // 设置WebView属性
-        OtherUtil.setWebViewProperty(mWebView);
-        // 设置状态栏成白色的背景,字体颜色为黑色
+//         设置WebView属性
+//        OtherUtil.setWebViewProperty(mWebView);
+//         设置状态栏成白色的背景,字体颜色为黑色
         OtherUtil.setStatusBarColor(this, ContextCompat.getColor(this, android.R.color.white));
     }
 
@@ -214,33 +219,102 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
 
         mWebView.setWebViewClient(mWebViewClient);
         mWebView.setWebChromeClient(mWebChromeClient);
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-        if (!TextUtils.isEmpty(type) && type.equals(LOCAL_URL_TYPE)) {
-            mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
-            // 用户从点击首页图片进入本页面,查看公司信息时才显示本按钮
-            mSeeTheCaseButton.setVisibility(View.VISIBLE);
-        } else if (!TextUtils.isEmpty(type) && type.equals(WALLET_URL_TYPE)) {
-            Map<String, String> headMap = new HashMap<>(2);
-            headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-            headMap.put("token", YiBaiApplication.getToken());
-            mWebView.loadUrl(url, headMap);
-            mWithdrawDepositTextView.setVisibility(View.VISIBLE);
-        } else if (!TextUtils.isEmpty(type) && type.equals(ORDER_SHARE_URL_TYPE)) {
-            Map<String, String> headMap = new HashMap<>(2);
-            headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-            headMap.put("token", YiBaiApplication.getToken());
-//            mWebView.loadUrl(url, headMap);
-            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
-            mShareTextView.setVisibility(View.VISIBLE);
-        } else {
-            Map<String, String> headMap = new HashMap<>(2);
-            headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-            headMap.put("token", YiBaiApplication.getToken());
-            mWebView.loadUrl(url, headMap);
-        }
+
+        setWebViewProperty();
+
+        mShareTextView.setVisibility(View.VISIBLE);
+        AndroidUtils.MainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (TextUtils.isEmpty(url)) {
+                    return;
+                }
+                if (!TextUtils.isEmpty(type) && type.equals(LOCAL_URL_TYPE)) {
+                    mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
+                    // 用户从点击首页图片进入本页面,查看公司信息时才显示本按钮
+                    mSeeTheCaseButton.setVisibility(View.VISIBLE);
+                } else if (!TextUtils.isEmpty(type) && type.equals(WALLET_URL_TYPE)) {
+                    Map<String, String> headMap = new HashMap<>(2);
+                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+                    headMap.put("token", YiBaiApplication.getToken());
+                    mWebView.loadUrl(url, headMap);
+                    mWithdrawDepositTextView.setVisibility(View.VISIBLE);
+                } else if (!TextUtils.isEmpty(type) && type.equals(ORDER_SHARE_URL_TYPE)) {
+                    Map<String, String> headMap = new HashMap<>(2);
+                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+                    headMap.put("token", YiBaiApplication.getToken());
+//                    mWebView.loadUrl(url);
+                    mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
+                    mShareTextView.setVisibility(View.VISIBLE);
+                } else {
+                    Map<String, String> headMap = new HashMap<>(2);
+                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+                    headMap.put("token", YiBaiApplication.getToken());
+                    mWebView.loadUrl(url, headMap);
+                }
+            }
+        }, 2000);
     }
+
+    private void setWebViewProperty() {
+        WebSettings mWebSettings = mWebView.getSettings();
+
+        mWebSettings.setAllowFileAccess(true);
+        mWebSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+        mWebSettings.setSupportZoom(true);
+        mWebSettings.setBuiltInZoomControls(true);
+        mWebSettings.setUseWideViewPort(true);
+        mWebSettings.setSupportMultipleWindows(false);
+        mWebSettings.setAppCacheEnabled(true);
+        mWebSettings.setDomStorageEnabled(true);
+        mWebSettings.setJavaScriptEnabled(true);
+        mWebSettings.setGeolocationEnabled(true);
+        mWebSettings.setAppCacheMaxSize(Long.MAX_VALUE);
+        mWebSettings.setAppCachePath(getDir("appcache", 0).getPath());
+        mWebSettings.setDatabasePath(getDir("databases", 0).getPath());
+        mWebSettings.setGeolocationDatabasePath(getDir("geolocation", 0)
+                .getPath());
+        mWebSettings.setPluginState(WebSettings.PluginState.ON_DEMAND);
+        mWebSettings.setLoadWithOverviewMode(true);
+        mWebSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        String mUserAgent = mWebSettings.getUserAgentString();
+        mWebSettings.setUserAgentString(mUserAgent + " App/AppName");
+        syncCookie();
+        mWebSettings.setUseWideViewPort(true);
+        mWebSettings.setLoadWithOverviewMode(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mWebSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        } else {
+            mWebSettings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            mWebSettings.setDisplayZoomControls(false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mWebSettings.setLoadsImagesAutomatically(true);
+        } else {
+            mWebSettings.setLoadsImagesAutomatically(false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mWebSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            CookieManager.getInstance().setAcceptThirdPartyCookies(mWebView, true);
+
+        mWebView.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+        mWebView.setHorizontalScrollBarEnabled(false);
+        mWebView.setHorizontalFadingEdgeEnabled(false);
+        mWebView.setVerticalFadingEdgeEnabled(false);
+        mWebView.requestFocus();
+    }
+
+    private void syncCookie() {
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        CookieSyncManager.getInstance().sync();
+    }
+
 
     @Override
     public void onNetworkStateChange(NetworkType networkType) {
@@ -287,97 +361,63 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
         }
 
         @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            String title = view.getTitle();
-            if (!TextUtils.isEmpty(title) && !"about:blank".equals(title)) {
-                // 获取到的网站title
-                mTitleTextView.setText(title);
-            }
+        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            handler.proceed();
+            super.onReceivedSslError(view, handler, error);
         }
 
         @Override
-        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-            // 证书已经过期
-            if (error.getPrimaryError() == SslError.SSL_EXPIRED
-                    || error.getPrimaryError() == SslError.SSL_UNTRUSTED // 不受信任的机构颁发的证书
-                    || error.getPrimaryError() == SslError.SSL_DATE_INVALID // 证书的日期是无效的
-                    || error.getPrimaryError() == SslError.SSL_INVALID) { // WebView BUG
-                handler.proceed(); // 接受所有网站的证书
-            } else {
-                handler.cancel();
-            }
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return super.shouldOverrideUrlLoading(view, url);
+        }
+
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+            return super.shouldInterceptRequest(view, request);
+        }
+
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            if (null != mTitleTextView && null != view && TextUtils.isEmpty(view.getTitle()))
+                mTitleTextView.setText(view.getTitle());
         }
     };
 
     private WebChromeClient mWebChromeClient = new WebChromeClient() {
         @Override
-        public void onProgressChanged(WebView view, int newProgress) {
-            super.onProgressChanged(view, newProgress);
-            // 当进度到100%时隐藏ProgressBar,关闭下拉刷新
-            if (100 == newProgress) {
-                mProgressBar.setVisibility(View.GONE);
-            } else {
-                mProgressBar.setVisibility(View.VISIBLE);
-                // 将进度设置到ProgressBar
-                mProgressBar.setProgress(newProgress);
-            }
+        public void onProgressChanged(WebView webView, int i) {
+            super.onProgressChanged(webView, i);
+        }
+
+        @Override
+        public boolean onJsConfirm(WebView view, String url, String message, android.webkit.JsResult result) {
+            return super.onJsConfirm(view, url, message, result);
+        }
+
+        @Override
+        public void onShowCustomView(View view, CustomViewCallback callback) {
+            super.onShowCustomView(view, callback);
+        }
+
+        @Override
+        public void onHideCustomView() {
+        }
+
+        @Override
+        public boolean onShowFileChooser(WebView webView, android.webkit.ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+            return super.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+        }
+
+        @Override
+        public boolean onJsAlert(WebView view, String url, String message, android.webkit.JsResult result) {
+            return super.onJsAlert(view, url, message, result);
         }
 
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            if (!TextUtils.isEmpty(title) && !"about:blank".equals(title)) {
-                // 获取到的网站title
-                mTitleTextView.setText(view.getTitle());
-            }
-        }
-
-        // For Android 3.0-
-        public void openFileChooser(ValueCallback<Uri> uploadMsg) {
-            mUploadMsg = uploadMsg;
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "File Chooser"), FILE_CHOOSER_RESULT_CODE);
-        }
-
-        // For Android 3.0+
-        public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
-            mUploadMsg = uploadMsg;
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "File Browser"), FILE_CHOOSER_RESULT_CODE);
-        }
-
-        // For Android 4.1 only
-        public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture) {
-            mUploadMsg = uploadMsg;
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "File Browser"), FILE_CHOOSER_RESULT_CODE);
-        }
-
-        // For Lollipop 5.0+ Devices
-        @Override
-        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-        public boolean onShowFileChooser(WebView mWebView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
-            if (null != mFilePathCallback) {
-                mFilePathCallback.onReceiveValue(null);
-                mFilePathCallback = null;
-            }
-            mFilePathCallback = filePathCallback;
-            Intent intent = fileChooserParams.createIntent();
-            try {
-                startActivityForResult(intent, REQUEST_SELECT_FILE);
-            } catch (ActivityNotFoundException e) {
-                mFilePathCallback = null;
-                Toast.makeText(getBaseContext(), "无法打开文件选择器", Toast.LENGTH_LONG).show();
-                return false;
-            }
-            return true;
         }
     };
 
@@ -422,7 +462,7 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
         TextView clientNameTextView = view.findViewById(R.id.clientNameTextView);
 
         File file = new File(qrCodeFilePath);
-        ImageUtil.displayImage(this, qrCodeImageView, file, DensityUtil.dpToPx(this, 2), CornerType.TOP);
+        ImageUtil.displayImage(this, qrCodeImageView, file, DensityUtil.dpToPx(this, 2), RoundCornersTransformation.CornerType.TOP);
         if (!TextUtils.isEmpty(customerName)) {
             clientNameTextView.setText(customerName);
         }
@@ -492,3 +532,4 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
         }
     }
 }
+

@@ -6,6 +6,7 @@ import com.ybw.yibai.common.bean.HotScheme;
 import com.ybw.yibai.common.bean.HotSchemeCategory;
 import com.ybw.yibai.common.bean.HotSchemes;
 import com.ybw.yibai.common.bean.RecommendProductList;
+import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -13,6 +14,12 @@ import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
 import com.ybw.yibai.module.home.HomeContract.CallBack;
 import com.ybw.yibai.module.home.HomeContract.HomeModel;
+
+import org.xutils.DbManager;
+import org.xutils.ex.DbException;
+
+import java.util.Iterator;
+import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -272,5 +279,30 @@ public class HomeModelImpl implements HomeModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(observer);
+    }
+
+    @Override
+    public void findUserSceneListInfo(CallBack callBack) {
+        try {
+            DbManager manager = YiBaiApplication.getDbManager();
+            if (null == manager) {
+                return;
+            }
+            List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
+                    .where("uid", "=", YiBaiApplication.getUid())
+                    .and("editScene", "=", true)
+                    .findAll();
+            if (null != sceneInfoList && sceneInfoList.size() > 0) {
+                if (sceneInfoList.get(0).getNumber() != null && !sceneInfoList.get(0).getNumber().isEmpty()) {
+                    callBack.findUserSceneListInfo(true);
+                } else {
+                    callBack.findUserSceneListInfo(false);
+                }
+            } else {
+                callBack.findUserSceneListInfo(false);
+            }
+        } catch (DbException e) {
+            e.printStackTrace();
+        }
     }
 }

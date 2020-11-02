@@ -595,7 +595,6 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      * @param bitmapList 下载完成的图片
      */
     private void handleOnDownloadFinished(Recommend.DataBean data, List<Bitmap> bitmapList) {
-        mSceneEditView.onShowLoading();
         double productHeight = 0;
         double augmentedProductHeight = 0;
         double augmentedProductOffsetRatio = 0;

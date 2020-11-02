@@ -2,13 +2,9 @@ package com.ybw.yibai.module.design;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,23 +13,17 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.base.YiBaiApplication;
-import com.ybw.yibai.common.adapter.DesignListAdapter;
 import com.ybw.yibai.common.bean.BaseBean;
-import com.ybw.yibai.common.bean.DesignDetails;
 import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
-import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
-import com.ybw.yibai.common.utils.DensityUtil;
-import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -44,7 +34,6 @@ import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
-import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
@@ -54,19 +43,12 @@ import com.ybw.yibai.module.user.UserPresenterImpl;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.disposables.Disposable;
 
-import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
@@ -452,7 +434,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
                 int vipLevel = preferences.getInt(VIP_LEVEL, 0);
                 if (1 == vipLevel) {
-                    DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
+                    PopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
                     return;
                 }
                 if (sceneInfo != null) {

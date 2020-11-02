@@ -24,7 +24,7 @@ import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.classs.MainPopupMenu;
-import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.DownloadApkUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.module.home.HomeFragment;
@@ -222,6 +222,19 @@ public class MainActivity extends BaseActivity implements MainView,
         mMainPresenter.getProductScreeningParam();
         mRadioGroup.setOnCheckedChangeListener(this);
         mCentreLayout.setOnClickListener(this);
+
+        mMainPresenter.findUserSceneListInfo();
+    }
+
+    public static boolean isSceneFlag = false;
+
+    @Override
+    public void findUserSceneListInfo(boolean flag) {
+        if (flag) {
+            isSceneFlag = true;
+        } else {
+            isSceneFlag = false;
+        }
     }
 
     @Override
@@ -234,16 +247,7 @@ public class MainActivity extends BaseActivity implements MainView,
         int id = v.getId();
 
         if (id == R.id.centreLayout) {
-            SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
-            if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mMainActivity, mRootLayout);
-                return;
-            }
-            Intent intent = new Intent(this, StartDesignActivity.class);
-            startActivity(intent);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
+            PopupWindowUtil.createScenePopupWindow(mMainActivity, mRootLayout, isSceneFlag);
             /*int navigationBarHeight = getNavigationBarHeight(this);
             mPopupMenu = MainPopupMenu.getInstance();
             mPopupMenu.show(this, mRootLayout, navigationBarHeight);

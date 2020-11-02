@@ -84,6 +84,8 @@ public interface HomeContract {
          * @param userPosition 设置货源城市时服务器端返回的数据
          */
         void onSetUserPositionSuccess(UserPosition userPosition);
+
+        void findUserSceneListInfo(boolean flag);
     }
 
     interface HomePresenter extends BasePresenter<HomeView> {
@@ -149,6 +151,11 @@ public interface HomeContract {
          * @param position 城市字符串（广东省广州市）
          */
         void setUserPosition(String position);
+
+        /**
+         * 查询本地场景
+         * */
+        void findUserSceneListInfo();
     }
 
     interface HomeModel {
@@ -197,6 +204,8 @@ public interface HomeContract {
          * @param callBack 回调方法
          */
         void setUserPosition(String position, CallBack callBack);
+
+        void findUserSceneListInfo(CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -242,5 +251,7 @@ public interface HomeContract {
          * @param userPosition 设置货源城市时服务器端返回的数据
          */
         void onSetUserPositionSuccess(UserPosition userPosition);
+
+        void findUserSceneListInfo(boolean flag);
     }
 }

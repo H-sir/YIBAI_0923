@@ -64,6 +64,8 @@ public interface MainContract {
          * @param file 图像文件
          */
         void returnsTheImageReturnedFromTheCameraOrAlbum(File file);
+
+        void findUserSceneListInfo(boolean flag);
     }
 
     interface MainPresenter extends BasePresenter<MainView> {
@@ -138,6 +140,8 @@ public interface MainContract {
          */
         void displayUpdateVipPopupWindow(View rootLayout);
 
+        void findUserSceneListInfo();
+
     }
 
     interface MainModel {
@@ -175,6 +179,7 @@ public interface MainContract {
          */
         void getProductScreeningParam(CallBack callBack);
 
+        void findUserSceneListInfo(CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -206,5 +211,7 @@ public interface MainContract {
          * @param productScreeningParam 获取产品筛选参数时服务器端返回的数据
          */
         void onGetProductScreeningParamSuccess(ProductScreeningParam productScreeningParam);
+
+        void findUserSceneListInfo(boolean flag);
     }
 }

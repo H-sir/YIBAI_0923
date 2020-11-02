@@ -402,4 +402,14 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView> implements Ma
             DownloadApkUtil.downloadApk(activity, name, downloadUrl, Environment.DIRECTORY_DOWNLOADS, activity.getResources().getString(R.string.yibai_new_version), activity.getResources().getString(R.string.new_version));
         }
     }
+
+    @Override
+    public void findUserSceneListInfo() {
+        mMainModel.findUserSceneListInfo(this);
+    }
+
+    @Override
+    public void findUserSceneListInfo(boolean flag) {
+        mMainView.findUserSceneListInfo(flag);
+    }
 }

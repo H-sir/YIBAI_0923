@@ -22,7 +22,7 @@ import com.ybw.yibai.common.adapter.PotSelectAdapter;
 import com.ybw.yibai.common.bean.HotScheme;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
-import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -255,7 +255,7 @@ public class HotSchemeFragment extends BaseFragment implements HotSchemeView, Vi
             SharedPreferences preferences = getActivity().getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootView);
+                PopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootView);
                 return;
             }
             mHotSchemePresenter.saveSimulationData(mPlantBean, mPotBean);

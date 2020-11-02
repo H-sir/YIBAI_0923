@@ -31,7 +31,7 @@ import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
-import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
@@ -433,7 +433,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
             SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(mProductDetailsActivity, mRootLayout);
+                PopupWindowUtil.displayUpdateVipPopupWindow(mProductDetailsActivity, mRootLayout);
                 return;
             }
             ProductData productData = new ProductData(

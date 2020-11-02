@@ -38,6 +38,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dyhdyh.widget.loading.bar.LoadingBar;
 import com.google.gson.Gson;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -105,6 +106,7 @@ import com.ybw.yibai.common.utils.TimeUtil;
 import com.ybw.yibai.common.widget.HorizontalViewPager;
 import com.ybw.yibai.common.widget.MatchLayout;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.loading.CustomLoadingFactory;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.common.widget.stickerview.BitmapStickerIcon;
 import com.ybw.yibai.common.widget.stickerview.StickerView;
@@ -1356,7 +1358,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             String pathName;
             if (isChangeCollocation) {
                 photoName = prefix + TimeUtil.getTimeStamp();
-                pathName = mStickerView.saveSticker(mCollocationLayout,mSceneBackgroundImageView, photoName);
+                pathName = mStickerView.saveSticker(mCollocationLayout, mSceneBackgroundImageView, photoName);
             } else {
                 photoName = prefix + TimeUtil.getTimeStamp();
                 pathName = mStickerView.saveSticker(photoName);
@@ -2094,22 +2096,24 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
          */
         @Override
         public void onUnselectedStickerView() {
-            if (View.VISIBLE == mProductCodeImageButton.getVisibility()) {
-                mProductCodeImageButton.setVisibility(View.GONE);
-            }
-            if (View.VISIBLE == mChangeStyleTextView.getVisibility()) {
-                mChangeStyleTextView.setVisibility(View.GONE);
-            }
-            if (View.VISIBLE == mBonsaiEditLayout.getVisibility()) {
-                mBonsaiEditLayout.setVisibility(View.GONE);
-            }
-            /**
-             * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
-             */
-            EventBus.getDefault()
-                    .postSticky(new StickerViewSelected(false));
-            if (mComType != null && mComType.equals("1")) {
-                mSceneContainerTool.setVisibility(View.GONE);
+            if (!addSpec) {
+                if (View.VISIBLE == mProductCodeImageButton.getVisibility()) {
+                    mProductCodeImageButton.setVisibility(View.GONE);
+                }
+                if (View.VISIBLE == mChangeStyleTextView.getVisibility()) {
+                    mChangeStyleTextView.setVisibility(View.GONE);
+                }
+                if (View.VISIBLE == mBonsaiEditLayout.getVisibility()) {
+                    mBonsaiEditLayout.setVisibility(View.GONE);
+                }
+                /**
+                 * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+                 */
+                EventBus.getDefault()
+                        .postSticky(new StickerViewSelected(false));
+                if (mComType != null && mComType.equals("1")) {
+                    mSceneContainerTool.setVisibility(View.GONE);
+                }
             }
         }
     };
@@ -2142,6 +2146,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
+        hideColor(mRootView);
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
         mSimulationDataList.clear();
@@ -3547,21 +3552,38 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (exists) break;
         }
         if (exists) {
-            new Handler().postDelayed(() -> {
-                addSpec = true;
-                mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
+            showColor(mRootView);
+            addSpec = true;
+//            new Handler().postDelayed(() -> {
+            mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
 //                replaceCollocation(true);
-                /**
-                 * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
-                 */
-                EventBus.getDefault().postSticky(new StickerViewSelected(true));
-                if (mComType != null && mComType.equals("1")) {
-                    mSceneContainerTool.setVisibility(View.GONE);
-                }
-                mChangeStyleTextView.setVisibility(View.VISIBLE);
-            }, 1000);
+            /**
+             * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+             */
+            EventBus.getDefault().postSticky(new StickerViewSelected(true));
+            if (mComType != null && mComType.equals("1")) {
+                mSceneContainerTool.setVisibility(View.GONE);
+            }
+            mChangeStyleTextView.setVisibility(View.VISIBLE);
+//            }, 1000);
         }
     }
+
+    public void showColor(View mParent) {
+        CustomLoadingFactory factory = new CustomLoadingFactory();
+        LoadingBar.make(mParent, factory).show();
+    }
+
+    public void hideColor(View mParent) {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LoadingBar.cancel(mParent);
+            }
+        }, 1000);
+    }
+
+    private Handler mHandler = new Handler();
 
     void simulateClick(View view, float x, float y) {
         long downTime = SystemClock.uptimeMillis();
@@ -3733,10 +3755,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onShowLoading() {
-        /*if (!mWaitDialog.isShowing()) {
-            mWaitDialog.setWaitDialogText(getResources().getString(R.string.loading));
-            mWaitDialog.show();
-        }*/
+//        if (!mWaitDialog.isShowing()) {
+//            mWaitDialog.setWaitDialogText(getResources().getString(R.string.loading));
+//            mWaitDialog.show();
+//        }
     }
 
     /**

@@ -231,8 +231,9 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
             Map<String, String> headMap = new HashMap<>(2);
             headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
             headMap.put("token", YiBaiApplication.getToken());
-//            mWebView.loadUrl(url, headMap);
-            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
+            String substring = url.substring(4, url.length());
+            mWebView.loadUrl("https" + substring, headMap);
+//            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
             mShareTextView.setVisibility(View.VISIBLE);
         } else {
             Map<String, String> headMap = new HashMap<>(2);

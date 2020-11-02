@@ -424,4 +424,31 @@ public class MainModelImpl implements MainModel {
         }
         edit.apply();
     }
+
+    @Override
+    public void findUserSceneListInfo(CallBack callBack) {
+        {
+            try {
+                DbManager manager = YiBaiApplication.getDbManager();
+                if (null == manager) {
+                    return;
+                }
+                List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
+                        .where("uid", "=", YiBaiApplication.getUid())
+                        .and("editScene", "=", true)
+                        .findAll();
+                if (null != sceneInfoList && sceneInfoList.size() > 0) {
+                    if (sceneInfoList.get(0).getNumber() != null && !sceneInfoList.get(0).getNumber().isEmpty()) {
+                        callBack.findUserSceneListInfo(true);
+                    } else {
+                        callBack.findUserSceneListInfo(false);
+                    }
+                } else {
+                    callBack.findUserSceneListInfo(false);
+                }
+            } catch (DbException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

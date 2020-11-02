@@ -337,18 +337,22 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(DesignCreate designCreate) {
-                sceneInfoList.remove(sceneInfo);
-                sceneInfo.setNumber(designCreate.getData().getDesingNumber());
-                try {
-                    manager.update(sceneInfo, "number");
-                } catch (DbException e) {
-                    e.printStackTrace();
-                }
-                if (sceneInfo.getScheme_id() == null || sceneInfo.getScheme_id().isEmpty()) {
-                    designNewScheme(sceneInfoList, sceneInfo, callBack);
+                if (designCreate.getCode() == 200) {
+                    sceneInfoList.remove(sceneInfo);
+                    sceneInfo.setNumber(designCreate.getData().getDesingNumber());
+                    try {
+                        manager.update(sceneInfo, "number");
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                    if (sceneInfo.getScheme_id() == null || sceneInfo.getScheme_id().isEmpty()) {
+                        designNewScheme(sceneInfoList, sceneInfo, callBack);
+                    } else {
+                        sceneInfoList.add(sceneInfo);
+                        callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    }
                 } else {
-                    sceneInfoList.add(sceneInfo);
-                    callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    callBack.onRequestFailure(new Throwable(designCreate.getMsg()));
                 }
             }
 
@@ -813,7 +817,11 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(DesignCreate designCreate) {
-                designNewScheme(designCreate.getData().getDesingNumber(), manager, callBack);
+                if (designCreate.getCode() == 200) {
+                    designNewScheme(designCreate.getData().getDesingNumber(), manager, callBack);
+                } else {
+                    callBack.onRequestFailure(new Throwable(designCreate.getMsg()));
+                }
             }
 
             @Override

@@ -49,7 +49,7 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.AnimationUtil.CustomTransformer;
 import com.ybw.yibai.common.utils.DensityUtil;
-import com.ybw.yibai.common.utils.DisplayUpdateVipPopupWindowUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.EncryptionUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
@@ -72,7 +72,6 @@ import com.ybw.yibai.module.city.CityActivity;
 import com.ybw.yibai.module.company.CompanyInfoEditActivity;
 import com.ybw.yibai.module.design.DesignActivity;
 import com.ybw.yibai.module.details.ProductDetailsActivity;
-import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.home.HomeContract.HomePresenter;
 import com.ybw.yibai.module.home.HomeContract.HomeView;
 import com.ybw.yibai.module.hotschemes.HotSchemesActivity;
@@ -85,7 +84,6 @@ import com.ybw.yibai.module.quotationdetails.QuotationDetailsFragment;
 import com.ybw.yibai.module.savepricing.SavePricingByCustomerActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.search.SearchActivity;
-import com.ybw.yibai.view.activity.SelectDeliveryCityActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -116,6 +114,7 @@ import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.utils.AnimationUtil.zoomAnimation;
+import static com.ybw.yibai.module.main.MainActivity.isSceneFlag;
 
 /**
  * 首页Fragment
@@ -433,6 +432,17 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
         GuideUtil.showGuideView(this, R.layout.guide_home_layout);
 
         mLocationTextView.setText(SceneHelper.getCity(getActivity()));
+
+        if (isSceneFlag) {
+            mStartDesignTextView.setText("继续设计");
+        } else {
+            mStartDesignTextView.setText("开始设计");
+        }
+    }
+
+    @Override
+    public void findUserSceneListInfo(boolean flag) {
+
     }
 
     @Override
@@ -511,11 +521,11 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
             SharedPreferences preferences = mContext.getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
-                DisplayUpdateVipPopupWindowUtil.displayUpdateVipPopupWindow(getActivity(),mRootLayout);
+                PopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootLayout);
                 return;
             }
             Intent intent = new Intent(mContext, SceneActivity.class);
-            intent.putExtra("location",mLocationTextView.getText().toString());
+            intent.putExtra("location", mLocationTextView.getText().toString());
             startActivity(intent);
         }
 
@@ -855,7 +865,7 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
         // 判断GPS是否打开
         if (requestCode == REQUEST_OPEN_GPS_CODE && LocationUtil.isGpsOpen(mContext)) {
             startPositioning();
-        }else if(requestCode == 101 && resultCode == 1){
+        } else if (requestCode == 101 && resultCode == 1) {
             String city = data.getStringExtra("city_code");
             mHomePresenter.setUserPosition(city);
         }

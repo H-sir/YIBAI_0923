@@ -262,6 +262,11 @@ public class HomePresenterImpl extends BasePresenterImpl<HomeView> implements Ho
         mHomeModel.setUserPosition(position, this);
     }
 
+    @Override
+    public void findUserSceneListInfo() {
+        mHomeModel.findUserSceneListInfo(this);
+    }
+
     /**
      * 在设置货源城市成功时回调
      *
@@ -270,5 +275,10 @@ public class HomePresenterImpl extends BasePresenterImpl<HomeView> implements Ho
     @Override
     public void onSetUserPositionSuccess(UserPosition userPosition) {
         mHomeView.onSetUserPositionSuccess(userPosition);
+    }
+
+    @Override
+    public void findUserSceneListInfo(boolean flag) {
+        mHomeView.findUserSceneListInfo(flag);
     }
 }

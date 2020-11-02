@@ -36,6 +36,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dyhdyh.widget.loading.bar.LoadingBar;
 import com.google.gson.Gson;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
@@ -77,6 +78,7 @@ import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.loading.CustomLoadingFactory;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
@@ -1259,6 +1261,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
             EventBus.getDefault().post(new BaseResponse<String>(1, "", sceneName));
         }
         EventBus.getDefault().postSticky(new ViewPagerPosition(editScenePosition));
+        onHideLoading();
     }
 
     /**
@@ -1571,7 +1574,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
      */
     @Override
     public void onLoadDataFailure(Throwable throwable) {
+        MessageUtil.showMessage(throwable.getMessage());
         ExceptionUtil.handleException(throwable);
+        if(throwable.getMessage().contains("城市")){
+            super.onBackPressed();
+        }
     }
 
     @Override

@@ -221,39 +221,39 @@ public class BrowserTwoActivity extends BaseActivity implements View.OnClickList
         mWebView.setWebChromeClient(mWebChromeClient);
 
         setWebViewProperty();
-
-        mShareTextView.setVisibility(View.VISIBLE);
-        AndroidUtils.MainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (TextUtils.isEmpty(url)) {
-                    return;
-                }
-                if (!TextUtils.isEmpty(type) && type.equals(LOCAL_URL_TYPE)) {
-                    mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
-                    // 用户从点击首页图片进入本页面,查看公司信息时才显示本按钮
-                    mSeeTheCaseButton.setVisibility(View.VISIBLE);
-                } else if (!TextUtils.isEmpty(type) && type.equals(WALLET_URL_TYPE)) {
-                    Map<String, String> headMap = new HashMap<>(2);
-                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-                    headMap.put("token", YiBaiApplication.getToken());
-                    mWebView.loadUrl(url, headMap);
-                    mWithdrawDepositTextView.setVisibility(View.VISIBLE);
-                } else if (!TextUtils.isEmpty(type) && type.equals(ORDER_SHARE_URL_TYPE)) {
-                    Map<String, String> headMap = new HashMap<>(2);
-                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-                    headMap.put("token", YiBaiApplication.getToken());
-//                    mWebView.loadUrl(url);
-                    mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
-                    mShareTextView.setVisibility(View.VISIBLE);
-                } else {
-                    Map<String, String> headMap = new HashMap<>(2);
-                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
-                    headMap.put("token", YiBaiApplication.getToken());
-                    mWebView.loadUrl(url, headMap);
-                }
-            }
-        }, 2000);
+        mWebView.loadUrl("https://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
+//        mShareTextView.setVisibility(View.VISIBLE);
+//        AndroidUtils.MainHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (TextUtils.isEmpty(url)) {
+//                    return;
+//                }
+//                if (!TextUtils.isEmpty(type) && type.equals(LOCAL_URL_TYPE)) {
+//                    mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
+//                    // 用户从点击首页图片进入本页面,查看公司信息时才显示本按钮
+//                    mSeeTheCaseButton.setVisibility(View.VISIBLE);
+//                } else if (!TextUtils.isEmpty(type) && type.equals(WALLET_URL_TYPE)) {
+//                    Map<String, String> headMap = new HashMap<>(2);
+//                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+//                    headMap.put("token", YiBaiApplication.getToken());
+//                    mWebView.loadUrl(url, headMap);
+//                    mWithdrawDepositTextView.setVisibility(View.VISIBLE);
+//                } else if (!TextUtils.isEmpty(type) && type.equals(ORDER_SHARE_URL_TYPE)) {
+//                    Map<String, String> headMap = new HashMap<>(2);
+//                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+//                    headMap.put("token", YiBaiApplication.getToken());
+////                    mWebView.loadUrl(url);
+//                    mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
+//                    mShareTextView.setVisibility(View.VISIBLE);
+//                } else {
+//                    Map<String, String> headMap = new HashMap<>(2);
+//                    headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+//                    headMap.put("token", YiBaiApplication.getToken());
+//                    mWebView.loadUrl(url, headMap);
+//                }
+//            }
+//        }, 2000);
     }
 
     private void setWebViewProperty() {

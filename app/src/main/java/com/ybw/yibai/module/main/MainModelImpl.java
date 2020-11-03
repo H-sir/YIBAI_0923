@@ -19,6 +19,7 @@ import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.bean.UserInfo.DataBean;
 import com.ybw.yibai.common.bean.VloeaBean;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -421,6 +422,7 @@ public class MainModelImpl implements MainModel {
         String cityName = data.getCity_name();
         if (!TextUtils.isEmpty(cityName)) {
             edit.putString(CITY_NAME, cityName);
+            SceneHelper.saveCity(context,cityName);
         }
         edit.apply();
     }

@@ -160,7 +160,7 @@ public class SkuMarketBean {
 
                 @SerializedName("gate_product_id") private int gateProductId;
                 @SerializedName("subtitle") private String subtitle;
-                @SerializedName("price") private int price;
+                @SerializedName("price") private float price;
                 @SerializedName("uptime") private String uptime;
                 @SerializedName("stock") private int stock;
                 @SerializedName("delivery") private String delivery;
@@ -191,11 +191,11 @@ public class SkuMarketBean {
                     this.subtitle = subtitle;
                 }
 
-                public int getPrice() {
+                public float getPrice() {
                     return price;
                 }
 
-                public void setPrice(int price) {
+                public void setPrice(float price) {
                     this.price = price;
                 }
 

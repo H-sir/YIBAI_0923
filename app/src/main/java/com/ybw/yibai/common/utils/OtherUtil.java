@@ -353,6 +353,7 @@ public class OtherUtil {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 webViewSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
             }
+
             // 不支持手势缩放,默认为true
             webViewSettings.setSupportZoom(false);
             // 将图片调整到适合WebView到大小

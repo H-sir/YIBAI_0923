@@ -16,10 +16,12 @@ import android.widget.TextView;
 import com.ybw.yibai.R;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.module.browser.BrowserActivity;
+import com.ybw.yibai.module.design.DesignActivity;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.startdesign.StartDesignActivity;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.USER_VIP_URL;
@@ -35,7 +37,7 @@ import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 public class PopupWindowUtil {
 
     public static void displayUpdateVipPopupWindow(Activity activity, View rootLayout) {
-        View view =View.inflate(activity,R.layout.popup_window_update_vip_layout, null);
+        View view = View.inflate(activity, R.layout.popup_window_update_vip_layout, null);
         PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         ImageView updateVipImg = view.findViewById(R.id.update_vip_img);
@@ -89,9 +91,9 @@ public class PopupWindowUtil {
 
     /**
      * 创建设计的弹窗
-     * */
-    public static void createScenePopupWindow(Activity activity, View rootLayout,boolean flag) {
-        View view =View.inflate(activity,R.layout.popup_window_create_scene_layout, null);
+     */
+    public static void createScenePopupWindow(Activity activity, View rootLayout, boolean flag) {
+        View view = View.inflate(activity, R.layout.popup_window_create_scene_layout, null);
         PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
         TextView existSceneCancel = view.findViewById(R.id.existSceneCancel);
@@ -104,9 +106,9 @@ public class PopupWindowUtil {
                 PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
                 return;
             }
-            Intent intent = new Intent(activity, StartDesignActivity.class);
+            Intent intent = new Intent(activity, SceneActivity.class);
+            intent.putExtra(DESIGN_CREATE, true);
             activity.startActivity(intent);
-            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             if (mPopupWindow.isShowing()) {
                 mPopupWindow.dismiss();
             }
@@ -118,9 +120,9 @@ public class PopupWindowUtil {
                 PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
                 return;
             }
-            Intent intent = new Intent(activity, SceneActivity.class);
-            intent.putExtra("location", SceneHelper.getCity(activity));
+            Intent intent = new Intent(activity, StartDesignActivity.class);
             activity.startActivity(intent);
+            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             if (mPopupWindow.isShowing()) {
                 mPopupWindow.dismiss();
             }
@@ -139,5 +141,4 @@ public class PopupWindowUtil {
         mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
         mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
     }
-
 }

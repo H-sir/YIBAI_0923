@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.ybw.yibai.common.constants.Preferences.ACTIVITY_INVITE_BG;
+import static com.ybw.yibai.common.constants.Preferences.CITY_NAME;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY;
 import static com.ybw.yibai.common.constants.Preferences.HEAD;
 import static com.ybw.yibai.common.constants.Preferences.MY_WALLET_URL;
@@ -413,6 +414,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
     private void getAndSetUserInfo() {
         String headPortrait = mSharedPreferences.getString(HEAD, null);
         int vipLevel = mSharedPreferences.getInt(VIP_LEVEL, 0);
+        String cityName = mSharedPreferences.getString(CITY_NAME, "全国");
         String nickName = mSharedPreferences.getString(NICK_NAME, null);
         String company = mSharedPreferences.getString(COMPANY, null);
         String activityInviteBg = mSharedPreferences.getString(ACTIVITY_INVITE_BG, null);

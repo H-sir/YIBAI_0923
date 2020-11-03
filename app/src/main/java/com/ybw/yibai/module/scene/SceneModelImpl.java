@@ -354,6 +354,7 @@ public class SceneModelImpl implements SceneModel {
                 } else {
                     callBack.onRequestFailure(new Throwable(designCreate.getMsg()));
                 }
+
             }
 
             @Override
@@ -398,16 +399,20 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(DesignScheme designScheme) {
-                try {
-                    DbManager dbManager = YiBaiApplication.getDbManager();
-                    // 没有场景/正在编辑的场景,新建场景
-                    sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
-                    sceneInfos.add(sceneInfo);
-                    // 保存场景信息
-                    dbManager.update(sceneInfo, "scheme_id");
-                    callBack.onFindUserSceneInfoSuccess(sceneInfos);
-                } catch (DbException e) {
-                    e.printStackTrace();
+                if (designScheme.getCode() == 200) {
+                    try {
+                        DbManager dbManager = YiBaiApplication.getDbManager();
+                        // 没有场景/正在编辑的场景,新建场景
+                        sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
+                        sceneInfos.add(sceneInfo);
+                        // 保存场景信息
+                        dbManager.update(sceneInfo, "scheme_id");
+                        callBack.onFindUserSceneInfoSuccess(sceneInfos);
+                    } catch (DbException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
                 }
             }
 
@@ -448,7 +453,11 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(PlacementQrQuotationList placementQrQuotationList) {
-                callBack.onGetPlacementListSuccess(placementQrQuotationList);
+                if (placementQrQuotationList.getCode() == 200) {
+                    callBack.onGetPlacementListSuccess(placementQrQuotationList);
+                } else {
+                    callBack.onRequestFailure(new Throwable(placementQrQuotationList.getMsg()));
+                }
             }
 
             @Override
@@ -489,7 +498,12 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(DeletePlacement deletePlacement) {
-                callBack.onDeletePlacementListSuccess(deletePlacement);
+                if (deletePlacement.getCode() == 200) {
+                    callBack.onDeletePlacementListSuccess(deletePlacement);
+                } else {
+                    callBack.onRequestFailure(new Throwable(deletePlacement.getMsg()));
+                }
+
             }
 
             @Override

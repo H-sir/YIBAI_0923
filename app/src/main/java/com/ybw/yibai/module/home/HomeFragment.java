@@ -442,7 +442,12 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
 
     @Override
     public void findUserSceneListInfo(boolean flag) {
-
+        isSceneFlag = flag;
+        if (isSceneFlag) {
+            mStartDesignTextView.setText("继续设计");
+        } else {
+            mStartDesignTextView.setText("开始设计");
+        }
     }
 
     @Override
@@ -862,6 +867,7 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        mHomePresenter.findUserSceneListInfo();
         // 判断GPS是否打开
         if (requestCode == REQUEST_OPEN_GPS_CODE && LocationUtil.isGpsOpen(mContext)) {
             startPositioning();

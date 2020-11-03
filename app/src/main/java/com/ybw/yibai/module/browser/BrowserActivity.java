@@ -232,6 +232,7 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
             headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
             headMap.put("token", YiBaiApplication.getToken());
             String substring = url.substring(4, url.length());
+
             mWebView.loadUrl("https" + substring, headMap);
 //            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
             mShareTextView.setVisibility(View.VISIBLE);

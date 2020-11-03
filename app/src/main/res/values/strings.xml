@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">易摆</string>
 
     <!-- 登录 -->
@@ -455,5 +455,5 @@
 
     <string name="exist_scene_title">提示</string>
     <string name="exist_scene_text">当前有正在编辑的设计，继续创建将完成当前编辑，并清除场景缓存。</string>
-    <string name="create_scene_text" >您当前有一个未完成的设计  \n操作1：【新建】，新建一个设计 \n操作2：【继续】，直接进入正在编辑的设计</string>
+    <string name="create_scene_text" tools:ignore="ExtraTranslation">您当前有一个未完成的设计</string>
 </resources>

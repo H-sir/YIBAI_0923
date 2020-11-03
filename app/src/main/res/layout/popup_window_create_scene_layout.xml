@@ -2,26 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/default_color"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="10dp"
-        android:text="@string/exist_scene_title"
-        android:textColor="@color/pickerview_timebtn_nor"
-        android:textSize="@dimen/action_button_content_margin" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/activity_background_color"
-        android:gravity="center"
-        android:padding="20dp"
+        android:padding="30dp"
         android:text="@string/create_scene_text"
         android:textSize="@dimen/action_button_content_margin" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/trans_grey" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,16 +28,23 @@
             android:id="@+id/existSceneCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:padding="10dp"
             android:text="新建"
             android:textColor="@color/main_text_color"
             android:textSize="@dimen/action_button_content_margin" />
 
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/trans_grey" />
+
         <TextView
             android:id="@+id/existSceneContinue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
             android:padding="10dp"
             android:text="继续"

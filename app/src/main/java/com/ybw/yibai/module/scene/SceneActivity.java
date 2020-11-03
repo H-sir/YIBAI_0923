@@ -36,7 +36,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dyhdyh.widget.loading.bar.LoadingBar;
 import com.google.gson.Gson;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;

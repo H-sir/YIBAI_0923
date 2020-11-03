@@ -50,7 +50,12 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
+import static com.ybw.yibai.common.constants.Preferences.CUSTOMER_NAME;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
+import static com.ybw.yibai.common.constants.Preferences.ORDER_NUMBER;
+import static com.ybw.yibai.common.constants.Preferences.ORDER_SHARE_URL_TYPE;
+import static com.ybw.yibai.common.constants.Preferences.TYPE;
+import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 

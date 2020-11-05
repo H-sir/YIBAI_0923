@@ -1590,6 +1590,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
         } else if (null != mPopupMenu && mPopupMenu.isShowing()) {
             mPopupMenu.closePopupWindow();
         } else {
+            /**
+             * 发送数据到{@link HomeFragment#onHome(String)}
+             * 使其跳转到对应的Fragment
+             */
+            EventBus.getDefault().postSticky("Design");
             super.onBackPressed();
         }
     }

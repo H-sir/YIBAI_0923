@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.ybw.yibai.common.utils.SDCardHelperUtil;
 import com.ybw.yibai.common.utils.XUtilsUtil;
 import com.ybw.yibai.common.widget.AppUpdateDialog;
 import com.ybw.yibai.module.browser.BrowserActivity;
+import com.ybw.yibai.module.home.HomeFragment;
 import com.ybw.yibai.module.main.MainContract.CallBack;
 import com.ybw.yibai.module.main.MainContract.MainModel;
 import com.ybw.yibai.module.main.MainContract.MainPresenter;
@@ -43,6 +47,8 @@ import java.io.File;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_BACK_MAIN_CODE;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_CAMERA_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_PHOTOS_CODE;
 import static com.ybw.yibai.common.constants.Preferences.TOKEN;
@@ -283,6 +289,13 @@ public class MainPresenterImpl extends BasePresenterImpl<MainView> implements Ma
             }
             File file = new File(path);
             mMainView.returnsTheImageReturnedFromTheCameraOrAlbum(file);
+        }
+
+        /**
+         *
+         * */
+        if (requestCode == 0 && resultCode == REQUEST_DESIGN_DETAILS_CODE) {
+            mMainView.resultHomeFragment();
         }
     }
 

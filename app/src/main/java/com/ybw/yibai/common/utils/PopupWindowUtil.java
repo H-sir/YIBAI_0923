@@ -106,12 +106,14 @@ public class PopupWindowUtil {
                 PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
                 return;
             }
-            Intent intent = new Intent(activity, SceneActivity.class);
+            Intent intent = new Intent(activity, StartDesignActivity.class);
             intent.putExtra(DESIGN_CREATE, true);
             activity.startActivity(intent);
+            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             if (mPopupWindow.isShowing()) {
                 mPopupWindow.dismiss();
             }
+
         });
         existSceneContinue.setOnClickListener(v -> {
             SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
@@ -121,6 +123,7 @@ public class PopupWindowUtil {
                 return;
             }
             Intent intent = new Intent(activity, StartDesignActivity.class);
+            intent.putExtra(DESIGN_CREATE, true);
             activity.startActivity(intent);
             activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             if (mPopupWindow.isShowing()) {

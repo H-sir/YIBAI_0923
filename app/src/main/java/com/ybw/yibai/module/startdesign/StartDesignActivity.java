@@ -24,6 +24,7 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
+import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.startdesign.StartDesignContract.StartDesignPresenter;
 import com.ybw.yibai.module.startdesign.StartDesignContract.StartDesignView;
@@ -33,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ybw.yibai.common.constants.Preferences.CREATE_SCENE_DATA_LIST;
+import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.utils.OtherUtil.transparentStatusBar;
 
 /**
@@ -194,7 +196,17 @@ public class StartDesignActivity extends FragmentActivity implements View.OnClic
                 mSceneNameList = data.getScene();
             }
         }
+
+        Intent intent = getIntent();
+        if (null != intent) {
+            designCreate = intent.getBooleanExtra(DESIGN_CREATE, false);
+        }
     }
+
+    /**
+     * 是否需要新建设计号
+     */
+    private boolean designCreate = false;
 
     private void initEvent() {
         // https://www.itcodemonkey.com/article/5148.html
@@ -249,6 +261,7 @@ public class StartDesignActivity extends FragmentActivity implements View.OnClic
             } else {
                 Intent intent = new Intent(this, SceneActivity.class);
                 intent.putParcelableArrayListExtra(CREATE_SCENE_DATA_LIST, (ArrayList<? extends Parcelable>) mCreateSceneDataList);
+                intent.putExtra(DESIGN_CREATE, designCreate);
                 startActivity(intent);
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();

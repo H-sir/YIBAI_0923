@@ -89,6 +89,12 @@ public class Encoded {
      * 请求码(设计详情返回的请求码)
      */
     public static final int REQUEST_DESIGN_DETAILS_CODE = 20;
+
+    /**
+     * 请求码
+     */
+    public static final int REQUEST_DESIGN_BACK_MAIN_CODE = 21;
+
     /**
      * 请求码(设计详情返回的请求码)
      */

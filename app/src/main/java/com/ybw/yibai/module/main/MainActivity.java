@@ -3,6 +3,7 @@ package com.ybw.yibai.module.main;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,6 +46,8 @@ import java.io.File;
 import java.util.List;
 
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_BACK_MAIN_CODE;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_PERMISSIONS_CODE;
 import static com.ybw.yibai.common.constants.Preferences.FILE_PATH;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
@@ -202,6 +205,11 @@ public class MainActivity extends BaseActivity implements MainView,
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    public void resultHomeFragment() {
 
     }
 

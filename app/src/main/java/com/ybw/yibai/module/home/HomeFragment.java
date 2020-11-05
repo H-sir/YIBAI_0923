@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -92,9 +93,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
+import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_BACK_MAIN_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_LOCATION_PERMISSIONS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_GPS_CODE;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY;
@@ -438,6 +441,15 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
         } else {
             mStartDesignTextView.setText("开始设计");
         }
+    }
+
+    /**
+     * EventBus
+     * 接收用户从{@link DesignActivity#}传递过来的数据}传递过来的数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHome(String city) {
+        mHomePresenter.findUserSceneListInfo();
     }
 
     @Override
@@ -867,7 +879,6 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mHomePresenter.findUserSceneListInfo();
         // 判断GPS是否打开
         if (requestCode == REQUEST_OPEN_GPS_CODE && LocationUtil.isGpsOpen(mContext)) {
             startPositioning();

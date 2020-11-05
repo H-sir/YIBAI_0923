@@ -959,9 +959,8 @@ public class SceneModelImpl implements SceneModel {
     /**
      * 创建场景
      */
-    public void designNewScheme(String
-                                        designNumber, List<CreateSceneData> mCreateSceneDataList, DbManager manager, CallBack
-                                        callBack) {
+    public void designNewScheme(String designNumber, List<CreateSceneData> mCreateSceneDataList, DbManager manager, CallBack
+            callBack) {
         String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         String path = mCreateSceneDataList.get(0).getFile().getAbsolutePath();
@@ -984,6 +983,7 @@ public class SceneModelImpl implements SceneModel {
                     sceneInfo.setUid(YiBaiApplication.getUid());
                     sceneInfo.setNumber(designNumber);
                     sceneInfo.setSceneId(TimeUtil.getNanoTime());
+                    sceneInfo.setSceneBackground(path);
                     sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
                     sceneInfo.setSceneName(schemeName);
                     sceneInfo.setEditScene(true);

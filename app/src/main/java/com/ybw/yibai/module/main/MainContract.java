@@ -66,6 +66,8 @@ public interface MainContract {
         void returnsTheImageReturnedFromTheCameraOrAlbum(File file);
 
         void findUserSceneListInfo(boolean flag);
+
+        void resultHomeFragment();
     }
 
     interface MainPresenter extends BasePresenter<MainView> {

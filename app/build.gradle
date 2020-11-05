@@ -17,8 +17,8 @@ android {
         applicationId "com.ybw.yibai"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 20
-        versionName "3.1.0"
+        versionCode 22
+        versionName "3.1.2"
         flavorDimensions "default"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -180,5 +180,6 @@ dependencies {
     implementation 'com.github.mingyouzhu:ToastPlus-android:v1.1'
     implementation 'com.github.mingyouzhu:recyclerviewplus:1.1'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'com.dyhdyh.loadingbar:loadingbar:1.4.4'
     implementation project(':MyLibrary')
 }

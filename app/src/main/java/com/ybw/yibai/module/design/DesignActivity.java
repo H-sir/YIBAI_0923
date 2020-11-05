@@ -40,6 +40,7 @@ import com.ybw.yibai.module.scene.SceneActivity;
 import com.ybw.yibai.module.user.UserContract;
 import com.ybw.yibai.module.user.UserPresenterImpl;
 
+import org.greenrobot.eventbus.EventBus;
 import org.xutils.DbManager;
 import org.xutils.ex.DbException;
 
@@ -459,6 +460,11 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
     public void onBackPressed() {
         Intent intent = new Intent(DesignActivity.this, MainActivity.class);
         startActivity(intent);
+        /**
+         * 发送数据到{@link HomeFragment#onHome(String)}
+         * 使其跳转到对应的Fragment
+         */
+        EventBus.getDefault().postSticky("Design");
         super.onBackPressed();
     }
 }

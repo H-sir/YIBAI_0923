@@ -51,6 +51,7 @@ import com.ybw.yibai.common.bean.DeletePlacement;
 import com.ybw.yibai.common.bean.DesignScheme;
 import com.ybw.yibai.common.bean.DesignSchemeRequest;
 import com.ybw.yibai.common.bean.ExistSimulationData;
+import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.QuotationData;
@@ -1575,7 +1576,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
     public void onLoadDataFailure(Throwable throwable) {
         MessageUtil.showMessage(throwable.getMessage());
         ExceptionUtil.handleException(throwable);
-        if(throwable.getMessage().contains("城市")){
+        if (throwable.getMessage().contains("城市")) {
             super.onBackPressed();
         }
     }
@@ -1591,10 +1592,10 @@ public class SceneActivity extends BaseActivity implements SceneView,
             mPopupMenu.closePopupWindow();
         } else {
             /**
-             * 发送数据到{@link HomeFragment#onHome(String)}
+             * 发送数据到{@link HomeFragment#onHome(HomeBean)}
              * 使其跳转到对应的Fragment
              */
-            EventBus.getDefault().postSticky("Design");
+            EventBus.getDefault().postSticky(new HomeBean());
             super.onBackPressed();
         }
     }

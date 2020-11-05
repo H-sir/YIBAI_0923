@@ -93,13 +93,58 @@ public class PopupWindowUtil {
      * 创建设计的弹窗
      */
     public static void createScenePopupWindow(Activity activity, View rootLayout, boolean flag) {
-        View view = View.inflate(activity, R.layout.popup_window_create_scene_layout, null);
-        PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (flag) {
+            View view = View.inflate(activity, R.layout.popup_window_create_scene_layout, null);
+            PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        TextView existSceneCancel = view.findViewById(R.id.existSceneCancel);
-        TextView existSceneContinue = view.findViewById(R.id.existSceneContinue);
+            TextView existSceneCancel = view.findViewById(R.id.existSceneCancel);
+            TextView existSceneContinue = view.findViewById(R.id.existSceneContinue);
 
-        existSceneCancel.setOnClickListener(v -> {
+            existSceneCancel.setOnClickListener(v -> {
+                SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+                if (1 == vipLevel) {
+                    PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
+                    return;
+                }
+                Intent intent = new Intent(activity, StartDesignActivity.class);
+                intent.putExtra(DESIGN_CREATE, true);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+
+            });
+            existSceneContinue.setOnClickListener(v -> {
+                SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+                if (1 == vipLevel) {
+                    PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
+                    return;
+                }
+                Intent intent = new Intent(activity, StartDesignActivity.class);
+                intent.putExtra(DESIGN_CREATE, false);
+                activity.startActivity(intent);
+                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+            });
+
+            mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+            mPopupWindow.setOutsideTouchable(true);
+            mPopupWindow.setFocusable(true);
+
+            // 设置一个动画效果
+            mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
+
+            // 在弹出PopupWindow设置屏幕透明度
+            OtherUtil.setBackgroundAlpha(activity, 0.6f);
+            // 添加PopupWindow窗口关闭事件
+            mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
+            mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
+        }else{
             SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
@@ -110,38 +155,6 @@ public class PopupWindowUtil {
             intent.putExtra(DESIGN_CREATE, true);
             activity.startActivity(intent);
             activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-
-        });
-        existSceneContinue.setOnClickListener(v -> {
-            SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
-            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
-            if (1 == vipLevel) {
-                PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
-                return;
-            }
-            Intent intent = new Intent(activity, StartDesignActivity.class);
-            intent.putExtra(DESIGN_CREATE, true);
-            activity.startActivity(intent);
-            activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-        });
-
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-
-        // 设置一个动画效果
-        mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
-
-        // 在弹出PopupWindow设置屏幕透明度
-        OtherUtil.setBackgroundAlpha(activity, 0.6f);
-        // 添加PopupWindow窗口关闭事件
-        mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
-        mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
+        }
     }
 }

@@ -962,6 +962,8 @@ public class SceneModelImpl implements SceneModel {
     public void designNewScheme(String designNumber, List<CreateSceneData> mCreateSceneDataList, DbManager manager, CallBack
             callBack) {
         String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
+        if (mCreateSceneDataList.get(0).getName() != null && !mCreateSceneDataList.get(0).getName().isEmpty())
+            schemeName = mCreateSceneDataList.get(0).getName();
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         String path = mCreateSceneDataList.get(0).getFile().getAbsolutePath();
         int uid = YiBaiApplication.getUid();
@@ -969,6 +971,7 @@ public class SceneModelImpl implements SceneModel {
         observable = mApiService.designScheme(timeStamp,
                 OtherUtil.getSign(timeStamp, DESIGN_SCHEME_METHOD),
                 uid, designNumber, 1, schemeName, getParamByBgPic(path));
+        String finalSchemeName = schemeName;
         Observer<DesignScheme> observer = new Observer<DesignScheme>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -985,7 +988,7 @@ public class SceneModelImpl implements SceneModel {
                     sceneInfo.setSceneId(TimeUtil.getNanoTime());
                     sceneInfo.setSceneBackground(path);
                     sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
-                    sceneInfo.setSceneName(schemeName);
+                    sceneInfo.setSceneName(finalSchemeName);
                     sceneInfo.setEditScene(true);
                     // 保存场景信息
                     manager.save(sceneInfo);

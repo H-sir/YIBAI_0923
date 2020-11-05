@@ -34,6 +34,7 @@ import com.ybw.yibai.common.adapter.ProductAdapter;
 import com.ybw.yibai.common.bean.CreateCustomers;
 import com.ybw.yibai.common.bean.CustomerList;
 import com.ybw.yibai.common.bean.CustomersInfo;
+import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.HotScheme;
 import com.ybw.yibai.common.bean.HotSchemeCategory;
 import com.ybw.yibai.common.bean.HotSchemeCategory.DataBean;
@@ -448,7 +449,7 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
      * 接收用户从{@link DesignActivity#}传递过来的数据}传递过来的数据
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHome(String city) {
+    public void onHome(HomeBean h) {
         mHomePresenter.findUserSceneListInfo();
     }
 

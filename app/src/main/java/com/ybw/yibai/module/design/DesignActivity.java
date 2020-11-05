@@ -21,6 +21,7 @@ import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.DesignList;
+import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.utils.PopupWindowUtil;
@@ -461,10 +462,10 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         Intent intent = new Intent(DesignActivity.this, MainActivity.class);
         startActivity(intent);
         /**
-         * 发送数据到{@link HomeFragment#onHome(String)}
+         * 发送数据到{@link HomeFragment#onHome(HomeBean)}
          * 使其跳转到对应的Fragment
          */
-        EventBus.getDefault().postSticky("Design");
+        EventBus.getDefault().postSticky(new HomeBean());
         super.onBackPressed();
     }
 }

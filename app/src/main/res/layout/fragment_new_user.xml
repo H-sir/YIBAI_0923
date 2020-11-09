@@ -109,7 +109,7 @@
             android:layout_weight="253"
             android:background="@color/colorPrimary"
             android:gravity="center"
-            android:text="@string/save_design"
+            android:text="@string/save"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

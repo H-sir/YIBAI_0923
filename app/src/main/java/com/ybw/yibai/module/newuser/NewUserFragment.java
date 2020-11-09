@@ -135,6 +135,10 @@ public class NewUserFragment extends BaseFragment implements NewUserView, View.O
         mCancelTextView = view.findViewById(R.id.cancelTextView);
         mSaveTextView = view.findViewById(R.id.saveTextView);
 
+        mCustomerNameEditText.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        mTelephoneEditText.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        mAddressEditText.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+
         // 初始化自定义的WaitDialog
         mWaitDialog = new WaitDialog(mContext);
     }

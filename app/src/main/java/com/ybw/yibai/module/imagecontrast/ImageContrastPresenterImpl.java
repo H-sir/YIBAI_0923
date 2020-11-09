@@ -74,6 +74,11 @@ public class ImageContrastPresenterImpl extends BasePresenterImpl<ImageContrastV
         mImageContrastModel.getRecommend(cateCode, plantSkuId, potSkuId, specType, pCid, specId, attrId, height, diameter, this);
     }
 
+    @Override
+    public void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int potTypeId) {
+        mImageContrastModel.getNewRecommed(cateCode, productSkuId, augmentedProductSkuId, potTypeId, this);
+    }
+
     /**
      * 换搭配获取植物花盆列表成功时回调
      *

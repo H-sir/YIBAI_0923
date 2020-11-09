@@ -41,6 +41,7 @@ import com.ybw.yibai.common.bean.UpdateQuotationLocation;
 import com.ybw.yibai.common.bean.UpdateQuotationPrice;
 import com.ybw.yibai.common.bean.VerifyPassword;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
@@ -407,7 +408,8 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
 
         // 添加新位置
         if (id == R.id.addNewLocation) {
-            mQuotationPresenter.createQuotationLocation(null);
+            int quotationLocationNum = SceneHelper.getQuotationLocationNum(getActivity());
+            mQuotationPresenter.createQuotationLocation("位置" + quotationLocationNum);
         }
 
         // 全选
@@ -902,6 +904,7 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
         if (CODE_SUCCEED != createQuotationLocation.getCode()) {
             return;
         }
+        SceneHelper.saveQuotationLocationNum(getActivity(), SceneHelper.getQuotationLocationNum(getActivity()) + 1);
         mQuotationPresenter.getQuotationLocation();
     }
 

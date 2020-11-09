@@ -210,8 +210,10 @@ public class ImageContrastActivity extends BaseActivity implements
     @Override
     protected void initEvent() {
         mImageContrastPresenter = new ImageContrastPresenterImpl(this);
-        mImageContrastPresenter.getRecommend(cateCode, productSkuId, augmentedProductSkuId,
-                spec, potTypeId, null, null, null, null);
+        mImageContrastPresenter.getNewRecommed(cateCode, productSkuId, augmentedProductSkuId,
+                potTypeId);
+//        mImageContrastPresenter.getRecommend(cateCode, productSkuId, augmentedProductSkuId,
+//                spec, potTypeId, null, null, null, null);
 
         mBackImageView.setOnClickListener(this);
         mComparisonTextView.setOnClickListener(this);

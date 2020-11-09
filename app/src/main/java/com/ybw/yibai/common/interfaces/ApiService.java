@@ -958,6 +958,29 @@ public interface ApiService {
      * @param cateCode   类别:plant,获取植物 pot获取盆
      * @param plantSkuId 植物SkuId
      * @param specType   大中小id(此参数仅在获取花盆时有效)
+     * @return 换搭配获取植物花盆列表时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_NEWRECOMMEND_URL)
+    Observable<Recommend> getNewRecommend(@Header("timestamp") String timestamp,
+                                          @Header("sign") String sign,
+                                          @Query("uid") int uid,
+                                          @Query("cate_code") String cateCode,
+                                          @Query("plantskuid") Integer plantSkuId,
+                                          @Query("potskuid") Integer potskuid,
+                                          @Query("spectype") Integer specType,
+                                          @Query("apiver") String apiver,
+                                          @Query("check") String check
+    );
+
+    /**
+     * 新搭配获取植物花盆列表
+     *
+     * @param timestamp  时间搓
+     * @param sign       签名
+     * @param uid        用户的ID
+     * @param cateCode   类别:plant,获取植物 pot获取盆
+     * @param plantSkuId 植物SkuId
+     * @param specType   大中小id(此参数仅在获取花盆时有效)
      * @param specid     规格id(多个用逗号拼接)
      * @param attrid     属性id(多个用逗号拼接)
      * @return 换搭配获取植物花盆列表时服务器端返回的数据

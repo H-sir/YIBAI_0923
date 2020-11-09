@@ -38,6 +38,22 @@ public class SceneHelper {
     private static final String Key_City = "City";
     private static String mCity;
 
+    /**
+     * 进货位置新增
+     */
+    private static final String Key_QuotationLocationNum = "QuotationLocationNum";
+    private static int mQuotationLocationNum = 1;
+
+    public static int getQuotationLocationNum(Context context) {
+        mQuotationLocationNum = readQuotationLocationNum(context);
+        return mQuotationLocationNum;
+    }
+
+    private static int readQuotationLocationNum(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        return pref.getInt(Key_QuotationLocationNum, 1);
+    }
+
     public static int getProductSkuId(Context context) {
         mProductSkuId = readProductSkuId(context);
         return mProductSkuId;
@@ -111,6 +127,17 @@ public class SceneHelper {
         SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
         SharedPreferences.Editor edit = pref.edit();
         edit.putString(Key_City, mCity);
+        return edit.commit();
+    }
+
+    public static void saveQuotationLocationNum(Context context, int mQuotationLocationNum) {
+        saveQuotationLocationNumInfo(context, mQuotationLocationNum);
+    }
+
+    private static synchronized boolean saveQuotationLocationNumInfo(Context context, int mQuotationLocationNum) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putInt(Key_QuotationLocationNum, mQuotationLocationNum);
         return edit.commit();
     }
 

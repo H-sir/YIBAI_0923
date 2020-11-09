@@ -84,6 +84,13 @@ public interface ImageContrastContract {
          * @param picturePath    组合图片在本地保存的路径
          */
         void addSimulationData(SimulationData simulationData, ListBean productInfo, String picturePath);
+
+        /**
+         * 换搭配获取植物花盆列表
+         *
+         * @param cateCode   类别:plant,获取植物 pot获取盆
+         */
+        void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int potTypeId);
     }
 
     interface ImageContrastModel {
@@ -114,6 +121,8 @@ public interface ImageContrastContract {
          * @param callBack       回调方法
          */
         void addSimulationData(SimulationData simulationData, ListBean productInfo, String picturePath, CallBack callBack);
+
+        void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int potTypeId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

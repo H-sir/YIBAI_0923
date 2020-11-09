@@ -28,6 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ybw.yibai.common.constants.HttpUrls.GET_NEWRECOMMEND_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_RECOMMEND_METHOD;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
 import static com.ybw.yibai.common.utils.FileUtil.judeFileExists;
@@ -91,6 +92,50 @@ public class ImageContrastModelImpl implements ImageContrastModel {
             @Override
             public void onNext(Recommend recommend) {
                 callBack.onGetRecommendSuccess(recommend);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int potTypeId, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<Recommend> observable;
+        observable = mApiService.getNewRecommend(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_NEWRECOMMEND_METHOD),
+                YiBaiApplication.getUid(),
+                cateCode,
+                productSkuId,
+                augmentedProductSkuId,
+                potTypeId,
+                "v2",
+                "no");
+        Observer<Recommend> observer = new Observer<Recommend>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(Recommend recommend) {
+                if (recommend.getCode() == 200) {
+                    callBack.onGetRecommendSuccess(recommend);
+                } else {
+                    callBack.onRequestFailure(new Throwable(recommend.getMsg()));
+                }
             }
 
             @Override

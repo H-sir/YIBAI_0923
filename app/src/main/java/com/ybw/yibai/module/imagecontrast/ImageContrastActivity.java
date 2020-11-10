@@ -315,12 +315,12 @@ public class ImageContrastActivity extends BaseActivity implements
             return;
         }
         List<ListBean> list = new ArrayList<>();
-        if (data.getPlant() != null) {
-            list = data.getPlant().getList();
+        if (data.getPot() != null) {
+            list = data.getPot().getList();
             cateCode = POT;
         } else {
-            if (data.getPot() != null) {
-                list = data.getPot().getList();
+            if (data.getPlant() != null) {
+                list = data.getPlant().getList();
                 cateCode = PLANT;
             }
         }

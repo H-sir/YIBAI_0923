@@ -141,7 +141,7 @@ public class ImageContrastAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ListBean listBean = mList.get(position);
         String categoryCode = listBean.getCategoryCode();
-        if (POT.equals(categoryCode)) {
+        if (PLANT.equals(categoryCode)) {
             productPic3 = listBean.getPic3();
             productHeight = listBean.getHeight();
             productOffsetRatio = listBean.getOffset_ratio();

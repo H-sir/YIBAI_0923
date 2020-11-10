@@ -21,6 +21,7 @@ import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.UserPosition;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.model.CreateDesignModel;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
@@ -1943,7 +1944,9 @@ public class SceneEditModelImpl implements SceneEditModel {
             SceneInfo sceneInfo = new SceneInfo();
             sceneInfo.setUid(YiBaiApplication.getUid());
             sceneInfo.setSceneId(TimeUtil.getTimeStamp());
-            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
+            String sceneName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+            sceneInfo.setSceneName(sceneName);
+//            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
             sceneInfo.setEditScene(true);
             // 保存场景信息
             manager.save(sceneInfo);

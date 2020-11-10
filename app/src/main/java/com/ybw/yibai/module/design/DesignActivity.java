@@ -24,6 +24,7 @@ import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SceneInfo;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
@@ -361,6 +362,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 if (null != mPopupWindow && mPopupWindow.isShowing()) {
                     mPopupWindow.dismiss();
                     if (schemelistBean == null) {
+                        SceneHelper.saveSceneNum(getApplicationContext(), 1);
                         addScene();
                     } else {
                         if (sceneInfo != null) {
@@ -447,6 +449,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 if (sceneInfo != null) {
                     existSceneInfoPopupWindow(null, sceneInfo);
                 } else {
+                    SceneHelper.saveSceneNum(getApplicationContext(), 1);
                     addScene();
                 }
                 break;

@@ -946,6 +946,7 @@ public class QuotationPresenterImpl extends BasePresenterImpl<QuotationView> imp
         mEditPricePopupWindow = new PopupWindow(view, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         TextView titleTextView = view.findViewById(R.id.titleTextView);
+        TextView titleTextViewPrice = view.findViewById(R.id.titleTextViewPrice);
         EditText editText = view.findViewById(R.id.editText);
         Button cancelButton = view.findViewById(R.id.cancelButton);
         Button determineButton = view.findViewById(R.id.determineButton);
@@ -953,7 +954,8 @@ public class QuotationPresenterImpl extends BasePresenterImpl<QuotationView> imp
         if (0 == mode) {
             titleTextView.setText(fragment.getResources().getString(R.string.modify_buy_price));
             editText.setHint(fragment.getResources().getString(R.string.enter_new_buy_price));
-        } else if (1 == mode || 2 == mode) {
+        } else {
+            titleTextViewPrice.setVisibility(View.VISIBLE);
             titleTextView.setText(fragment.getResources().getString(R.string.modify_month_rent_price));
             editText.setHint(fragment.getResources().getString(R.string.enter_new_month_rent_price));
         }

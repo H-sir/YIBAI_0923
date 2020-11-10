@@ -5,6 +5,7 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.DesignCreate;
 import com.ybw.yibai.common.bean.DesignScheme;
 import com.ybw.yibai.common.bean.SceneInfo;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
@@ -102,7 +103,8 @@ public class UserModelImpl implements UserContract.UserModel {
      * 创建场景
      */
     public void designNewScheme(String designNumber, DbManager manager, UserContract.CallBack callBack) {
-        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
+        String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+//        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         int uid = YiBaiApplication.getUid();
         Observable<DesignScheme> observable;

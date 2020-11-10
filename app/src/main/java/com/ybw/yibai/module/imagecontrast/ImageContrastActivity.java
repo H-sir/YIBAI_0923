@@ -202,7 +202,7 @@ public class ImageContrastActivity extends BaseActivity implements
             mComparisonTextView.setText(getResources().getString(R.string.pot_comparison));
         }
 
-        mAdapter = new ImageContrastAdapter(this, filePath, mSimulationData, mList);
+        mAdapter = new ImageContrastAdapter(this, filePath, mPlantInfo, mPotInfo,mSimulationData, mList);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
     }
@@ -246,6 +246,8 @@ public class ImageContrastActivity extends BaseActivity implements
         }
     }
 
+    boolean plantOrPot = false;
+
     /**
      * 在PopupWindow里面的RadioButton被选中时回调
      *
@@ -257,15 +259,17 @@ public class ImageContrastActivity extends BaseActivity implements
         // 盆器对比
         if (checkedId == R.id.potComparisonRadioButton) {
             mComparisonTextView.setText(getResources().getString(R.string.pot_comparison));
-            mImageContrastPresenter.getRecommend(POT, productSkuId, augmentedProductSkuId,
-                    spec, null, null, null, null, null);
+            mImageContrastPresenter.getNewRecommed(cateCode, productSkuId, augmentedProductSkuId,
+                    potTypeId);
+            plantOrPot = false;
         }
 
         // 植物对比
         if (checkedId == R.id.plantComparisonRadioButton) {
             mComparisonTextView.setText(getResources().getString(R.string.plant_comparison));
-            mImageContrastPresenter.getRecommend(PLANT, productSkuId, augmentedProductSkuId,
-                    spec, null, null, null, null, null);
+            mImageContrastPresenter.getNewRecommed(cateCode, productSkuId, augmentedProductSkuId,
+                    potTypeId);
+            plantOrPot = true;
         }
     }
 
@@ -315,13 +319,25 @@ public class ImageContrastActivity extends BaseActivity implements
             return;
         }
         List<ListBean> list = new ArrayList<>();
-        if (data.getPot() != null) {
-            list = data.getPot().getList();
-            cateCode = POT;
-        } else {
+        if (plantOrPot) {
             if (data.getPlant() != null) {
                 list = data.getPlant().getList();
                 cateCode = PLANT;
+            } else {
+                if (data.getPot() != null) {
+                    list = data.getPot().getList();
+                    cateCode = POT;
+                }
+            }
+        } else {
+            if (data.getPot() != null) {
+                list = data.getPot().getList();
+                cateCode = POT;
+            } else {
+                if (data.getPlant() != null) {
+                    list = data.getPlant().getList();
+                    cateCode = PLANT;
+                }
             }
         }
 

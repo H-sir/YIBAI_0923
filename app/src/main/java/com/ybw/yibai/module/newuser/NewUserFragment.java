@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -49,7 +50,7 @@ public class NewUserFragment extends BaseFragment implements NewUserView, View.O
     /**
      * Root布局
      */
-    private RelativeLayout mRootLayout;
+    private LinearLayout mRootLayout;
 
     /**
      * 头像

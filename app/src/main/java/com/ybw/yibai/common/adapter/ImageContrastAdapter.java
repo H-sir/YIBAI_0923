@@ -78,17 +78,20 @@ public class ImageContrastAdapter extends RecyclerView.Adapter<RecyclerView.View
     /**
      * 贴纸数据
      */
-    private SimulationData mSimulationData;
-
+    SimulationData mSimulationData;
+    private ListBean plant;
+    private ListBean pot;
     /**
      * 推荐植物花盆
      */
     private List<ListBean> mList;
 
-    public ImageContrastAdapter(Context context, String filePath, SimulationData simulationData, List<ListBean> list) {
+    public ImageContrastAdapter(Context context, String filePath, ListBean plant, ListBean pot,SimulationData mSimulationData, List<ListBean> list) {
         this.mContext = context;
         this.mFilePath = filePath;
-        this.mSimulationData = simulationData;
+        this.plant = plant;
+        this.pot = pot;
+        this.mSimulationData = mSimulationData;
         this.mList = list;
 
         topHeight = getStatusBarHeight(context) - dpToPx(context, 44 + 2);
@@ -146,13 +149,13 @@ public class ImageContrastAdapter extends RecyclerView.Adapter<RecyclerView.View
             productHeight = listBean.getHeight();
             productOffsetRatio = listBean.getOffset_ratio();
 
-            augmentedProductPic3 = mSimulationData.getAugmentedProductPic3();
-            augmentedProductHeight = mSimulationData.getAugmentedProductHeight();
-            augmentedProductOffsetRatio = mSimulationData.getAugmentedProductOffsetRatio();
+            augmentedProductPic3 = pot.getPic3();
+            augmentedProductHeight = pot.getHeight();
+            augmentedProductOffsetRatio = pot.getOffset_ratio();
         } else {
-            productPic3 = mSimulationData.getProductPic3();
-            productHeight = mSimulationData.getProductHeight();
-            productOffsetRatio = mSimulationData.getProductOffsetRatio();
+            productPic3 = plant.getPic3();
+            productHeight = plant.getHeight();
+            productOffsetRatio = plant.getOffset_ratio();
 
             augmentedProductPic3 = listBean.getPic3();
             augmentedProductHeight = listBean.getHeight();

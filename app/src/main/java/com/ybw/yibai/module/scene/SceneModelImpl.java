@@ -13,6 +13,7 @@ import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
@@ -110,7 +111,9 @@ public class SceneModelImpl implements SceneModel {
             sceneInfo.setSceneId(TimeUtil.getNanoTime());
 
             if (TextUtils.isEmpty(name)) {
-                sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
+                String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+                sceneInfo.setSceneName(schemeName);
+//                sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
             } else {
                 sceneInfo.setSceneName(name);
             }
@@ -267,7 +270,9 @@ public class SceneModelImpl implements SceneModel {
             SceneInfo sceneInfo = new SceneInfo();
             sceneInfo.setUid(YiBaiApplication.getUid());
             sceneInfo.setSceneId(TimeUtil.getTimeStamp());
-            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
+            String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+            sceneInfo.setSceneName(schemeName);
+//            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
             sceneInfo.setEditScene(true);
             // 保存场景信息
             manager.save(sceneInfo);
@@ -378,7 +383,8 @@ public class SceneModelImpl implements SceneModel {
      */
     public void designNewScheme(List<SceneInfo> sceneInfos, SceneInfo sceneInfo, CallBack
             callBack) {
-        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
+        String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+//        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         int uid = YiBaiApplication.getUid();
         Observable<DesignScheme> observable;
@@ -858,7 +864,8 @@ public class SceneModelImpl implements SceneModel {
      * 创建场景
      */
     public void designNewScheme(String designNumber, DbManager manager, CallBack callBack) {
-        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
+        String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+//        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         int uid = YiBaiApplication.getUid();
         Observable<DesignScheme> observable;
@@ -961,7 +968,8 @@ public class SceneModelImpl implements SceneModel {
      */
     public void designNewScheme(String designNumber, List<CreateSceneData> mCreateSceneDataList, DbManager manager, CallBack
             callBack) {
-        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
+        String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+//        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         if (mCreateSceneDataList.get(0).getName() != null && !mCreateSceneDataList.get(0).getName().isEmpty())
             schemeName = mCreateSceneDataList.get(0).getName();
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());

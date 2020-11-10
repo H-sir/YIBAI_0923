@@ -89,9 +89,13 @@
     <string name="please_enter_the_authorization_code">请输入授权码</string>
     <string name="remember_the_authorization_code">记住授权码</string>
     <string name="modify_buy_price">修改购买价</string>
+    <string name="modify_year_rent_price">修改年租价</string>
     <string name="modify_month_rent_price">修改月租价</string>
+    <string name="modify_day_rent_price">修改日租价</string>
     <string name="enter_new_buy_price">输入新的购买价</string>
+    <string name="enter_new_year_rent_price">输入新的年租价</string>
     <string name="enter_new_month_rent_price">输入新的月租价</string>
+    <string name="enter_new_day_rent_price">输入新的日租价</string>
     <string name="no_products_have_been_added_yet">暂未添加任何产品&#8230;</string>
     <string name="look_at_the_product">看看产品</string>
     <string name="list">清单</string>

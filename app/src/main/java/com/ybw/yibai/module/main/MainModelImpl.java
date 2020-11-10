@@ -124,7 +124,9 @@ public class MainModelImpl implements MainModel {
             SceneInfo sceneInfo = new SceneInfo();
             sceneInfo.setUid(YiBaiApplication.getUid());
             sceneInfo.setSceneId(TimeUtil.getTimeStamp());
-            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
+            String sceneName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
+            sceneInfo.setSceneName(sceneName);
+//            sceneInfo.setSceneName(YiBaiApplication.getContext().getResources().getString(R.string.my_scene));
             sceneInfo.setEditScene(true);
             // 保存默认的场景信息
             dbManager.save(sceneInfo);

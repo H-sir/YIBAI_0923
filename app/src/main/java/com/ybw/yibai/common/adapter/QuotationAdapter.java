@@ -132,7 +132,7 @@ public class QuotationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (null != onPriceClickListener) {
                 if (0 == mode) {
                     onPriceClickListener.onPriceClick(position, mode, productPrice);
-                } else if (1 == mode || 2 == mode) {
+                } else if (1 == mode || 2 == mode || 3 == mode) {
                     onPriceClickListener.onPriceClick(position, mode, productMonthRent);
                 }
             }

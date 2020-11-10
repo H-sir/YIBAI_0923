@@ -762,6 +762,7 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
     public void onPriceClick(int position, int mode, double price) {
         pricePosition = position;
         quotationMode = mode;
+            YiBaiApplication.setRoleName(SERVICE);
         if (YiBaiApplication.getRoleName().equals(SERVICE)) {
             mQuotationPresenter.displayEditPricePopupWindow(mRootView, mode, price);
         } else if (YiBaiApplication.isAuthorization()) {

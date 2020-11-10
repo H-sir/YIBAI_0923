@@ -1,81 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/headPortraitImageView"
         android:layout_width="120dp"
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
         android:layout_marginTop="8dp"
         android:contentDescription="@null"
         android:src="@mipmap/add" />
 
-    <com.ybw.yibai.common.widget.ClearEditText
-        android:id="@+id/customerNameEditText"
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/headPortraitImageView"
-        android:layout_marginEnd="68dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="26dp"
-        android:background="@drawable/background_edit_text"
-        android:gravity="center"
-        android:hint="@string/enter_customer_name"
-        android:inputType="text"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/main_text_color"
-        android:textCursorDrawable="@drawable/edit_text_cursor_color"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:rightImage="@mipmap/edit_text_clear" />
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-    <com.ybw.yibai.common.widget.ClearEditText
-        android:id="@+id/telephoneEditText"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/customerNameEditText"
-        android:layout_marginEnd="68dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/background_edit_text"
-        android:gravity="center"
-        android:hint="@string/contact_telephone"
-        android:inputType="phone"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/main_text_color"
-        android:textCursorDrawable="@drawable/edit_text_cursor_color"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:rightImage="@mipmap/edit_text_clear" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <com.ybw.yibai.common.widget.ClearEditText
-        android:id="@+id/addressEditText"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/telephoneEditText"
-        android:layout_marginEnd="68dp"
-        android:layout_marginStart="68dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/background_edit_text"
-        android:gravity="center"
-        android:hint="@string/contact_address"
-        android:inputType="text"
-        android:lines="1"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/main_text_color"
-        android:textCursorDrawable="@drawable/edit_text_cursor_color"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:rightImage="@mipmap/edit_text_clear" />
+            <com.ybw.yibai.common.widget.ClearEditText
+                android:id="@+id/customerNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/headPortraitImageView"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="26dp"
+                android:layout_marginEnd="68dp"
+                android:background="@drawable/background_edit_text"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:hint="@string/enter_customer_name"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/main_text_color"
+                android:textCursorDrawable="@drawable/edit_text_cursor_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:rightImage="@mipmap/edit_text_clear" />
+
+            <com.ybw.yibai.common.widget.ClearEditText
+                android:id="@+id/telephoneEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/customerNameEditText"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="68dp"
+                android:background="@drawable/background_edit_text"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:hint="@string/contact_telephone"
+                android:imeOptions="actionSearch"
+                android:inputType="phone"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/main_text_color"
+                android:textCursorDrawable="@drawable/edit_text_cursor_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:rightImage="@mipmap/edit_text_clear" />
+
+            <com.ybw.yibai.common.widget.ClearEditText
+                android:id="@+id/addressEditText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_below="@+id/telephoneEditText"
+                android:layout_marginStart="68dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="68dp"
+                android:background="@drawable/background_edit_text"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:hint="@string/contact_address"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/main_text_color"
+                android:textCursorDrawable="@drawable/edit_text_cursor_color"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:rightImage="@mipmap/edit_text_clear" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
 
     <View
         android:id="@+id/view"
@@ -114,4 +137,4 @@
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

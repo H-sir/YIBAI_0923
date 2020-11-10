@@ -3,6 +3,8 @@ package com.ybw.yibai.common.helper;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.ybw.yibai.base.YiBaiApplication;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -43,6 +45,22 @@ public class SceneHelper {
      */
     private static final String Key_QuotationLocationNum = "QuotationLocationNum";
     private static int mQuotationLocationNum = 1;
+
+    /**
+     * 场景新增
+     */
+    private static final String Key_SceneNum = "SceneNum";
+    private static int mSceneNum = 1;
+
+    public static int getSceneNum(Context context) {
+        mSceneNum = readSceneNum(context);
+        return mSceneNum;
+    }
+
+    private static int readSceneNum(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        return pref.getInt(Key_SceneNum, 1);
+    }
 
     public static int getQuotationLocationNum(Context context) {
         mQuotationLocationNum = readQuotationLocationNum(context);
@@ -141,4 +159,20 @@ public class SceneHelper {
         return edit.commit();
     }
 
+    public static void saveSceneNum(Context context, int mSceneNum) {
+        saveSceneNumInfo(context, mSceneNum);
+    }
+
+    private static synchronized boolean saveSceneNumInfo(Context context, int mSceneNum) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putInt(Key_SceneNum, mSceneNum);
+        return edit.commit();
+    }
+
+    public static String saveSceneNum(Context context) {
+        String sceneName = "位置" + getSceneNum(context);
+        saveSceneNum(context, getSceneNum(context) + 1);
+        return sceneName;
+    }
 }

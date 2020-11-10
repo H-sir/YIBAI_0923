@@ -113,14 +113,11 @@ public class ImageContrastModelImpl implements ImageContrastModel {
     @Override
     public void getNewRecommed(String cateCode, int productSkuId, int augmentedProductSkuId, int potTypeId, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<Recommend> observable;
-        observable = mApiService.getNewRecommend(timeStamp,
+        Observable<Recommend> observable = mApiService.getNewRecommedChangeStyle(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_NEWRECOMMEND_METHOD),
                 YiBaiApplication.getUid(),
-                cateCode,
                 productSkuId,
                 augmentedProductSkuId,
-                potTypeId,
                 "v2",
                 "no");
         Observer<Recommend> observer = new Observer<Recommend>() {

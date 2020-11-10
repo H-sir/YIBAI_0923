@@ -306,43 +306,6 @@ public class ImageContrastActivity extends BaseActivity implements
      */
     @Override
     public void onGetRecommendSuccess(Recommend recommend) {
-//        if (CODE_SUCCEED != recommend.getCode()) {
-//            MessageUtil.showMessage(recommend.getMsg());
-//            return;
-//        }
-//        DataBean data = recommend.getData();
-//        if (null == data) {
-//            return;
-//        }
-//        List<ListBean> list = new ArrayList<>();
-//        if (data.getPot() != null) {
-//            list = data.getPot().getList();
-//            cateCode = PLANT;
-//        }
-//        if (data.getPlant() != null) {
-//            list = data.getPlant().getList();
-//            cateCode = POT;
-//        }
-//        if (null == list || list.size() == 0) {
-//            return;
-//        }
-//        mList.clear();
-//        if (PLANT.equals(cateCode)) {
-//            mPlantInfo.setCategoryCode(PLANT);
-//            mList.add(mPlantInfo);
-//        } else {
-//            mPotInfo.setCategoryCode(POT);
-//            mList.add(mPotInfo);
-//        }
-//        for (ListBean listBean : list) {
-//            if (PLANT.equals(cateCode)) {
-//                listBean.setCategoryCode(PLANT);
-//            } else {
-//                listBean.setCategoryCode(POT);
-//            }
-//        }
-//        mList.addAll(list);
-//        mAdapter.notifyDataSetChanged();
         if (CODE_SUCCEED != recommend.getCode()) {
             MessageUtil.showMessage(recommend.getMsg());
             return;
@@ -351,12 +314,21 @@ public class ImageContrastActivity extends BaseActivity implements
         if (null == data) {
             return;
         }
-        List<ListBean> list = data.getList();
+        List<ListBean> list = new ArrayList<>();
+        if (data.getPlant() != null) {
+            list = data.getPlant().getList();
+            cateCode = POT;
+        } else {
+            if (data.getPot() != null) {
+                list = data.getPot().getList();
+                cateCode = PLANT;
+            }
+        }
+
         if (null == list || list.size() == 0) {
             return;
         }
         mList.clear();
-        cateCode = data.getCateCode();
         if (PLANT.equals(cateCode)) {
             mPlantInfo.setCategoryCode(PLANT);
             mList.add(mPlantInfo);
@@ -373,6 +345,36 @@ public class ImageContrastActivity extends BaseActivity implements
         }
         mList.addAll(list);
         mAdapter.notifyDataSetChanged();
+//        if (CODE_SUCCEED != recommend.getCode()) {
+//            MessageUtil.showMessage(recommend.getMsg());
+//            return;
+//        }
+//        DataBean data = recommend.getData();
+//        if (null == data) {
+//            return;
+//        }
+//        List<ListBean> list = data.getList();
+//        if (null == list || list.size() == 0) {
+//            return;
+//        }
+//        mList.clear();
+//        cateCode = data.getCateCode();
+//        if (PLANT.equals(cateCode)) {
+//            mPlantInfo.setCategoryCode(PLANT);
+//            mList.add(mPlantInfo);
+//        } else {
+//            mPotInfo.setCategoryCode(POT);
+//            mList.add(mPotInfo);
+//        }
+//        for (ListBean listBean : list) {
+//            if (PLANT.equals(cateCode)) {
+//                listBean.setCategoryCode(PLANT);
+//            } else {
+//                listBean.setCategoryCode(POT);
+//            }
+//        }
+//        mList.addAll(list);
+//        mAdapter.notifyDataSetChanged();
     }
 
     /**

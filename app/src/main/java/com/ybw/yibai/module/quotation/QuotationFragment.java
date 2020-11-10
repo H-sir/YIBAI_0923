@@ -402,12 +402,15 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
         }
     }
 
+    private boolean isAddNewLocation = false;
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
 
         // 添加新位置
         if (id == R.id.addNewLocation) {
+            isAddNewLocation = true;
             int quotationLocationNum = SceneHelper.getQuotationLocationNum(getActivity());
             mQuotationPresenter.createQuotationLocation("位置" + quotationLocationNum);
         }
@@ -817,6 +820,10 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
         if (null == list || list.size() == 0) {
             mLocationPlacementAdapter.notifyDataSetChanged();
             return;
+        }
+        if (isAddNewLocation) {
+            list.get(0).setSelect(true);
+            isAddNewLocation = false;
         }
         mLocationPlacementList.addAll(list);
         mLocationPlacementAdapter.notifyDataSetChanged();

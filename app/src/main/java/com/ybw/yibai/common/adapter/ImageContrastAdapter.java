@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
+import static com.ybw.yibai.common.constants.Preferences.POT;
 import static com.ybw.yibai.common.utils.DensityUtil.dpToPx;
 import static com.ybw.yibai.common.utils.FileUtil.judeFileExists;
 import static com.ybw.yibai.common.utils.ImageUtil.drawableToBitmap;
@@ -140,7 +141,7 @@ public class ImageContrastAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         ListBean listBean = mList.get(position);
         String categoryCode = listBean.getCategoryCode();
-        if (PLANT.equals(categoryCode)) {
+        if (POT.equals(categoryCode)) {
             productPic3 = listBean.getPic3();
             productHeight = listBean.getHeight();
             productOffsetRatio = listBean.getOffset_ratio();

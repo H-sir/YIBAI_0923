@@ -1097,6 +1097,7 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
         if (CODE_SUCCEED != createQuotationOrder.getCode()) {
             return;
         }
+        SceneHelper.saveQuotationLocationNum(getContext(),1);
         mQuotationPresenter.getQuotationLocation();
         mQuotationPresenter.getPlacementList();
         mQuotationPresenter.getQuotationList();

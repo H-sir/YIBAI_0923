@@ -47,6 +47,7 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.module.browser.AgentWebActivity;
 import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;

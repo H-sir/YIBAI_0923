@@ -970,7 +970,8 @@ public class SceneModelImpl implements SceneModel {
             callBack) {
         String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
 //        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
-        if (mCreateSceneDataList.get(0).getName() != null && !mCreateSceneDataList.get(0).getName().isEmpty())
+        if (mCreateSceneDataList.get(0).getName() != null && !mCreateSceneDataList.get(0).getName().isEmpty()
+                && !mCreateSceneDataList.get(0).getName().equals("我的场景"))
             schemeName = mCreateSceneDataList.get(0).getName();
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         String path = mCreateSceneDataList.get(0).getFile().getAbsolutePath();

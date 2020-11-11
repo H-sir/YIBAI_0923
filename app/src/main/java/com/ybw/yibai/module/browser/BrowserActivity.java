@@ -51,6 +51,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.webkit.WebSettings.LayoutAlgorithm.SINGLE_COLUMN;
+import static android.webkit.WebSettings.MIXED_CONTENT_ALWAYS_ALLOW;
 import static com.ybw.yibai.common.constants.Folder.PICTURES_PATH;
 import static com.ybw.yibai.common.constants.Folder.QR_CODE_IMAGE_PREFIX;
 import static com.ybw.yibai.common.constants.Folder.SHARE_IMAGE_PREFIX;
@@ -186,10 +188,31 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
         mWebView = findViewById(R.id.webView);
         mSeeTheCaseButton = findViewById(R.id.seeTheCaseButton);
 
-        // 设置WebView属性
-        OtherUtil.setWebViewProperty(mWebView);
-        // 设置状态栏成白色的背景,字体颜色为黑色
-        OtherUtil.setStatusBarColor(this, ContextCompat.getColor(this, android.R.color.white));
+        WebSettings webViewSettings = mWebView.getSettings();
+//        webViewSettings.setBlockNetworkImage(true);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            webViewSettings.setMixedContentMode(MIXED_CONTENT_ALWAYS_ALLOW);
+//        }
+
+        // 不支持手势缩放,默认为true
+        webViewSettings.setSupportZoom(false);
+        // 将图片调整到适合WebView到大小
+        webViewSettings.setUseWideViewPort(true);
+        // 支持js
+        webViewSettings.setJavaScriptEnabled(true);
+        // 开启DOM storage API 功能
+        webViewSettings.setDomStorageEnabled(true);
+        // 缩放至屏幕到大小
+        webViewSettings.setLoadWithOverviewMode(true);
+        // 解决图片不显示的问题
+        // WebView不启用缓存
+        webViewSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webViewSettings.setLayoutAlgorithm(SINGLE_COLUMN);
+
+//        // 设置WebView属性
+//        OtherUtil.setWebViewProperty(mWebView);
+//        // 设置状态栏成白色的背景,字体颜色为黑色
+//        OtherUtil.setStatusBarColor(this, ContextCompat.getColor(this, android.R.color.white));
     }
 
     @Override
@@ -234,6 +257,7 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
             String substring = url.substring(4, url.length());
 
             mWebView.loadUrl("https" + substring, headMap);
+//            mWebView.loadUrl(url, headMap);
 //            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
             mShareTextView.setVisibility(View.VISIBLE);
         } else {
@@ -290,12 +314,20 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
 
         @Override
         public void onPageFinished(WebView view, String url) {
+//            mWebView.getSettings().setBlockNetworkImage(false);
+//            //判断webview是否加载了，图片资源
+//            if (!mWebView.getSettings().getLoadsImagesAutomatically()) {
+//                //设置wenView加载图片资源
+//                mWebView.getSettings().setLoadsImagesAutomatically(true);
+//            }
             super.onPageFinished(view, url);
             String title = view.getTitle();
             if (!TextUtils.isEmpty(title) && !"about:blank".equals(title)) {
                 // 获取到的网站title
                 mTitleTextView.setText(title);
             }
+
+
         }
 
         @Override
@@ -309,6 +341,12 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
             } else {
                 handler.cancel();
             }
+        }
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
         }
     };
 

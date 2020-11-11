@@ -47,7 +47,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".module.browser.BrowserActivity" />
-        <activity android:name=".module.browser.BrowserTwoActivity" />
+        <activity android:name=".module.browser.AgentWebActivity" />
         <activity
             android:name=".view.activity.FormulaCreatorActivity"
             android:theme="@style/OAppTheme" />

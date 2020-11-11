@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity implements MainView,
         MainPopupMenu.OnItemClickListener {
     private MainActivity mMainActivity = null;
     private static final String TAG = "MainActivity";
-
+    public static boolean isWindown = false;
     /**
      * 是否需要更新APP(1更新0否)
      */

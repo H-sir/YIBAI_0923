@@ -120,6 +120,7 @@ import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 import static com.ybw.yibai.common.utils.OtherUtil.splitList;
 import static com.ybw.yibai.common.utils.ViewPagerIndicatorUtil.initDots;
+import static com.ybw.yibai.module.main.MainActivity.isWindown;
 
 /**
  * 场景界面
@@ -437,7 +438,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
     /**
      * 是否新建设计号
      */
-    private boolean designCreate;
+    private boolean designCreate = false;
 
     /**
      * 当前正在编辑用户场景
@@ -448,6 +449,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
      * 场景数据列表
      */
     private List<SceneDesign> mSceneDesignDataList = new ArrayList<>();
+
 
     @Override
     protected int setLayout() {
@@ -529,20 +531,20 @@ public class SceneActivity extends BaseActivity implements SceneView,
         // 给RecyclerView设置布局管理器(必须设置)
         mRecyclerView.setLayoutManager(manager);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        final View decorView = getWindow().getDecorView();
-        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
-        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int i) {
-                if ((i & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
-                    decorView.setSystemUiVisibility(uiOptions);
-                } else {
-
-                }
-            }
-        });
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        final View decorView = getWindow().getDecorView();
+//        final int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN;
+//        decorView.setSystemUiVisibility(uiOptions);
+//        decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+//            @Override
+//            public void onSystemUiVisibilityChange(int i) {
+//                if ((i & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+//                    decorView.setSystemUiVisibility(uiOptions);
+//                } else {
+//
+//                }
+//            }
+//        });
     }
 
     String mComType;
@@ -618,21 +620,25 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mViewPager.addOnPageChangeListener(mViewPagerListener);
         mArcMenu.setArcMenuStateListener(mArcMenuStateListener);
 
-        if (designCreate) {
-            designCreate = false;
-            if (mCreateSceneDataList == null || mCreateSceneDataList.size() == 0) {
-                mScenePresenter.addDesignAndSceneInfo();//创建新场景
-            } else {
-                mScenePresenter.addDesignAndSceneInfo(mCreateSceneDataList);//创建新场景
-            }
+        if (isWindown) {
+            isWindown = false;
+            mScenePresenter.findUserSceneListInfo(true);
         } else {
-            /**
-             * 获取场景信息
-             * */
-            if (mCreateSceneDataList == null || mCreateSceneDataList.size() == 0) {
-                mScenePresenter.findUserSceneListInfo(true);
+            if (designCreate) {
+                if (mCreateSceneDataList == null || mCreateSceneDataList.size() == 0) {
+                    mScenePresenter.addDesignAndSceneInfo();//创建新场景
+                } else {
+                    mScenePresenter.addDesignAndSceneInfo(mCreateSceneDataList);//创建新场景
+                }
             } else {
-                mScenePresenter.addSceneInfo(mCreateSceneDataList);//创建新场景
+                /**
+                 * 获取场景信息
+                 * */
+                if (mCreateSceneDataList == null || mCreateSceneDataList.size() == 0) {
+                    mScenePresenter.findUserSceneListInfo(true);
+                } else {
+                    mScenePresenter.addSceneInfo(mCreateSceneDataList);//创建新场
+                }
             }
         }
     }
@@ -687,6 +693,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
                 // 竖屏
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
+            isWindown = true;
         }
 
         // 显示场景列表
@@ -1237,6 +1244,9 @@ public class SceneActivity extends BaseActivity implements SceneView,
      */
     @Override
     public void onFindUserSceneInfoSuccess(List<SceneInfo> sceneInfoList) {
+        if (mCreateSceneDataList != null)
+            mCreateSceneDataList.clear();
+        designCreate = false;
         mSceneInfoList.clear();
         if (null == sceneInfoList || sceneInfoList.size() == 0) {
             return;

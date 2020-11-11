@@ -107,6 +107,7 @@ public class PopupWindowUtil {
                     PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
                     return;
                 }
+                SceneHelper.saveSceneNum(activity,1);
                 Intent intent = new Intent(activity, StartDesignActivity.class);
                 intent.putExtra(DESIGN_CREATE, true);
                 activity.startActivity(intent);

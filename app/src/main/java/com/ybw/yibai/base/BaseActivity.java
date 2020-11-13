@@ -35,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Watcher 
      */
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         ScreenAdaptationUtils.applyAdaptationScreen((Application) YiBaiApplication.getContext(), this, ORIENTATION_PORTRAIT);

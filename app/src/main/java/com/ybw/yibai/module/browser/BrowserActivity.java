@@ -57,6 +57,7 @@ import static com.ybw.yibai.common.constants.Folder.PICTURES_PATH;
 import static com.ybw.yibai.common.constants.Folder.QR_CODE_IMAGE_PREFIX;
 import static com.ybw.yibai.common.constants.Folder.SHARE_IMAGE_PREFIX;
 import static com.ybw.yibai.common.constants.Preferences.CUSTOMER_NAME;
+import static com.ybw.yibai.common.constants.Preferences.GYS_DETAILS_URL_TYPE;
 import static com.ybw.yibai.common.constants.Preferences.LOCAL_URL_TYPE;
 import static com.ybw.yibai.common.constants.Preferences.ORDER_NUMBER;
 import static com.ybw.yibai.common.constants.Preferences.ORDER_SHARE_URL_TYPE;
@@ -260,6 +261,11 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
 //            mWebView.loadUrl(url, headMap);
 //            mWebView.loadUrl("http://mybw.100ybw.com/index/detailed.html?number=2020102398484998");
             mShareTextView.setVisibility(View.VISIBLE);
+        } else if (!TextUtils.isEmpty(type) && type.equals(GYS_DETAILS_URL_TYPE)) {
+            Map<String, String> headMap = new HashMap<>(2);
+            headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+            headMap.put("token", YiBaiApplication.getToken());
+            mWebView.loadUrl(url, headMap);
         } else {
             Map<String, String> headMap = new HashMap<>(2);
             headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));

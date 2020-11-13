@@ -12,6 +12,7 @@ import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter
 import com.ybw.yibai.R
 import com.ybw.yibai.common.bean.ListBean
 import com.ybw.yibai.common.callback.IOnSelectListener
+import com.ybw.yibai.common.utils.ImageUtil
 
 class OPlantAdapter(context: Context):RecyclerArrayAdapter<ListBean>(context){
     var onSelectListener:IOnSelectListener<ListBean>? = null

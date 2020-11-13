@@ -19,6 +19,7 @@ import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
+import com.ybw.yibai.module.browser.BrowserActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -28,8 +29,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ybw.yibai.common.constants.Preferences.CUSTOMER_NAME;
+import static com.ybw.yibai.common.constants.Preferences.GYS_DETAILS_URL_TYPE;
+import static com.ybw.yibai.common.constants.Preferences.ORDER_NUMBER;
+import static com.ybw.yibai.common.constants.Preferences.ORDER_SHARE_URL_TYPE;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ADDORSELECT;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
+import static com.ybw.yibai.common.constants.Preferences.TYPE;
+import static com.ybw.yibai.common.constants.Preferences.URL;
 
 /**
  * 多货源信息
@@ -108,10 +115,23 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
             @Override
             public void onBind(int pos, SkuMarketBean.DataBean.GateInfoBean gateInfoBean, NestFullViewHolder holder) {
                 Log.d("NullListView", "嵌套第一层ScrollView onBind() called with: pos = [" + pos + "], testBean = [" + gateInfoBean + "], v = [" + holder + "]");
+                LinearLayout gysDetails = holder.getView(R.id.gysDetails);//点击条状供应商详情
+                ImageView gysPhoto = holder.getView(R.id.gysPhoto);//供应商头像
+
                 TextView gateName = holder.getView(R.id.gateName);//平台
                 TextView gateAdd = holder.getView(R.id.gateAdd);//描述
                 gateName.setText(gateInfoBean.getGateName());
                 gateAdd.setText(gateInfoBean.getGateAdd());
+
+                gysDetails.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MarketActivity.this, BrowserActivity.class);
+                        intent.putExtra(URL, "");
+                        intent.putExtra(TYPE, GYS_DETAILS_URL_TYPE);
+                        startActivity(intent);
+                    }
+                });
 
                 //第二层
                 NestFullListView view = (NestFullListView) holder.getView(R.id.gateSkuListView);

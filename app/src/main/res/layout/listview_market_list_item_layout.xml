@@ -1,32 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/marketListLinear"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/marketListLinear"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/gysDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:orientation="horizontal"
         android:padding="10dp">
 
-        <TextView
-            android:id="@+id/gateName"
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/gysPhoto"
+            android:layout_width="64px"
+            android:layout_height="64px" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/action_button_content_margin" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/gateAdd"
+            <TextView
+                android:id="@+id/gateName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/action_button_content_margin" />
+
+            <TextView
+                android:id="@+id/gateAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/prompt_high_text_color"
+                android:textSize="@dimen/action_button_margin" />
+        </LinearLayout>
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableRight="@mipmap/right_gray"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/action_button_margin" />
+            android:layout_gravity="center"
+            android:src="@mipmap/right_gray" />
 
     </LinearLayout>
 
@@ -35,10 +55,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_weight="1"
         android:layout_marginRight="8dp"
-        android:fillViewport="true"
+        android:layout_weight="1"
         android:divider="@color/line_color"
+        android:fillViewport="true"
         android:scrollbars="none" />
 
     <View

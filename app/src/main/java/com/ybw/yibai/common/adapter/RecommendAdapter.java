@@ -1,5 +1,6 @@
 package com.ybw.yibai.common.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +66,7 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         return viewHolder;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
@@ -74,12 +76,12 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String name = listBean.getName();
         String pic = listBean.getPic2();
 
-        if (TextUtils.isEmpty(pic)) {
+        if (pic != null && !pic.isEmpty()) {
+            ImageUtil.displayImage(mContext, myViewHolder.mImageView, pic);
+            myViewHolder.mImageView.setBackground(null);
+        } else {
             ImageUtil.displayImage(mContext, myViewHolder.mImageView, " ");
             myViewHolder.mImageView.setBackground(mContext.getDrawable(R.drawable.background_image_view));
-        } else {
-            ImageUtil.displayImage(mContext, myViewHolder.mImageView, pic, DensityUtil.dpToPx(mContext, 2));
-            myViewHolder.mImageView.setBackground(null);
         }
 
         if (TextUtils.isEmpty(name)) {
@@ -101,10 +103,10 @@ public class RecommendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             mImageView = itemView.findViewById(R.id.imageView);
             mTextView = itemView.findViewById(R.id.textView);
 
-            ViewGroup.LayoutParams params = mImageView.getLayoutParams();
-            params.width = mItemWidth;
-            params.height = mItemWidth;
-            mImageView.setLayoutParams(params);
+//            ViewGroup.LayoutParams params = mImageView.getLayoutParams();
+//            params.width = mItemWidth;
+//            params.height = mItemWidth;
+//            mImageView.setLayoutParams(params);
 
             itemView.setOnClickListener(this);
         }

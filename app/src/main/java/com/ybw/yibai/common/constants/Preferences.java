@@ -220,6 +220,11 @@ public class Preferences {
     public static final String ORDER_SHARE_URL_TYPE = "orderShareUrlType";
 
     /**
+     * 标记该网页为供应商详情分享链接地址类型
+     */
+    public static final String GYS_DETAILS_URL_TYPE = "gysDetailsUrlType";
+
+    /**
      * 位置
      */
     public static final String POSITION = "position";

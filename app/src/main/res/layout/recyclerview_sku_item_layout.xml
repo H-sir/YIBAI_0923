@@ -6,19 +6,20 @@
 
     <RelativeLayout
         android:id="@+id/itemLayout"
-        android:layout_width="62dp"
-        android:layout_height="62dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_centerInParent="true"
         android:padding="2dp"
         tools:ignore="UselessParent">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:background="@drawable/background_image_view"
-            android:contentDescription="@null"
-            android:scaleType="centerInside" />
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:src="@mipmap/icon_trumpet"/>
 
         <TextView
             android:id="@+id/textView"

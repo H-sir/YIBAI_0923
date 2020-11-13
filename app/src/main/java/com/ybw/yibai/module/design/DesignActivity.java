@@ -175,6 +175,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                         mDesignStats.setText("正在编辑");
                         sceneInfoFlag = true;
                         flag = true;
+                        break;
                     }
                 }
                 if (!flag) {

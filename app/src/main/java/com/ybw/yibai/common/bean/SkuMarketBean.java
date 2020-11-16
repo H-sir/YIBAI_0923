@@ -113,7 +113,26 @@ public class SkuMarketBean {
             @SerializedName("gate_id") private int gateId;
             @SerializedName("gate_name") private String gateName;
             @SerializedName("gate_add") private String gateAdd;
+            @SerializedName("gate_logo") private String gateLogo;
+            @SerializedName("gate_info_url") private String gateInfoUrl;
             @SerializedName("gate_sku") private List<GateSkuBean> gateSku;
+
+
+            public String getGateLogo() {
+                return gateLogo;
+            }
+
+            public void setGateLogo(String gateLogo) {
+                this.gateLogo = gateLogo;
+            }
+
+            public String getGateInfoUrl() {
+                return gateInfoUrl;
+            }
+
+            public void setGateInfoUrl(String gateInfoUrl) {
+                this.gateInfoUrl = gateInfoUrl;
+            }
 
             public int getGateId() {
                 return gateId;

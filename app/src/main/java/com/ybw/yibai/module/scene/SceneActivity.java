@@ -702,9 +702,12 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
         // 显示场景列表
         if (id == R.id.listImageView || id == R.id.titleTextView) {
-            if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-                mDrawerLayout.openDrawer(GravityCompat.END);
-            }
+//            if (!mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+//                mDrawerLayout.openDrawer(GravityCompat.END);
+//            }
+            Intent intent = new Intent(this, DesignDetailsActivity.class);
+            intent.putExtra(DESIGN_NUMBER, mDesingNumber);
+            startActivityForResult(intent, 0);//此处的requestCode应与下面结果处理函中调用的requestCode一致
         }
 
         // 浮动Button

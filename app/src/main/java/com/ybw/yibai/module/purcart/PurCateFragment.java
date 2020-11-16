@@ -36,6 +36,7 @@ import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.PurCartChildBean;
 import com.ybw.yibai.common.bean.PurCartHeadBean;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
@@ -77,7 +78,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         PurCartComExtendableListViewAdapter.OnSelectItemClickListener,
         PurCartComExtendableListViewAdapter.OnSelectComClickListener,
         PurCartComExtendableListViewAdapter.OnChildClickListener,
-        PurCartComExtendableListViewAdapter.OnItemViewClickListener {
+        PurCartComExtendableListViewAdapter.OnItemViewClickListener,
+        PurCartComExtendableListViewAdapter.OnChildItemClickListener {
 
     private PurCateFragment mPurCateFragment = null;
 
@@ -148,6 +150,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     @Override
     protected void initEvent() {
+        purCartCity.setText( SceneHelper.getCity(getActivity()));
         // 注册事件
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -332,6 +335,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         mPurCartComExtendableListViewAdapter.setOnItemSubtractClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setSelectClickListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setChildClickListener(mPurCateFragment);
+        mPurCartComExtendableListViewAdapter.setChildClickItemListener(mPurCateFragment);
         mPurCartComExtendableListViewAdapter.setOnItemViewClickListener(mPurCateFragment);
         purCartAllPrice.setText(String.valueOf(allPrice));
     }
@@ -775,6 +779,16 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         if (purCartChildBean.getSkuId() != 0) {
             Intent intent = new Intent(getActivity(), MarketActivity.class);
             intent.putExtra(PRODUCT_SKU_ID, purCartChildBean.getSkuId());
+            intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onChild(PurCartHeadBean.DataBean dataBean) {
+        if (dataBean.getSkuId() != 0) {
+            Intent intent = new Intent(getActivity(), MarketActivity.class);
+            intent.putExtra(PRODUCT_SKU_ID, dataBean.getSkuId());
             intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
             startActivity(intent);
         }

@@ -760,5 +760,5 @@ public class HttpUrls {
     /**
      * 使用帮助的URL
      */
-    public static final String USING_HELP_URL = "https://h5.100ybw.com/help.html?alias=mybw&havhead=0";
+    public static final String USING_HELP_URL = "https://www.showdoc.com.cn/yibaiapp";
 }

@@ -118,6 +118,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                 LinearLayout gysDetails = holder.getView(R.id.gysDetails);//点击条状供应商详情
                 ImageView gysPhoto = holder.getView(R.id.gysPhoto);//供应商头像
 
+                ImageUtil.displayImage(getApplicationContext(), gysPhoto, gateInfoBean.getGateLogo());
                 TextView gateName = holder.getView(R.id.gateName);//平台
                 TextView gateAdd = holder.getView(R.id.gateAdd);//描述
                 gateName.setText(gateInfoBean.getGateName());
@@ -126,10 +127,12 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                 gysDetails.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(MarketActivity.this, BrowserActivity.class);
-                        intent.putExtra(URL, "");
-                        intent.putExtra(TYPE, GYS_DETAILS_URL_TYPE);
-                        startActivity(intent);
+                        if (gateInfoBean.getGateInfoUrl() != null && !gateInfoBean.getGateInfoUrl().isEmpty()) {
+                            Intent intent = new Intent(MarketActivity.this, BrowserActivity.class);
+                            intent.putExtra(URL, gateInfoBean.getGateInfoUrl());
+                            intent.putExtra(TYPE, GYS_DETAILS_URL_TYPE);
+                            startActivity(intent);
+                        }
                     }
                 });
 
@@ -198,7 +201,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
                                         if (pic != null && !pic.isEmpty())
                                             ImageUtil.displayImage(getApplicationContext(), imagePic, pic);
                                         imagePic.setOnClickListener(view1 -> {
-                                            ImageUtil.showImage(MarketActivity.this, gateSkuBean.getPicArr(),pos);
+                                            ImageUtil.showImage(MarketActivity.this, gateSkuBean.getPicArr(), pos);
                                         });
                                     }
                                 }

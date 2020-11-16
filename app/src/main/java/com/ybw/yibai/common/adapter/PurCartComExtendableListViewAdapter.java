@@ -115,6 +115,7 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         PurCartHeadBean.DataBean first = purCartHeadBean.getFirst();
 
         View itemView = convertView.findViewById(R.id.itemView);
+        View itemTitleView = convertView.findViewById(R.id.itemTitleView);
         ImageView purcartComSelect = convertView.findViewById(R.id.purcartComSelect);    //是否选择
         ImageView purcartComImage = convertView.findViewById(R.id.purcartComImage);      //图片
         TextView purcartComName = convertView.findViewById(R.id.purcartComName);        //名称
@@ -160,6 +161,11 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         itemView.setOnClickListener(view -> {
             if (onItemViewClickListener != null)
                 onItemViewClickListener.onItemViewNum(first);
+        });
+
+        itemTitleView.setOnClickListener(view -> {
+            if (onChildItemClickListener != null)
+                onChildItemClickListener.onChild(first);
         });
 
         return convertView;
@@ -393,5 +399,19 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
 
     public void setChildClickListener(OnChildClickListener onChildClickListener) {
         this.onChildClickListener = onChildClickListener;
+    }
+
+    public interface OnChildItemClickListener {
+
+        /**
+         * 点击-的回调
+         */
+        void onChild(PurCartHeadBean.DataBean dataBean);
+    }
+
+    private OnChildItemClickListener onChildItemClickListener;
+
+    public void setChildClickItemListener(OnChildItemClickListener onChildItemClickListener) {
+        this.onChildItemClickListener = onChildItemClickListener;
     }
 }

@@ -503,6 +503,9 @@ public class MainActivity extends BaseActivity implements MainView,
         } else if (3 == index) {
             // 显示"报价"界面
             mQuotationRadioButton.setChecked(true);
+        }else if(4 == index){
+            mQuotationRadioButton.setChecked(true);
+            mQuotationPurchaseFragment.mViewPager.setCurrentItem(1);
         }
     }
 

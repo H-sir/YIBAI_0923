@@ -408,7 +408,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
              * 发送数据到{@link MainActivity#ratioActivitySendData(ToFragment)}
              * 使其跳转到对应的Fragment
              */
-            ToFragment toFragment = new ToFragment(3);
+            ToFragment toFragment = new ToFragment(4);
             EventBus.getDefault().postSticky(toFragment);
             finish();
         }

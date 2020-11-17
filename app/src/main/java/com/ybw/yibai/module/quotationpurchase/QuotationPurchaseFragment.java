@@ -71,7 +71,7 @@ public class QuotationPurchaseFragment extends BaseFragment implements ViewPager
     /**
      *
      */
-    private ViewPager mViewPager;
+    public ViewPager mViewPager;
 
     /*
       /\_/\

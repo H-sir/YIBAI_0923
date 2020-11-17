@@ -12,7 +12,7 @@
         <LinearLayout
             android:id="@+id/tradeName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:orientation="vertical"
             android:padding="5dp">
@@ -88,7 +88,7 @@
     <com.ybw.yibai.common.widget.nestlistview.NestFullListView
         android:id="@+id/gateSkuPicListView"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="128dp"
         android:layout_below="@+id/tradeName"
         android:fillViewport="true" />
 

@@ -150,7 +150,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     @Override
     protected void initEvent() {
-        purCartCity.setText( SceneHelper.getCity(getActivity()));
+        purCartCity.setText(SceneHelper.getCity(getActivity()));
         // 注册事件
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -206,7 +206,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             if (TextUtils.isEmpty(city)) {
                 return;
             }
-            purCartCity.setText(city);
+//            purCartCity.setText(city);
         }
     };
 
@@ -282,6 +282,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     @Override
     public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
         this.purCartBean = purCartBean;
+        isAllSelect = true;
+        purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_select));
         allPrice = 0;
         int index = 0;
         mPurCartHeadBean.clear();
@@ -564,22 +566,21 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     private void purCartAllSelectData() {
         if (isAllSelect) {
-//            String cartIds = "";
-//            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
-//                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
-//                if (itemlistBean.getChecked() == 1) {
-//                    cartIds = cartIds + itemlistBean.getCartId() + ",";
-//                }
-//            }
-//            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
-//                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
-//                if (comlistBean.getChecked() == 1) {
-//                    cartIds = cartIds + comlistBean.getCartId() + ",";
-//                }
-//            }
-//            cartIds.substring(0, cartIds.length() - 2);
-//            mPurCartPresenter.upAllCart(cartIds, 1, 0);
-
+            String cartIds = "";
+            for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+                if (itemlistBean.getChecked() == 1) {
+                    cartIds = cartIds + itemlistBean.getCartId() + ",";
+                }
+            }
+            for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+                PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+                if (comlistBean.getChecked() == 1) {
+                    cartIds = cartIds + comlistBean.getCartId() + ",";
+                }
+            }
+            cartIds.substring(0, cartIds.length() - 2);
+            mPurCartPresenter.upAllCart(cartIds, 1, 0);
         } else {
             String cartIds = "";
             for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
@@ -691,6 +692,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         int check = 0;
         if (isSelect) {
             check = 1;
+        }else {
+            isAllSelect = false;
         }
         int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
@@ -706,6 +709,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         int check = 0;
         if (isSelect) {
             check = 1;
+        }else {
+            isAllSelect = false;
         }
         int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null)
@@ -770,7 +775,6 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     private void setAllSelect() {
         isAllSelect = false;
         purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_no_select));
-
         onGetPurCartDataSuccess(purCartBean);
     }
 

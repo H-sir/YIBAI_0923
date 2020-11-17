@@ -164,7 +164,7 @@ public class MarketActivity extends BaseActivity implements MarketContract.Marke
 
                         deliveryMessage.setText(gateSkuBean.getDelivery());
                         tradePrice.setText("￥" + String.valueOf(gateSkuBean.getPrice()));
-                        gateNameText.setText("");
+                        gateNameText.setText(gateSkuBean.getSubtitle());
                         stockMarket.setText(String.valueOf(gateSkuBean.getStock()));
                         uptime.setText(gateSkuBean.getUptime());
                         gateNameSelect.setOnClickListener(new View.OnClickListener() {

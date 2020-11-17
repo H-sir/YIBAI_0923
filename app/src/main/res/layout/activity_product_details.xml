@@ -49,7 +49,7 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@null"
                 android:padding="10dp"
-                android:src="@drawable/offer_click" />
+                android:src="@mipmap/offer_click_and_num" />
 
         </RelativeLayout>
 

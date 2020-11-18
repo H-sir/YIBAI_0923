@@ -506,6 +506,7 @@ public class MainActivity extends BaseActivity implements MainView,
         }else if(4 == index){
             mQuotationRadioButton.setChecked(true);
             mQuotationPurchaseFragment.mViewPager.setCurrentItem(1);
+            mQuotationPurchaseFragment.onPageSelected(1);
         }
     }
 

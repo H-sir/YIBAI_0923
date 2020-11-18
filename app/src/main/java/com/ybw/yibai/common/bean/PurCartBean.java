@@ -288,7 +288,7 @@ public class PurCartBean {
             @SerializedName("num") private int num;
             @SerializedName("pic") private String pic;
             @SerializedName("cart_id") private int cartId;
-            @SerializedName("price") private int price;
+            @SerializedName("price") private float price;
             @SerializedName("checked") private int checked;
             @SerializedName("first") private FirstBeanX first;
 
@@ -316,11 +316,11 @@ public class PurCartBean {
                 this.cartId = cartId;
             }
 
-            public int getPrice() {
+            public float getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(float price) {
                 this.price = price;
             }
 

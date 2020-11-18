@@ -156,7 +156,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             EventBus.getDefault().register(this);
         }
         mPurCartPresenter = new PurCartPresenterImpl(this);
-        mPurCartPresenter.applyPermissions(permissions);
+//        mPurCartPresenter.applyPermissions(permissions);
     }
 
     @Override

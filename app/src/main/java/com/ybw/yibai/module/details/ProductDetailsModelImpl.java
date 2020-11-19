@@ -8,6 +8,7 @@ import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.ProductData;
 import com.ybw.yibai.common.bean.ProductDetails;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimilarSKU;
@@ -41,6 +42,7 @@ import okhttp3.RequestBody;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SIMILAR_SUK_LIST_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UPDATE_SKU_USE_STATE_METHOD;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
@@ -88,6 +90,43 @@ public class ProductDetailsModelImpl implements ProductDetailsModel {
                     callBack.onSaveQuotationDataDataResult(true);
                 else
                     callBack.onSaveQuotationDataDataResult(false);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getPurCartData(CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<PurCartBean> observable = mApiService.getPurCart(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_PURCART_METHOD),
+                YiBaiApplication.getUid());
+        Observer<PurCartBean> observer = new Observer<PurCartBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(PurCartBean purCartBean) {
+                if (purCartBean.getCode() == 200) {
+                    callBack.onGetPurCartDataSuccess(purCartBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(purCartBean.getMsg()));
+                }
             }
 
             @Override

@@ -20,6 +20,7 @@ import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SkuListBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean.SonBean;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -458,6 +459,16 @@ public class ProductDetailsPresenterImpl extends BasePresenterImpl<ProductDetail
     @Override
     public void onAddQuotationSuccess(AddQuotation addQuotation) {
         mBonsaiDetailsView.onAddQuotationSuccess(addQuotation);
+    }
+
+    @Override
+    public void getPurCartData() {
+        mBonsaiDetailsModel.getPurCartData(this);
+    }
+
+    @Override
+    public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
+        mBonsaiDetailsView.onGetPurCartDataSuccess(purCartBean);
     }
 
     @Override

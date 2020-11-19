@@ -3,12 +3,16 @@ package com.ybw.yibai.module.details;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,12 +29,14 @@ import com.ybw.yibai.common.bean.ProductDetails.DataBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SkuListBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean.SonBean;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
 import com.ybw.yibai.common.bean.SimilarSKU.DataBean.ListBean;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
+import com.ybw.yibai.common.utils.EncryptionUtil;
 import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -46,6 +52,9 @@ import com.ybw.yibai.module.scene.SceneActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -187,9 +196,14 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
     private TextView mTitleTextView;
 
     /**
-     * 跳转到报价详情
+     * 跳转到进货详情
      */
     private ImageView mToQuotationImageView;
+
+    /**
+     * 跳转到报价详情
+     */
+    private TextView mSaveTextViewNum;
 
     /**
      * 产品使用状态
@@ -232,6 +246,10 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
      * 产品价格
      */
     private TextView mProductPriceTextView;
+    /**
+     * H5
+     */
+    private WebView webView;
 
     /**
      * 显示相似推荐列表
@@ -317,6 +335,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mBackImageView = findViewById(R.id.backImageView);
         mTitleTextView = findViewById(R.id.titleTextView);
         mToQuotationImageView = findViewById(R.id.toQuotationImageView);
+        mSaveTextViewNum = findViewById(R.id.saveTextViewNum);
         mUseStateTextView = findViewById(R.id.useStateTextView);
 
         mProductImageView = findViewById(R.id.productImageView);
@@ -327,6 +346,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mSelectedLayout = findViewById(R.id.selectedLayout);
         mSpecTextView = findViewById(R.id.specTextView);
         mProductPriceTextView = findViewById(R.id.priceTextView);
+        webView = findViewById(R.id.webView);
         mRecyclerView = findViewById(R.id.recyclerView);
 
         mLookDesignTextView = findViewById(R.id.lookDesignTextView);
@@ -369,6 +389,32 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mAdapter = new SimilarProductAdapter(this, mSimilarSkuList);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+        webView.requestFocusFromTouch();              //如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点
+        settings.setDomStorageEnabled(true);
+        settings.setBlockNetworkImage(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        }
+        settings.setUseWideViewPort(true);                                      //设置此属性，可任意比例缩放
+        settings.setLoadWithOverviewMode(true);
+        settings.setSupportZoom(true);                                          //便页面支持缩放
+//        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);           //优先使用缓存
+//        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);                     //不使用缓存：
+        settings.setJavaScriptEnabled(true);                                    //支持js
+        settings.setUseWideViewPort(false);                                     //将图片调整到适合webview的大小
+        settings.setSupportZoom(true);                                          //支持缩放
+        settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN); //支持内容重新布局
+        settings.supportMultipleWindows();                                      //多窗口
+        settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);             //关闭webview中缓存
+        settings.setAllowFileAccess(true);                                      //设置可以访问文件
+        settings.setNeedInitialFocus(true);                                     //当webview调用requestFocus时为webview设置节点
+        settings.setBuiltInZoomControls(true);                                  //设置支持缩放
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);                //支持通过JS打开新窗口
+        settings.setLoadWithOverviewMode(true);                                 // 缩放至屏幕的大小
+        settings.setLoadsImagesAutomatically(true);                             //支持自动加载图片
+
     }
 
     @Override
@@ -376,6 +422,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mProductDetailsPresenter = new ProductDetailsPresenterImpl(this);
         mProductDetailsPresenter.getProductDetails(productId);
         mProductDetailsPresenter.getSimilarSKUList(productSkuId);
+        mProductDetailsPresenter.getPurCartData();
         mBackImageView.setOnClickListener(this);
         mToQuotationImageView.setOnClickListener(this);
         mUseStateTextView.setOnClickListener(this);
@@ -532,6 +579,17 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (null == data) {
             return;
         }
+
+        if (!TextUtils.isEmpty(productDetails.getData().getContent())) {
+            String content = productDetails.getData().getContent();
+            String htmlString = EncryptionUtil.base64DecodeString(content);
+            if (!TextUtils.isEmpty(htmlString)) {
+                webView.clearCache(true);
+//                String replace = htmlString.replace("http", "https");
+                webView.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);
+            }
+        }
+
         List<SpecBean> specList = data.getSpec();
         if (null != specList && specList.size() > 0) {
             mSpecList.addAll(specList);
@@ -792,6 +850,20 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
     @Override
     public void onAddQuotationSuccess(AddQuotation addQuotation) {
         MessageUtil.showMessage(addQuotation.getMsg());
+    }
+
+    @Override
+    public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (Iterator<PurCartBean.DataBean.ComlistBean> iterator = purCartBean.getData().getComlist().iterator(); iterator.hasNext(); ) {
+            PurCartBean.DataBean.ComlistBean comlistBean = iterator.next();
+            map.put(comlistBean.getCartId(), 1);
+        }
+        for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
+            PurCartBean.DataBean.ItemlistBean itemlistBean = iterator.next();
+            map.put(itemlistBean.getCartId(), 1);
+        }
+        mSaveTextViewNum.setText(String.valueOf(map.size()));
     }
 
     /**

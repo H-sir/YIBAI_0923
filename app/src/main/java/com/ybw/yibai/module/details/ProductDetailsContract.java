@@ -11,6 +11,7 @@ import com.ybw.yibai.common.bean.ProductData;
 import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SkuListBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean;
+import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 
@@ -89,6 +90,8 @@ public interface ProductDetailsContract {
          * @param addQuotation sku加入待摆放清单时服务器端返回的数据
          */
         void onAddQuotationSuccess(AddQuotation addQuotation);
+
+        void onGetPurCartDataSuccess(PurCartBean purCartBean);
     }
 
     interface ProductDetailsPresenter extends BasePresenter<ProductDetailsView> {
@@ -173,6 +176,8 @@ public interface ProductDetailsContract {
          *添加商品到进货列表
          * */
         void addpurcart(ProductData productData);
+
+        void getPurCartData();
     }
 
     interface ProductDetailsModel {
@@ -228,6 +233,8 @@ public interface ProductDetailsContract {
         void addQuotation(int firstSkuId, CallBack callBack);
 
         void addPurcart(ProductData productData, CallBack callBack);
+
+        void getPurCartData(CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -273,5 +280,7 @@ public interface ProductDetailsContract {
          * @param addQuotation sku加入待摆放清单时服务器端返回的数据
          */
         void onAddQuotationSuccess(AddQuotation addQuotation);
+
+        void onGetPurCartDataSuccess(PurCartBean purCartBean);
     }
 }

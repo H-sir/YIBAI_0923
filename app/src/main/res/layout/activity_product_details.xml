@@ -39,17 +39,33 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:id="@+id/toQuotationImageView"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@null"
-                android:padding="10dp"
-                android:src="@mipmap/offer_click_and_num" />
+                android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/toQuotationImageView"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@null"
+                    android:padding="10dp"
+                    android:src="@mipmap/offer_click_and_num" />
+
+                <TextView
+                    android:id="@+id/saveTextViewNum"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/shape_text_view"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@android:color/white"
+                    android:textSize="8dp" />
+            </FrameLayout>
 
         </RelativeLayout>
 

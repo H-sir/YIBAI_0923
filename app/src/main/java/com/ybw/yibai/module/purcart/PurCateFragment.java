@@ -35,6 +35,7 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.PurCartChildBean;
 import com.ybw.yibai.common.bean.PurCartHeadBean;
+import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.DensityUtil;
@@ -99,6 +100,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     TextView purCartSettlement;
     @BindView(R.id.rootLayout)
     LinearLayout rootLayout;
+    @BindView(R.id.noPurCartList)
+    LinearLayout noPurCartList;
 
     private PurCartContract.PurCartPresenter mPurCartPresenter;
     /**
@@ -279,8 +282,18 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
     List<PurCartHeadBean> mPurCartHeadBean = new ArrayList<>();
     List<List<PurCartChildBean>> mPurCartChildBean = new ArrayList<>();
 
+    /**
+     * 进货数据返回
+     */
     @Override
     public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
+        if (purCartBean.getData() == null || ((purCartBean.getData().getItemlist() == null || purCartBean.getData().getItemlist().size() == 0
+        ) && (purCartBean.getData().getComlist() == null || purCartBean.getData().getItemlist().size() == 0))) {
+            noPurCartList.setVisibility(View.VISIBLE);
+        } else {
+            noPurCartList.setVisibility(View.GONE);
+        }
+
         this.purCartBean = purCartBean;
         isAllSelect = true;
         purCartAllSelectImg.setImageDrawable(getResources().getDrawable(R.mipmap.purcart_select));
@@ -526,7 +539,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         ExceptionUtil.handleException(throwable);
     }
 
-    @OnClick({R.id.purCartAllSelect, R.id.purCartSettlement})
+    @OnClick({R.id.purCartAllSelect, R.id.purCartSettlement, R.id.onProductCheck})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.purCartAllSelect:
@@ -561,6 +574,14 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     wxapi.sendReq(req);
                 }
                 break;
+            case R.id.onProductCheck:
+                /**
+                 * 发送数据到{@link MainActivity#ratioActivitySendData(ToFragment)}
+                 * 使其跳转到对应的Fragment
+                 */
+                ToFragment toFragment = new ToFragment(2);
+                EventBus.getDefault().postSticky(toFragment);
+                break;
         }
     }
 
@@ -579,8 +600,10 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     cartIds = cartIds + comlistBean.getCartId() + ",";
                 }
             }
-            cartIds.substring(0, cartIds.length() - 2);
-            mPurCartPresenter.upAllCart(cartIds, 1, 0);
+            if (cartIds.length() > 2) {
+                cartIds.substring(0, cartIds.length() - 2);
+                mPurCartPresenter.upAllCart(cartIds, 1, 0);
+            }
         } else {
             String cartIds = "";
             for (Iterator<PurCartBean.DataBean.ItemlistBean> iterator = purCartBean.getData().getItemlist().iterator(); iterator.hasNext(); ) {
@@ -692,7 +715,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         int check = 0;
         if (isSelect) {
             check = 1;
-        }else {
+        } else {
             isAllSelect = false;
         }
         int cartId = purCartHeadBean.getCartId();
@@ -709,7 +732,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         int check = 0;
         if (isSelect) {
             check = 1;
-        }else {
+        } else {
             isAllSelect = false;
         }
         int cartId = purCartHeadBean.getCartId();

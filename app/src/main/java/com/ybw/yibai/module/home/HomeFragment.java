@@ -561,7 +561,7 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
              * 发送数据到{@link MainActivity#ratioActivitySendData(ToFragment)}
              * 使其跳转到对应的Fragment
              */
-            ToFragment toFragment = new ToFragment(2);
+            ToFragment toFragment = new ToFragment(4);
             EventBus.getDefault().postSticky(toFragment);
         }
 

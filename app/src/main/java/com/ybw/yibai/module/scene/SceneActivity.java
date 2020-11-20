@@ -1315,6 +1315,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
         List<PlacementQrQuotationList.DataBean.ListBean> list = data.getList();
         if (null == list || list.size() == 0) {
+            mRecommendedMatchBottomSheetBehavior.setState(STATE_HIDDEN);
             showBottomDialog();
             return;
         }
@@ -1547,6 +1548,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
      *
      * @param stickerViewSelected "贴纸View"被选中状态
      */
+    @SuppressLint("RestrictedApi")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void stickerViewSelected(@NonNull StickerViewSelected stickerViewSelected) {
         boolean selected = stickerViewSelected.isSelected();
@@ -1559,13 +1561,25 @@ public class SceneActivity extends BaseActivity implements SceneView,
             mFloatingActionButton.hide();
             mFunctionLayout.setVisibility(View.GONE);
         } else {
+            sceneFlagShow = !sceneFlagShow;
+            if (sceneFlagShow) {
+                mArcMenu.show();
+                mFloatingActionButton.show();
+                mBarView.setVisibility(View.VISIBLE);
+                mFloatingActionButton.setVisibility(View.VISIBLE);
+                mFunctionLayout.setVisibility(View.VISIBLE);
+            } else {
+                mArcMenu.hide();
+                mBarView.setVisibility(View.INVISIBLE);
+                mFloatingActionButton.hide();
+                mFunctionLayout.setVisibility(View.INVISIBLE);
+            }
             mTitleTextView.setText(mSceneInfo.getSceneName());
-            mArcMenu.show();
-            mFunctionLayout.setVisibility(View.VISIBLE);
-            mFloatingActionButton.show();
             if (mComType != null && mComType.equals("1")) return;
         }
     }
+
+    boolean sceneFlagShow = false;
 
     /**
      * EventBus

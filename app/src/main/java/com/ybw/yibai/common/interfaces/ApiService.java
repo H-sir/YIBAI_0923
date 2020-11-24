@@ -1800,7 +1800,7 @@ public interface ApiService {
      *
      * @return APP更新时服务器端返回的数据
      */
-    @GET("http://103.45.184.103:8889/RoadHouseH/ybvloea.json")
+    @GET("http://43.226.73.21:8081/RoadHouse/ybvloea.json")
     Observable<String> getDataByGet();
 
     /**

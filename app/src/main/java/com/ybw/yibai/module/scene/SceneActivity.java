@@ -294,6 +294,9 @@ public class SceneActivity extends BaseActivity implements SceneView,
      */
     private ViewPager mRecommendedMatchTypeViewPager;
 
+    private LinearLayout mNoMessage;
+    private TextView mPlacementNull;
+
     /**
      * 指示点父布局
      */
@@ -507,6 +510,8 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mRecommendedMatchTypeRadioGroup = findViewById(R.id.recommendedMatchTypeRadioGroup);
         mRecommendedMatchTypeViewPager = findViewById(R.id.recommendedMatchTypeViewPager);
         mRecommendedMatchDotLinearLayout = findViewById(R.id.recommendedMatchDotLinearLayout);
+        mNoMessage = findViewById(R.id.noMessage);
+        mPlacementNull = findViewById(R.id.placementNull);
 
         mQuotationLayout = findViewById(R.id.quotation_layout);
         mQuotationDetailsTextView = findViewById(R.id.quotationDetailsTextView);
@@ -608,6 +613,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mJoinQuotationTextView.setOnClickListener(this);
         mSaveTextView.setOnClickListener(this);
         mMyDesignImageTextView.setOnClickListener(this);
+        mPlacementNull.setOnClickListener(this);
 
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//关闭手势滑动
 
@@ -720,6 +726,10 @@ public class SceneActivity extends BaseActivity implements SceneView,
         // 背景图
         if (id == R.id.backgroundImageTextView) {
 
+        }
+        //
+        if (id == R.id.placementNull) {
+            mRecommendedMatchBottomSheetBehavior.setState(STATE_HIDDEN);
         }
 
         // 推荐搭配
@@ -1308,15 +1318,23 @@ public class SceneActivity extends BaseActivity implements SceneView,
             MessageUtil.showMessage(placementQrQuotationList.getMsg());
             return;
         }
+        mNoMessage.setVisibility(View.GONE);
+        mRecommendedMatchTypeViewPager.setVisibility(View.VISIBLE);
         PlacementQrQuotationList.DataBean data = placementQrQuotationList.getData();
         if (null == data) {
+            mNoMessage.setVisibility(View.VISIBLE);
+            mRecommendedMatchTypeViewPager.setVisibility(View.GONE);
+            mRecommendedMatchBottomSheetBehavior.setState(STATE_EXPANDED);
             return;
         }
 
         List<PlacementQrQuotationList.DataBean.ListBean> list = data.getList();
+
         if (null == list || list.size() == 0) {
-            mRecommendedMatchBottomSheetBehavior.setState(STATE_HIDDEN);
-            showBottomDialog();
+            mNoMessage.setVisibility(View.VISIBLE);
+            mRecommendedMatchTypeViewPager.setVisibility(View.GONE);
+            mRecommendedMatchBottomSheetBehavior.setState(STATE_EXPANDED);
+//            showBottomDialog();
             return;
         }
 

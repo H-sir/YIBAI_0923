@@ -427,6 +427,8 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         }
         Recommend.DataBean data = recommend.getData();
         if (null == data) {
+            mSceneEditView.onHideLoading();
+            MessageUtil.showMessage("无对应产品");
             return;
         }
         addSimulationData(data);

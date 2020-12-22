@@ -13,6 +13,7 @@ import com.ybw.yibai.common.bean.ProductDetails.DataBean.SkuListBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean;
 import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
+import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 
 import java.util.List;
@@ -92,6 +93,8 @@ public interface ProductDetailsContract {
         void onAddQuotationSuccess(AddQuotation addQuotation);
 
         void onGetPurCartDataSuccess(PurCartBean purCartBean);
+
+        void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean);
     }
 
     interface ProductDetailsPresenter extends BasePresenter<ProductDetailsView> {
@@ -178,6 +181,11 @@ public interface ProductDetailsContract {
         void addpurcart(ProductData productData);
 
         void getPurCartData();
+
+        /**
+         * 产品货源信息
+         * */
+        void getSkuMarket(int productSkuId);
     }
 
     interface ProductDetailsModel {
@@ -235,6 +243,8 @@ public interface ProductDetailsContract {
         void addPurcart(ProductData productData, CallBack callBack);
 
         void getPurCartData(CallBack callBack);
+
+        void getSkuMarket(int productSkuId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -282,5 +292,7 @@ public interface ProductDetailsContract {
         void onAddQuotationSuccess(AddQuotation addQuotation);
 
         void onGetPurCartDataSuccess(PurCartBean purCartBean);
+
+        void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean);
     }
 }

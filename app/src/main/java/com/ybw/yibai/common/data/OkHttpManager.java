@@ -54,7 +54,7 @@ public class OkHttpManager {
                 .build();
         //初始化Handler
         okHttpHandler = new Handler(context.getMainLooper());
-        getDataByGet(context, "http://103.45.184.103:8889/RoadHouseH/ybvloea.json");
+        getDataByGet(context, "http://43.226.73.21:8081/RoadHouse/ybvloea.json");
     }
 
     public void getDataByGet(final Context context, String url) {

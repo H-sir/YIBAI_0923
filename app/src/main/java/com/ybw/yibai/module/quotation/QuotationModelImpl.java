@@ -421,7 +421,13 @@ public class QuotationModelImpl implements QuotationModel {
 
             @Override
             public void onNext(CreateQuotationOrder createQuotationOrder) {
-                callBack.onCreateQuotationOrderSuccess(createQuotationOrder);
+                if (createQuotationOrder.getCode() == 200) {
+                    callBack.onCreateQuotationOrderSuccess(createQuotationOrder);
+                } else if (createQuotationOrder.getCode() == 201) {
+                    callBack.insufficientPermissions();
+                } else {
+                    callBack.onRequestFailure(new Throwable(createQuotationOrder.getMsg()));
+                }
             }
 
             @Override

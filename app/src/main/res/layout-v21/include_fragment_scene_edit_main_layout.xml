@@ -386,18 +386,51 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/skuMarketTextView"
+        <LinearLayout
+            android:id="@+id/skuMarketLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="22dp"
-            android:drawableTop="@mipmap/sku_market_img"
-            android:drawablePadding="8dp"
             android:gravity="center"
-            android:text="查看货源"
-            android:textColor="@color/main_text_color"
-            android:textSize="10sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:src="@mipmap/sku_market_img" />
+
+                <TextView
+                    android:id="@+id/skuMarketTextView"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/shape_text_view"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="8dp"
+                    android:textColor="@android:color/white" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="送达天数"
+                android:textColor="@color/main_text_color"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                tools:ignore="SmallSp" />
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

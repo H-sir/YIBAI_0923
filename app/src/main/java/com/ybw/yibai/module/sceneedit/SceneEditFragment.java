@@ -809,10 +809,18 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     private FilterFactoryUtil mBrightnessFilter;
     private View btnHideTools;
+
+    /**
+     * 货源天数
+     */
+    private TextView mSkuMarketTextView;
+
     /**
      * 查看货源
      */
-    private TextView mSkuMarketTextView;
+    private View mSkuMarketLayout;
+
+
     /**
      *
      */
@@ -885,6 +893,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mIntelligentEraseTextView = view.findViewById(R.id.intelligentEraseTextView);
         mRestoreSettingsTextView = view.findViewById(R.id.restoreSettingsTextView);
         mSkuMarketTextView = view.findViewById(R.id.skuMarketTextView);
+        mSkuMarketLayout = view.findViewById(R.id.skuMarketLayout);
 
         mSaveTextViewNum = view.findViewById(R.id.saveTextViewNum);
 
@@ -955,8 +964,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mRecyclerView.setLayoutManager(manager);
 
         // 显示第一个引导层
-        String label = getClass().getSimpleName() + "One";
-        GuideUtil.showGuideView(this, R.layout.guide_scene_edit_one_layout, label);
+//        String label = getClass().getSimpleName() + "One";
+//        GuideUtil.showGuideView(this, R.layout.guide_scene_edit_one_layout, label);
     }
 
     /**
@@ -1181,7 +1190,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mRootView.setOnClickListener(this);
         mQuotationDetailsTextView.setOnClickListener(this);
         mAddQuotationTextView.setOnClickListener(this);
-        mSkuMarketTextView.setOnClickListener(this);
+        mSkuMarketLayout.setOnClickListener(this);
 
         mSaveScenarios.setOnClickListener(this);
         mTakePhotoReplacementTextView.setOnClickListener(this);
@@ -1422,7 +1431,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
 
         //查看货源
-        if (id == R.id.skuMarketTextView) {
+        if (id == R.id.skuMarketLayout) {
             if (augmentedProductSkuId != 0 && productSkuId != 0) {
                 skuMarketPopupWindow();
             } else {
@@ -1512,27 +1521,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 hidden = (boolean) btnHideTools.getTag();
             }
             if (hidden) {
-                mBonsaiEditLayout.setVisibility(View.INVISIBLE);
-                mBtnChangeLocation.setVisibility(View.INVISIBLE);
-                mProductCodeImageButton.setVisibility(View.INVISIBLE);
-                mChangeStyleTextView.setVisibility(View.INVISIBLE);
-                mPlantRecyclerView.setVisibility(View.INVISIBLE);
-                mPotRecyclerView.setVisibility(View.INVISIBLE);
-                mBottomCatTab.setVisibility(View.INVISIBLE);
-                mMultipleImageContrastTextView.setVisibility(View.INVISIBLE);
-                mSavePhoto.setVisibility(View.INVISIBLE);
-                btnHideTools.setTag(false);
+                hideToolsIsHidden();
             } else {
-                mProductCodeImageButton.setVisibility(View.VISIBLE);
-                mBonsaiEditLayout.setVisibility(View.VISIBLE);
-                mBtnChangeLocation.setVisibility(View.INVISIBLE);
-                mChangeStyleTextView.setVisibility(View.VISIBLE);
-                mPlantRecyclerView.setVisibility(View.VISIBLE);
-                mPotRecyclerView.setVisibility(View.VISIBLE);
-                mBottomCatTab.setVisibility(View.VISIBLE);
-                mSavePhoto.setVisibility(View.INVISIBLE);
-                mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
-                btnHideTools.setTag(true);
+                hideToolsIsShow();
             }
         }
 
@@ -1588,6 +1579,32 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
     }
 
+    private void hideToolsIsShow() {
+        mProductCodeImageButton.setVisibility(View.VISIBLE);
+        mBonsaiEditLayout.setVisibility(View.VISIBLE);
+        mBtnChangeLocation.setVisibility(View.INVISIBLE);
+        mChangeStyleTextView.setVisibility(View.VISIBLE);
+        mPlantRecyclerView.setVisibility(View.VISIBLE);
+        mPotRecyclerView.setVisibility(View.VISIBLE);
+        mBottomCatTab.setVisibility(View.VISIBLE);
+        mSavePhoto.setVisibility(View.INVISIBLE);
+        mMultipleImageContrastTextView.setVisibility(View.VISIBLE);
+        btnHideTools.setTag(true);
+    }
+
+    private void hideToolsIsHidden() {
+        mBonsaiEditLayout.setVisibility(View.INVISIBLE);
+        mBtnChangeLocation.setVisibility(View.INVISIBLE);
+        mProductCodeImageButton.setVisibility(View.INVISIBLE);
+        mChangeStyleTextView.setVisibility(View.INVISIBLE);
+        mPlantRecyclerView.setVisibility(View.INVISIBLE);
+        mPotRecyclerView.setVisibility(View.INVISIBLE);
+        mBottomCatTab.setVisibility(View.INVISIBLE);
+        mMultipleImageContrastTextView.setVisibility(View.INVISIBLE);
+        mSavePhoto.setVisibility(View.INVISIBLE);
+        btnHideTools.setTag(false);
+    }
+
     private void onResert() {
         for (int i = 0; i < mParamAdapter.getAllData().size(); i++) {
             BTCBean item = mParamAdapter.getAllData().get(i);
@@ -1619,7 +1636,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (productPic1 != null && !productPic1.isEmpty())
             ImageUtil.displayImage(getActivity(), productIdImg, productPic1);
         productIdName.setText(productName);
-        productIdSX.setText(specTypeName);
+        productIdSX.setText(productMarket);
 
         LinearLayout augmentedProductSkuIdView = view.findViewById(R.id.augmentedProductSkuIdView);
         ImageView augmentedProductSkuIdImg = view.findViewById(R.id.augmentedProductSkuIdImg);
@@ -1628,7 +1645,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (augmentedProductPic1 != null && !augmentedProductPic1.isEmpty())
             ImageUtil.displayImage(getActivity(), augmentedProductSkuIdImg, augmentedProductPic1);
         augmentedProductSkuIdName.setText(augmentedProductName);
-        augmentedProductSkuIdSX.setText(specTypeName);
+        augmentedProductSkuIdSX.setText(augmentedProductMarket);
 
         augmentedProductSkuIdView.setOnClickListener(v -> {
             if (null != mPopupWindow && mPopupWindow.isShowing()) {
@@ -2078,8 +2095,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mBackgroundEditLayout.setVisibility(View.GONE);
             }
             // 显示第二个引导层
-            String label = getClass().getSimpleName() + "Two";
-            GuideUtil.showGuideView(SceneEditFragment.this, R.layout.guide_scene_edit_two_layout, label);
+//            String label = getClass().getSimpleName() + "Two";
+//            GuideUtil.showGuideView(SceneEditFragment.this, R.layout.guide_scene_edit_two_layout, label);
             StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
             stickerViewSelected.setBaseSticker(currentSticker);
             /**
@@ -2206,7 +2223,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
         mAlreadyPlacedAdapter.notifyDataSetChanged();
         if (addSpec) {
-            addSpec = false;
             replaceCollocation(true);
         }
     }
@@ -2419,6 +2435,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         List<ListBean> potList = new ArrayList<>();
         List<ListBean> plantList = new ArrayList<>();
 
+
         if (recommend.getData().getPlant() != null) {
             plantList.addAll(recommend.getData().getPlant().getList());
             productType = PLANT;
@@ -2508,6 +2525,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 initRecommendProductFragment(potLists);
             }
         }
+
     }
 
     @Override
@@ -3145,6 +3163,17 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         productCombinationType = listBean.getComtype();
         productPriceCode = listBean.getPrice_code();
         productTradePriceCode = listBean.getTrade_price_code();
+        productMarket = listBean.getSource().getDelivery();
+
+        if (listBean.getSource().getDelivery_day() == null || listBean.getSource().getDelivery_day().isEmpty()) {
+            mSkuMarketTextView.setText("缺货");
+        } else {
+            if (listBean.getSource().getDelivery_day().equals("0")) {
+                mSkuMarketTextView.setText("现货");
+            } else {
+                mSkuMarketTextView.setText(listBean.getSource().getDelivery_day());
+            }
+        }
     }
 
     /**
@@ -3173,7 +3202,20 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         augmentedCombinationType = listBean.getComtype();
         augmentedPriceCode = listBean.getPrice_code();
         augmentedTradePriceCode = listBean.getTrade_price_code();
+        augmentedProductMarket = listBean.getSource().getDelivery();
+
+        if (listBean.getSource().getDelivery_day() == null || listBean.getSource().getDelivery_day().isEmpty()) {
+            mSkuMarketTextView.setText("缺货");
+        } else {
+            if (listBean.getSource().getDelivery_day().equals("0")) {
+                mSkuMarketTextView.setText("现货");
+            } else {
+                mSkuMarketTextView.setText(listBean.getSource().getDelivery_day());
+            }
+        }
     }
+    private String augmentedProductMarket = "";
+    private String productMarket = "";
 
     boolean isChangeFlagOne = false;
     int stickerWidth;
@@ -3270,10 +3312,13 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
              * 发送数据到{@link SceneActivity#barViewSelected(BarViewSelected)}
              */
             EventBus.getDefault().postSticky(new BarViewSelected(true));
+            if (!addSpec)
+                hideToolsIsHidden();
+            addSpec = false;
 
             // 显示第三个引导层
-            String label = getClass().getSimpleName() + "Three";
-            GuideUtil.showGuideView(this, R.layout.guide_scene_edit_three_layout, label);
+//            String label = getClass().getSimpleName() + "Three";
+//            GuideUtil.showGuideView(this, R.layout.guide_scene_edit_three_layout, label);
         } else {
             isChangeCollocation = false;
             isChangeFlagOne = false;

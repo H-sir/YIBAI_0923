@@ -83,6 +83,8 @@ public class ProductDetails {
          */
         private List<SkuListBean> skulist;
 
+        private SourceBean source;
+
         public int getId() {
             return id;
         }
@@ -147,6 +149,14 @@ public class ProductDetails {
             this.attr = attr;
         }
 
+        public SourceBean getSource() {
+            return source;
+        }
+
+        public void setSource(SourceBean source) {
+            this.source = source;
+        }
+
         public List<SkuListBean> getSkuList() {
             return skulist;
         }
@@ -154,6 +164,28 @@ public class ProductDetails {
         public void setSkuList(List<SkuListBean> skuList) {
             this.skulist = skuList;
         }
+
+        public static class SourceBean {
+            private String delivery_day;
+            private String delivery;
+
+            public String getDelivery_day() {
+                return delivery_day;
+            }
+
+            public void setDelivery_day(String delivery_day) {
+                this.delivery_day = delivery_day;
+            }
+
+            public String getDelivery() {
+                return delivery;
+            }
+
+            public void setDelivery(String delivery) {
+                this.delivery = delivery;
+            }
+        }
+
 
         public static class SpecBean {
 

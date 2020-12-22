@@ -45,7 +45,17 @@ public class SkuMarketBean {
         /**
          * product_name : 富贵竹笼
          * self_info : {"price":"","month_rent":""}
-         * gate_info : [{"gate_id":0,"gate_name":"平台直供","gate_add":"官方优选货源","gate_sku":[{"gate_product_id":0,"subtitle":"","pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],"price":129,"uptime":"10/09 14:51:03","stock":0,"delivery":"广州发货至广州市:预计1天后到货"}]}]
+         * gate_info : [{"gate_id":0,
+         *              "gate_name":"平台直供",
+         *              "gate_add":"官方优选货源",
+         *              "gate_sku":[{
+         *                          "gate_product_id":0,
+         *                          "subtitle":"",
+         *                          "pic_arr":["http://images.100ybw.com/product/2020/09/04/20200904041636835f51f7e42a895.png"],
+         *                          "price":129,"
+         *                          uptime":"10/09 14:51:03",
+         *                          "stock":0,
+         *                          "delivery":"广州发货至广州市:预计1天后到货"}]}]
          */
 
         @SerializedName("product_name") private String productName;

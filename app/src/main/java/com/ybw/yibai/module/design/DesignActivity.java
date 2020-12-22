@@ -20,6 +20,7 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.BaseBean;
+import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.DesignList;
 import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.NetworkType;
@@ -53,12 +54,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.HttpUrls.BASE_URL;
-import static com.ybw.yibai.common.constants.Preferences.CUSTOMER_NAME;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
-import static com.ybw.yibai.common.constants.Preferences.ORDER_NUMBER;
-import static com.ybw.yibai.common.constants.Preferences.ORDER_SHARE_URL_TYPE;
-import static com.ybw.yibai.common.constants.Preferences.TYPE;
-import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 
@@ -189,7 +185,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                     onDesignDelete(dataBean);
                 });
                 mDesignShare.setOnClickListener(view -> {
-                    onDesignShare(dataBean);
+                    checkShare(dataBean);
                 });
 
                 //第二层
@@ -219,6 +215,26 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
             }
         };
         designListView.setAdapter(mNestFullListViewAdapter);
+    }
+
+    /**
+     * 查询分享的权限
+     * */
+    private void checkShare(DesignList.DataBean.ListBean dataBean) {
+        shareDataBean = dataBean;
+        mUserPresenter.checkShare();
+    }
+
+    private DesignList.DataBean.ListBean shareDataBean;
+    @Override
+    public void checkShareData(CheckShareBean checkShareBean) {
+        onDesignShare(shareDataBean);
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        MessageUtil.showMessage("次数不够，请升级");
+        PopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
     }
 
     @Override
@@ -289,6 +305,8 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         if (sceneInfoFlag) {
             mSchemelistBean = schemelistBean;
             mUserPresenter.findUserSceneListInfo();
+        }else{
+            MessageUtil.showMessage(getString(R.string.design_two_message));
         }
 //        if (sceneInfo != null) {
 //            sceneInfo.setEditScene(true);
@@ -441,12 +459,12 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
                 onBackPressed();
                 break;
             case R.id.createDesign:
-                SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-                int vipLevel = preferences.getInt(VIP_LEVEL, 0);
-                if (1 == vipLevel) {
-                    PopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
-                    return;
-                }
+//                SharedPreferences preferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+//                int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+//                if (1 == vipLevel) {
+//                    PopupWindowUtil.displayUpdateVipPopupWindow(mDesignActivity, mRootLayout);
+//                    return;
+//                }
                 if (sceneInfo != null) {
                     existSceneInfoPopupWindow(null, sceneInfo);
                 } else {

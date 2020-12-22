@@ -47,6 +47,8 @@ public class ListBean implements Serializable, Parcelable {
      */
     private String pic3;
 
+    private SourceBean source;
+
     /**
      *
      */
@@ -108,6 +110,15 @@ public class ListBean implements Serializable, Parcelable {
      * (非后台给的数据,android 开发人员自定义的字段)
      */
     private boolean select;
+
+
+    public SourceBean getSource() {
+        return source;
+    }
+
+    public void setSource(SourceBean source) {
+        this.source = source;
+    }
 
     public int getSku_id() {
         return sku_id;
@@ -323,4 +334,25 @@ public class ListBean implements Serializable, Parcelable {
             return new ListBean[size];
         }
     };
+
+    public static class SourceBean {
+        private String delivery_day;
+        private String delivery;
+
+        public String getDelivery_day() {
+            return delivery_day;
+        }
+
+        public void setDelivery_day(String delivery_day) {
+            this.delivery_day = delivery_day;
+        }
+
+        public String getDelivery() {
+            return delivery;
+        }
+
+        public void setDelivery(String delivery) {
+            this.delivery = delivery;
+        }
+    }
 }

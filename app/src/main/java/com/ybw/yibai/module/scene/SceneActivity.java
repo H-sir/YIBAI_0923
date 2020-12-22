@@ -2,11 +2,14 @@ package com.ybw.yibai.module.scene;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -33,6 +36,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -71,16 +75,20 @@ import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.utils.ExceptionUtil;
+import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.NavigationBarUtil;
+import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.loading.CustomLoadingFactory;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
+import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;
@@ -117,6 +125,9 @@ import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
+import static com.ybw.yibai.common.constants.Preferences.URL;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.USER_VIP_URL;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 import static com.ybw.yibai.common.utils.OtherUtil.splitList;
 import static com.ybw.yibai.common.utils.ViewPagerIndicatorUtil.initDots;
@@ -138,7 +149,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         SceneListAdapter.OnItemClickListener {
 
     private static final String TAG = "SceneActivity";
-
+    private SceneActivity mSceneActivity = null;
     /**
      * 是否获取全部:1获取全部0分页(默认为0分页)
      */
@@ -456,6 +467,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
     @Override
     protected int setLayout() {
+        mSceneActivity = this;
         mContext = this;
         Application application = (Application) YiBaiApplication.getContext();
         if (getResources().getConfiguration().orientation == ORIENTATION_PORTRAIT) {
@@ -659,6 +671,12 @@ public class SceneActivity extends BaseActivity implements SceneView,
     @Override
     public void updateSceneData() {
         mScenePresenter.findUserSceneListInfo(true);
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        MessageUtil.showMessage("次数不够，请升级");
+        PopupWindowUtil.displayUpdateVipPopupWindow(mSceneActivity, mRootLayout);
     }
 
     @Override

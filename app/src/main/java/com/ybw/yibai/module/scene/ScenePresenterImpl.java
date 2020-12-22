@@ -2,9 +2,11 @@ package com.ybw.yibai.module.scene;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -13,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
@@ -35,6 +39,7 @@ import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.widget.CustomDialog;
+import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.scene.SceneContract.CallBack;
 import com.ybw.yibai.module.scene.SceneContract.SceneModel;
 import com.ybw.yibai.module.scene.SceneContract.ScenePresenter;
@@ -54,6 +59,9 @@ import static android.app.Activity.RESULT_OK;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_DETAILS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_CAMERA_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_PHOTOS_CODE;
+import static com.ybw.yibai.common.constants.Preferences.URL;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+import static com.ybw.yibai.common.constants.Preferences.USER_VIP_URL;
 import static com.ybw.yibai.common.utils.FileUtil.judeFileExists;
 import static com.ybw.yibai.common.utils.ImageUtil.createPhotoPath;
 
@@ -507,5 +515,10 @@ public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements 
     @Override
     public void onGetAddDesignSchemeSuccess(DesignScheme designScheme) {
         mSceneView.onGetAddDesignSchemeSuccess(designScheme);
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        mSceneView.insufficientPermissions();
     }
 }

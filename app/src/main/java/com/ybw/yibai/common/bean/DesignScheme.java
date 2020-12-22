@@ -56,7 +56,17 @@ public class DesignScheme {
         @SerializedName("desing_number") private String desingNumber;
         @SerializedName("scheme_name") private String schemeName;
         @SerializedName("scheme_id") private String schemeId;
+        @SerializedName("status") private int status;
 //        @SerializedName("imglist") private ImglistBean imglist;
+
+
+        public int getStatus() {
+            return status;
+        }
+
+        public void setStatus(int status) {
+            this.status = status;
+        }
 
         public String getDesingNumber() {
             return desingNumber;

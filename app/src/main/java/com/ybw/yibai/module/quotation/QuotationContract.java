@@ -169,6 +169,8 @@ public interface QuotationContract {
          * @param deletePlacement 删除待摆放清单产品时服务器端返回的数据
          */
         void onDeletePlacementListSuccess(DeletePlacement deletePlacement);
+
+        void insufficientPermissions();
     }
 
     interface QuotationPresenter extends BasePresenter<QuotationView> {
@@ -516,5 +518,7 @@ public interface QuotationContract {
          * @param deletePlacement 删除待摆放清单产品时服务器端返回的数据
          */
         void onDeletePlacementListSuccess(DeletePlacement deletePlacement);
+
+        void insufficientPermissions();
     }
 }

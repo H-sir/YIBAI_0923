@@ -10,6 +10,7 @@ import com.ybw.yibai.common.bean.BindingWechat;
 import com.ybw.yibai.common.bean.Case;
 import com.ybw.yibai.common.bean.CaseClassify;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.CityAreaList;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.CreateCustomers;
@@ -376,6 +377,20 @@ public interface ApiService {
                                              @Part("scheme_name") String schemeName,
                                              @Part MultipartBody.Part parts
     );
+
+    /**
+     * 查询设计分享的权限
+     *
+     * @param timestamp    时间搓
+     * @param sign         签名
+     * @param uid          用户的ID
+     */
+    @Multipart
+    @POST(HttpUrls.CHECK_SHARE_URL)
+    Observable<CheckShareBean> checkShare(@Header("timestamp") String timestamp,
+                                          @Header("sign") String sign,
+                                          @Part("uid") int uid);
+
 
     /**
      * 14.4.	创建场景或场景添加图片产品

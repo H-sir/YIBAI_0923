@@ -160,6 +160,8 @@ public class SceneModelImpl implements SceneModel {
                         // 保存场景信息
                         manager.save(sceneInfo);
                         addSceneInfoPage(createSceneData, index + 1, sceneInfo.getNumber(), manager, callBack);
+                    } else if (designScheme.getCode() == 201) {
+                        callBack.insufficientPermissions();
                     } else {
                         callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
                     }
@@ -417,6 +419,8 @@ public class SceneModelImpl implements SceneModel {
                     } catch (DbException e) {
                         e.printStackTrace();
                     }
+                } else if (designScheme.getCode() == 201) {
+                    callBack.insufficientPermissions();
                 } else {
                     callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
                 }
@@ -881,21 +885,27 @@ public class SceneModelImpl implements SceneModel {
             @Override
             public void onNext(DesignScheme designScheme) {
                 try {
-                    // 没有场景/正在编辑的场景,新建场景
-                    SceneInfo sceneInfo = new SceneInfo();
-                    sceneInfo.setUid(YiBaiApplication.getUid());
-                    sceneInfo.setNumber(designNumber);
-                    sceneInfo.setSceneId(TimeUtil.getNanoTime());
-                    sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
-                    sceneInfo.setSceneName(schemeName);
-                    sceneInfo.setEditScene(true);
-                    // 保存场景信息
-                    manager.save(sceneInfo);
-                    // 重新查找
-                    List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
-                            .where("uid", "=", YiBaiApplication.getUid())
-                            .findAll();
-                    callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    if (designScheme.getCode() == 200) {
+                        // 没有场景/正在编辑的场景,新建场景
+                        SceneInfo sceneInfo = new SceneInfo();
+                        sceneInfo.setUid(YiBaiApplication.getUid());
+                        sceneInfo.setNumber(designNumber);
+                        sceneInfo.setSceneId(TimeUtil.getNanoTime());
+                        sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
+                        sceneInfo.setSceneName(schemeName);
+                        sceneInfo.setEditScene(true);
+                        // 保存场景信息
+                        manager.save(sceneInfo);
+                        // 重新查找
+                        List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
+                                .where("uid", "=", YiBaiApplication.getUid())
+                                .findAll();
+                        callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    } else if (designScheme.getCode() == 201) {
+                        callBack.insufficientPermissions();
+                    } else {
+                        callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -971,7 +981,7 @@ public class SceneModelImpl implements SceneModel {
         String schemeName = SceneHelper.saveSceneNum(YiBaiApplication.getContext());
 //        String schemeName = YiBaiApplication.getContext().getResources().getString(R.string.my_scene);
         if (mCreateSceneDataList.get(0).getName() != null && !mCreateSceneDataList.get(0).getName().isEmpty()) {
-            if(!mCreateSceneDataList.get(0).getName().equals("我的场景")){
+            if (!mCreateSceneDataList.get(0).getName().equals("我的场景")) {
                 schemeName = mCreateSceneDataList.get(0).getName();
             }
         }
@@ -992,22 +1002,28 @@ public class SceneModelImpl implements SceneModel {
             @Override
             public void onNext(DesignScheme designScheme) {
                 try {
-                    // 没有场景/正在编辑的场景,新建场景
-                    SceneInfo sceneInfo = new SceneInfo();
-                    sceneInfo.setUid(YiBaiApplication.getUid());
-                    sceneInfo.setNumber(designNumber);
-                    sceneInfo.setSceneId(TimeUtil.getNanoTime());
-                    sceneInfo.setSceneBackground(path);
-                    sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
-                    sceneInfo.setSceneName(finalSchemeName);
-                    sceneInfo.setEditScene(true);
-                    // 保存场景信息
-                    manager.save(sceneInfo);
-                    // 重新查找
-                    List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
-                            .where("uid", "=", YiBaiApplication.getUid())
-                            .findAll();
-                    callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    if (designScheme.getCode() == 200) {
+                        // 没有场景/正在编辑的场景,新建场景
+                        SceneInfo sceneInfo = new SceneInfo();
+                        sceneInfo.setUid(YiBaiApplication.getUid());
+                        sceneInfo.setNumber(designNumber);
+                        sceneInfo.setSceneId(TimeUtil.getNanoTime());
+                        sceneInfo.setSceneBackground(path);
+                        sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
+                        sceneInfo.setSceneName(finalSchemeName);
+                        sceneInfo.setEditScene(true);
+                        // 保存场景信息
+                        manager.save(sceneInfo);
+                        // 重新查找
+                        List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
+                                .where("uid", "=", YiBaiApplication.getUid())
+                                .findAll();
+                        callBack.onFindUserSceneInfoSuccess(sceneInfoList);
+                    } else if (designScheme.getCode() == 201) {
+                        callBack.insufficientPermissions();
+                    } else {
+                        callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
+                    }
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -1061,6 +1077,8 @@ public class SceneModelImpl implements SceneModel {
                         callBack.onGetDesignSchemeSuccess(designScheme);
                     else
                         callBack.onGetAddDesignSchemeSuccess(designScheme);
+                } else if (designScheme.getCode() == 201) {
+                    callBack.insufficientPermissions();
                 } else {
                     callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
                 }
@@ -1103,6 +1121,8 @@ public class SceneModelImpl implements SceneModel {
                         callBack.onGetDesignSchemeSuccess(designScheme);
                     else
                         callBack.onGetAddDesignSchemeSuccess(designScheme);
+                } else if (designScheme.getCode() == 201) {
+                    callBack.insufficientPermissions();
                 } else {
                     callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
                 }

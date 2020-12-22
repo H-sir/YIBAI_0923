@@ -1021,4 +1021,9 @@ public class QuotationPresenterImpl extends BasePresenterImpl<QuotationView> imp
     public void onDeletePlacementListSuccess(DeletePlacement deletePlacement) {
         mQuotationView.onDeletePlacementListSuccess(deletePlacement);
     }
+
+    @Override
+    public void insufficientPermissions() {
+        mQuotationView.insufficientPermissions();
+    }
 }

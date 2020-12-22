@@ -36,6 +36,11 @@ import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
  */
 public class PopupWindowUtil {
 
+    /**
+     * 显示升级会员的PopupWindow
+     *
+     * @param rootLayout View根布局
+     */
     public static void displayUpdateVipPopupWindow(Activity activity, View rootLayout) {
         View view = View.inflate(activity, R.layout.popup_window_update_vip_layout, null);
         PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -107,7 +112,7 @@ public class PopupWindowUtil {
                     PopupWindowUtil.displayUpdateVipPopupWindow(activity, rootLayout);
                     return;
                 }
-                SceneHelper.saveSceneNum(activity,1);
+                SceneHelper.saveSceneNum(activity, 1);
                 Intent intent = new Intent(activity, StartDesignActivity.class);
                 intent.putExtra(DESIGN_CREATE, true);
                 activity.startActivity(intent);
@@ -145,7 +150,7 @@ public class PopupWindowUtil {
             // 添加PopupWindow窗口关闭事件
             mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
             mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
-        }else{
+        } else {
             SharedPreferences preferences = activity.getSharedPreferences(USER_INFO, MODE_PRIVATE);
             int vipLevel = preferences.getInt(VIP_LEVEL, 0);
             if (1 == vipLevel) {
@@ -158,4 +163,6 @@ public class PopupWindowUtil {
             activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         }
     }
+
+
 }

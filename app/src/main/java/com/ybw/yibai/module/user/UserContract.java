@@ -3,6 +3,7 @@ package com.ybw.yibai.module.user;
 import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
+import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.SceneInfo;
 
 import java.util.List;
@@ -30,6 +31,10 @@ public interface UserContract {
          * 更新用户单个的场景信息启动编辑成功时回调
          */
         void onUpdateUserSceneSuccess();
+
+        void checkShareData(CheckShareBean checkShareBean);
+
+        void insufficientPermissions();
     }
 
     interface UserPresenter extends BasePresenter<UserView> {
@@ -50,6 +55,11 @@ public interface UserContract {
         void updateUserScene(List<SceneInfo> sceneInfoList);
 
         void updateUserScene(SceneInfo sceneInfo);
+
+        /**
+         * 设计分享权限查询
+         * */
+        void checkShare();
     }
 
     interface UserModel {
@@ -72,6 +82,8 @@ public interface UserContract {
         void updateUserScene(SceneInfo sceneInfo, CallBack callBack);
 
         void updateUserScene(List<SceneInfo> sceneInfoList, CallBack callBack);
+
+        void checkShare(CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -92,5 +104,9 @@ public interface UserContract {
          * 更新用户单个的场景信息启动编辑成功时回调
          */
         void onUpdateUserSceneSuccess();
+
+        void checkShareData(CheckShareBean checkShareBean);
+
+        void insufficientPermissions();
     }
 }

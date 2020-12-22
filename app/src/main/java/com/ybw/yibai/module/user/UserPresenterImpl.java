@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.user;
 
 import com.ybw.yibai.base.BasePresenterImpl;
+import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.SceneInfo;
 
 import java.util.List;
@@ -74,5 +75,21 @@ public class UserPresenterImpl extends BasePresenterImpl<UserContract.UserView> 
     @Override
     public void onUpdateUserSceneSuccess() {
         mUserView.onUpdateUserSceneSuccess();
+    }
+
+
+    @Override
+    public void checkShare() {
+        mUserModel.checkShare(this);
+    }
+
+    @Override
+    public void checkShareData(CheckShareBean checkShareBean) {
+        mUserView.checkShareData(checkShareBean);
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        mUserView.insufficientPermissions();
     }
 }

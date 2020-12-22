@@ -242,6 +242,7 @@ public class BrowserActivity extends BaseActivity implements View.OnClickListene
             return;
         }
         if (!TextUtils.isEmpty(type) && type.equals(LOCAL_URL_TYPE)) {
+            mTitleTextView.setText("公司简介");
             mWebView.loadDataWithBaseURL(null, url, "text/html", "utf-8", null);
             // 用户从点击首页图片进入本页面,查看公司信息时才显示本按钮
             mSeeTheCaseButton.setVisibility(View.VISIBLE);

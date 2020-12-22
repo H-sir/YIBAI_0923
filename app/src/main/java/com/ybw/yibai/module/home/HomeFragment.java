@@ -536,12 +536,12 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
 
         // 开始设计
         if (id == R.id.startDesignTextView) {
-            SharedPreferences preferences = mContext.getSharedPreferences(USER_INFO, MODE_PRIVATE);
-            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
-            if (1 == vipLevel) {
-                PopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootLayout);
-                return;
-            }
+//            SharedPreferences preferences = mContext.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+//            int vipLevel = preferences.getInt(VIP_LEVEL, 0);
+//            if (1 == vipLevel) {
+//                PopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootLayout);
+//                return;
+//            }
             Intent intent = new Intent(mContext, SceneActivity.class);
             intent.putExtra("location", mLocationTextView.getText().toString());
             startActivity(intent);

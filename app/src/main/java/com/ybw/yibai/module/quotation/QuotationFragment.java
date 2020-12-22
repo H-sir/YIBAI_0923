@@ -46,6 +46,7 @@ import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.browser.AgentWebActivity;
 import com.ybw.yibai.module.browser.BrowserActivity;
@@ -763,7 +764,7 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
     public void onPriceClick(int position, int mode, double price) {
         pricePosition = position;
         quotationMode = mode;
-            YiBaiApplication.setRoleName(SERVICE);
+        YiBaiApplication.setRoleName(SERVICE);
         if (YiBaiApplication.getRoleName().equals(SERVICE)) {
             mQuotationPresenter.displayEditPricePopupWindow(mRootView, mode, price);
         } else if (YiBaiApplication.isAuthorization()) {
@@ -1098,7 +1099,7 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
         if (CODE_SUCCEED != createQuotationOrder.getCode()) {
             return;
         }
-        SceneHelper.saveQuotationLocationNum(getContext(),1);
+        SceneHelper.saveQuotationLocationNum(getContext(), 1);
         mQuotationPresenter.getQuotationLocation();
         mQuotationPresenter.getPlacementList();
         mQuotationPresenter.getQuotationList();
@@ -1147,6 +1148,12 @@ public class QuotationFragment extends BaseFragment implements QuotationView,
             mQuotationPresenter.getPlacementList();
         }
         recoverProductsToBePlacedLayout();
+    }
+
+    @Override
+    public void insufficientPermissions() {
+        MessageUtil.showMessage("次数不够，请升级");
+        PopupWindowUtil.displayUpdateVipPopupWindow(getActivity(), mRootView);
     }
 
     /**

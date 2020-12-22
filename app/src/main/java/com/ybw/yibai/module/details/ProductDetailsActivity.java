@@ -32,6 +32,7 @@ import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean.SonBean;
 import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
 import com.ybw.yibai.common.bean.SimilarSKU.DataBean.ListBean;
+import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
@@ -238,9 +239,23 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
     private RelativeLayout mSelectedLayout;
 
     /**
+     * 货源
+     */
+    private RelativeLayout mMarketLayout;
+
+    /**
+     * 货源信息
+     */
+    private TextView mMarketSpecTextView;
+
+    /**
      * 显示用户选中的规格
      */
     private TextView mSpecTextView;
+
+    /**
+     * 显示用户选中的规格
+     */
 
     /**
      * 产品价格
@@ -343,6 +358,8 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mProductSpecTextView = findViewById(R.id.productSpecTextView);
         mView = findViewById(R.id.view);
 
+        mMarketLayout = findViewById(R.id.marketLayout);
+        mMarketSpecTextView = findViewById(R.id.marketSpecTextView);
         mSelectedLayout = findViewById(R.id.selectedLayout);
         mSpecTextView = findViewById(R.id.specTextView);
         mProductPriceTextView = findViewById(R.id.priceTextView);
@@ -423,10 +440,12 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mProductDetailsPresenter.getProductDetails(productId);
         mProductDetailsPresenter.getSimilarSKUList(productSkuId);
         mProductDetailsPresenter.getPurCartData();
+//        mProductDetailsPresenter.getSkuMarket(productSkuId);
         mBackImageView.setOnClickListener(this);
         mToQuotationImageView.setOnClickListener(this);
         mUseStateTextView.setOnClickListener(this);
         mSelectedLayout.setOnClickListener(this);
+        mMarketLayout.setOnClickListener(this);
         mProductPriceTextView.setOnClickListener(this);
 
         mLookDesignTextView.setOnClickListener(this);
@@ -543,6 +562,19 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (id == R.id.joinQuotationTextView) {
             mProductDetailsPresenter.addQuotation(productSkuId);
         }
+
+        // 调整货源
+        if (id == R.id.marketLayout) {
+            Intent intent = new Intent(ProductDetailsActivity.this, MarketActivity.class);
+            intent.putExtra(PRODUCT_SKU_ID, productSkuId);
+            intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean) {
+
     }
 
     /**
@@ -578,6 +610,10 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         DataBean data = productDetails.getData();
         if (null == data) {
             return;
+        }
+
+        if (productDetails.getData().getSource() != null) {
+            mMarketSpecTextView.setText(productDetails.getData().getSource().getDelivery());
         }
 
         if (!TextUtils.isEmpty(productDetails.getData().getContent())) {
@@ -782,15 +818,12 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         int useState = skuList.getUsestate();
         if (1 == useState) {
             // 使用
-            mUseStateTextView.setText(getResources().getString(R.string.use));
-            mUseStateTextView.setVisibility(View.GONE);
+            mUseStateTextView.setText("喜欢");
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_button_unpressed));
         } else {
             // 不使用
-            mUseStateTextView.setVisibility(View.GONE);
-            mUseStateTextView.setText(getResources().getString(R.string.unused));
-            mUseStateTextView.setVisibility(View.GONE);
+            mUseStateTextView.setText("喜欢");
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, R.color.prompt_low_text_color));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_image_view));
         }

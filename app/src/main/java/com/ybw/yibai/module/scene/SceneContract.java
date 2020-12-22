@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.scene;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.view.View;
 
@@ -113,6 +114,9 @@ public interface SceneContract {
         void onGetDesignSchemeSuccess(DesignScheme designScheme);
 
         void updateSceneData();
+
+        void insufficientPermissions();
+
     }
 
     interface ScenePresenter extends BasePresenter<SceneView> {
@@ -407,5 +411,10 @@ public interface SceneContract {
          * @param designScheme 设计详情
          */
         void onGetAddDesignSchemeSuccess(DesignScheme designScheme);
+
+        /**
+         * 权限不足
+         * */
+        void insufficientPermissions();
     }
 }

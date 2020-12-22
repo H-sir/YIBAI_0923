@@ -22,6 +22,7 @@ import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean;
 import com.ybw.yibai.common.bean.ProductDetails.DataBean.SpecBean.SonBean;
 import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.bean.SimilarSKU;
+import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -469,6 +470,16 @@ public class ProductDetailsPresenterImpl extends BasePresenterImpl<ProductDetail
     @Override
     public void onGetPurCartDataSuccess(PurCartBean purCartBean) {
         mBonsaiDetailsView.onGetPurCartDataSuccess(purCartBean);
+    }
+
+    @Override
+    public void getSkuMarket(int productSkuId) {
+        mBonsaiDetailsModel.getSkuMarket(productSkuId,this);
+    }
+
+    @Override
+    public void onGetSkuMarketSuccess(SkuMarketBean skuMarketBean) {
+        mBonsaiDetailsView.onGetSkuMarketSuccess(skuMarketBean);
     }
 
     @Override

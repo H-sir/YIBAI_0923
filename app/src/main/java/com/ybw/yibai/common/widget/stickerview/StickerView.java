@@ -2,6 +2,7 @@ package com.ybw.yibai.common.widget.stickerview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,6 +15,8 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.IntDef;
@@ -42,6 +45,8 @@ import com.ybw.yibai.common.widget.stickerview.event.StickerViewEvent;
 import com.ybw.yibai.common.widget.stickerview.event.StickerViewSelectedListener;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -472,7 +477,7 @@ public class StickerView extends FrameLayout {
 //        mPottedHeightRectF.bottom = y1 - iconWidth / 2;
 
         // 绘制盆栽高度背景
-        mPottedHeightRectF.left = x2-50;
+        mPottedHeightRectF.left = x2 - 50;
         mPottedHeightRectF.right = x2 + 150;
         mPottedHeightRectF.top = ((y4 - y2) / 2 + y2) - 50;
         mPottedHeightRectF.bottom = ((y4 - y2) / 2 + y2) + 50;
@@ -1354,7 +1359,7 @@ public class StickerView extends FrameLayout {
         String pathName = SDCardHelperUtil.getSDCardPrivateFilesDir(YiBaiApplication.getContext(), DIRECTORY_PICTURES) + "/" + name + ".jpg";
         File file = new File(pathName);
         try {
-            File saveImageFile = StickerUtils.saveImage(file, createBitmap());
+            File saveImageFile = StickerUtils.saveImage(mContext,file, createBitmap());
             return saveImageFile.getAbsolutePath();
         } catch (IllegalArgumentException | IllegalStateException ignored) {
             ignored.fillInStackTrace();
@@ -1367,12 +1372,12 @@ public class StickerView extends FrameLayout {
      *
      * @param name 贴纸保存后的路径名称
      */
-    public String saveSticker(View v,View bg,@NonNull String name) {
+    public String saveSticker(View v, View bg, @NonNull String name) {
         String pathName = SDCardHelperUtil.getSDCardPrivateFilesDir(YiBaiApplication.getContext(), DIRECTORY_PICTURES) + "/" + name + ".jpg";
         File file = new File(pathName);
         try {
-            Bitmap bitmap = viewConversionBitmap(bg,v);
-            File saveImageFile = StickerUtils.saveImage(file, bitmap);
+            Bitmap bitmap = viewConversionBitmap(bg, v);
+            File saveImageFile = StickerUtils.saveImage(mContext,file, bitmap);
             return saveImageFile.getAbsolutePath();
         } catch (IllegalArgumentException | IllegalStateException ignored) {
             ignored.fillInStackTrace();
@@ -1383,7 +1388,7 @@ public class StickerView extends FrameLayout {
     /**
      * view转bitmap
      */
-    public Bitmap viewConversionBitmap(View bg,View v) {
+    public Bitmap viewConversionBitmap(View bg, View v) {
         int w = v.getWidth();
         int h = v.getHeight();
 
@@ -1391,7 +1396,7 @@ public class StickerView extends FrameLayout {
         Canvas c = new Canvas(bmp);
         Bitmap bitmap = loadBitmapFromView(bg);
 
-        c.drawBitmap(bitmap,0,0,null);
+        c.drawBitmap(bitmap, 0, 0, null);
 
         v.layout(0, 0, w, h);
         v.draw(c);
@@ -1419,7 +1424,7 @@ public class StickerView extends FrameLayout {
      */
     public void saveSticker(@NonNull File file) {
         try {
-            StickerUtils.saveImage(file, createBitmap());
+            StickerUtils.saveImage(mContext,file, createBitmap());
         } catch (IllegalArgumentException | IllegalStateException ignored) {
             ignored.fillInStackTrace();
         }

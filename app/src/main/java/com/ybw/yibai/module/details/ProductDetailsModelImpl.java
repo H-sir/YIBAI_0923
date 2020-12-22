@@ -13,6 +13,7 @@ import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimilarSKU;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -44,6 +45,7 @@ import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SIMILAR_SUK_LIST_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_SKU_MARKET_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UPDATE_SKU_USE_STATE_METHOD;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
 
@@ -126,6 +128,44 @@ public class ProductDetailsModelImpl implements ProductDetailsModel {
                     callBack.onGetPurCartDataSuccess(purCartBean);
                 } else {
                     callBack.onRequestFailure(new Throwable(purCartBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getSkuMarket(int productSkuId, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<SkuMarketBean> observable = mApiService.getSkuMarket(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_SKU_MARKET_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId);
+        Observer<SkuMarketBean> observer = new Observer<SkuMarketBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(SkuMarketBean skuMarketBean) {
+                if (skuMarketBean.getCode() == 200) {
+                    callBack.onGetSkuMarketSuccess(skuMarketBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(skuMarketBean.getMsg()));
                 }
             }
 

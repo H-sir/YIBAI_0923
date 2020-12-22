@@ -2,6 +2,7 @@ package com.ybw.yibai.module.user;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.YiBaiApplication;
+import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.DesignCreate;
 import com.ybw.yibai.common.bean.DesignScheme;
 import com.ybw.yibai.common.bean.SceneInfo;
@@ -23,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ybw.yibai.common.constants.HttpUrls.CHECK_SHARE_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.CREATE_DESIGN_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.DESIGN_SCHEME_METHOD;
 
@@ -120,21 +122,28 @@ public class UserModelImpl implements UserContract.UserModel {
             @Override
             public void onNext(DesignScheme designScheme) {
                 try {
-                    // 没有场景/正在编辑的场景,新建场景
-                    SceneInfo sceneInfo = new SceneInfo();
-                    sceneInfo.setUid(YiBaiApplication.getUid());
-                    sceneInfo.setNumber(designNumber);
-                    sceneInfo.setSceneId(TimeUtil.getNanoTime());
-                    sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
-                    sceneInfo.setSceneName(schemeName);
-                    sceneInfo.setEditScene(true);
-                    // 保存场景信息
-                    manager.save(sceneInfo);
-                    // 重新查找
-                    List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
-                            .where("uid", "=", YiBaiApplication.getUid())
-                            .findAll();
-                    callBack.onFindUserUserInfoSuccess(sceneInfoList);
+                    if (designScheme.getCode() == 200) {
+                        // 没有场景/正在编辑的场景,新建场景
+                        SceneInfo sceneInfo = new SceneInfo();
+                        sceneInfo.setUid(YiBaiApplication.getUid());
+                        sceneInfo.setNumber(designNumber);
+                        sceneInfo.setSceneId(TimeUtil.getNanoTime());
+                        sceneInfo.setScheme_id(designScheme.getData().getSchemeId());
+                        sceneInfo.setSceneName(schemeName);
+                        sceneInfo.setEditScene(true);
+                        // 保存场景信息
+                        manager.save(sceneInfo);
+                        // 重新查找
+                        List<SceneInfo> sceneInfoList = manager.selector(SceneInfo.class)
+                                .where("uid", "=", YiBaiApplication.getUid())
+                                .findAll();
+                        callBack.onFindUserUserInfoSuccess(sceneInfoList);
+                    } else if (designScheme.getCode() == 201) {
+                        callBack.insufficientPermissions();
+                    } else {
+                        callBack.onRequestFailure(new Throwable(designScheme.getMsg()));
+                    }
+
                 } catch (DbException e) {
                     e.printStackTrace();
                 }
@@ -177,7 +186,7 @@ public class UserModelImpl implements UserContract.UserModel {
             if (null == manager) {
                 return;
             }
-            manager.update(sceneInfoList, "editScene","count");
+            manager.update(sceneInfoList, "editScene", "count");
             callBack.onUpdateUserSceneListSuccess();
         } catch (DbException e) {
             e.printStackTrace();
@@ -191,10 +200,51 @@ public class UserModelImpl implements UserContract.UserModel {
             if (null == manager) {
                 return;
             }
-            manager.update(sceneInfo, "editScene","count");
+            manager.update(sceneInfo, "editScene", "count");
             callBack.onUpdateUserSceneListSuccess();
         } catch (DbException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public void checkShare(UserContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        int uid = YiBaiApplication.getUid();
+        Observable<CheckShareBean> observable = mApiService.checkShare(timeStamp,
+                OtherUtil.getSign(timeStamp, CHECK_SHARE_METHOD),
+                uid);
+        Observer<CheckShareBean> observer = new Observer<CheckShareBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(CheckShareBean checkShareBean) {
+                if (checkShareBean.getCode() == 200) {
+                    callBack.checkShareData(checkShareBean);
+                } else if (checkShareBean.getCode() == 201) {
+                    callBack.insufficientPermissions();
+                } else {
+                    callBack.onRequestFailure(new Throwable(checkShareBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 }

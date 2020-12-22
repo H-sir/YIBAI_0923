@@ -1,13 +1,21 @@
 package com.ybw.yibai.common.widget.stickerview.event;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+
+import com.ybw.yibai.R;
+import com.ybw.yibai.common.utils.FileUtil;
+import com.ybw.yibai.common.utils.MessageUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.ybw.yibai.common.constants.Folder.PICTURES_PATH;
 import static java.lang.Math.round;
 
 /**
@@ -32,12 +40,22 @@ public class StickerUtils {
         rectF.sort();
     }
 
-    public static File saveImage(@NonNull File file, @NonNull Bitmap bmp) {
+    public static File saveImage(Context context, @NonNull File file, @NonNull Bitmap bmp) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
+
+            String path = FileUtil.createExternalStorageFile(PICTURES_PATH);
+            try {
+                FileUtil.copyFile(file.getPath(), path + file.getName());
+                //保存图片后发送广播通知更新数据库
+                Uri uri = Uri.fromFile(file);
+                context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

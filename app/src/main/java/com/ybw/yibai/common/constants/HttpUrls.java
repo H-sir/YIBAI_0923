@@ -325,6 +325,10 @@ public class HttpUrls {
      * 创建设计的方法
      */
     public static final String DESIGN_SCHEME_METHOD = "mybw.designscheme";
+    /**
+     * 查询设计的分享的权限方法
+     */
+    public static final String CHECK_SHARE_METHOD = "mybw.checkshare";
 
     /**
      * 微信绑定的方法
@@ -602,6 +606,10 @@ public class HttpUrls {
      * 创建场景或场景添加图片产品
      */
     public static final String DESIGN_SCHEME_URL = "?method=" + DESIGN_SCHEME_METHOD;
+    /**
+     * 查询设计分享的权限
+     */
+    public static final String CHECK_SHARE_URL = "?method=" + CHECK_SHARE_METHOD;
 
     /**
      * 获取设计列表的方法

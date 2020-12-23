@@ -1173,6 +1173,18 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (mComType != null && mComType.equals("1")) {
             mBonsaiInfoTextView.setVisibility(View.GONE);
         }
+
+        switch (SceneHelper.getSceneProductTime(getActivity())) {
+            case -1:
+                mSkuMarketTextView.setText("缺货");
+                break;
+            case 0:
+                mSkuMarketTextView.setText("现货");
+                break;
+            default:
+                mSkuMarketTextView.setText(String.valueOf(SceneHelper.getSceneProductTime(getActivity())));
+                break;
+        }
     }
 
     private String SpecId = "";
@@ -3167,11 +3179,14 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
         if (listBean.getSource().getDelivery_day() == null || listBean.getSource().getDelivery_day().isEmpty()) {
             mSkuMarketTextView.setText("缺货");
+            SceneHelper.saveSceneProductTime(getActivity(), -1);
         } else {
             if (listBean.getSource().getDelivery_day().equals("0")) {
                 mSkuMarketTextView.setText("现货");
+                SceneHelper.saveSceneProductTime(getActivity(), 0);
             } else {
                 mSkuMarketTextView.setText(listBean.getSource().getDelivery_day());
+                SceneHelper.saveSceneProductTime(getActivity(), Integer.parseInt(listBean.getSource().getDelivery_day()));
             }
         }
     }
@@ -3202,18 +3217,23 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         augmentedCombinationType = listBean.getComtype();
         augmentedPriceCode = listBean.getPrice_code();
         augmentedTradePriceCode = listBean.getTrade_price_code();
-        augmentedProductMarket = listBean.getSource().getDelivery();
+        if (listBean.getSource() != null && listBean.getSource().getDelivery() != null)
+            augmentedProductMarket = listBean.getSource().getDelivery();
 
         if (listBean.getSource().getDelivery_day() == null || listBean.getSource().getDelivery_day().isEmpty()) {
             mSkuMarketTextView.setText("缺货");
+            SceneHelper.saveSceneProductTime(getActivity(), -1);
         } else {
             if (listBean.getSource().getDelivery_day().equals("0")) {
                 mSkuMarketTextView.setText("现货");
+                SceneHelper.saveSceneProductTime(getActivity(), 0);
             } else {
                 mSkuMarketTextView.setText(listBean.getSource().getDelivery_day());
+                SceneHelper.saveSceneProductTime(getActivity(), Integer.parseInt(listBean.getSource().getDelivery_day()));
             }
         }
     }
+
     private String augmentedProductMarket = "";
     private String productMarket = "";
 

@@ -52,6 +52,22 @@ public class SceneHelper {
     private static final String Key_SceneNum = "SceneNum";
     private static int mSceneNum = 1;
 
+    /**
+     * 天数
+     */
+    private static final String Key_SceneProductTime = "SceneProductTime";
+    private static int mSceneProductTime = -1;
+
+    public static int getSceneProductTime(Context context) {
+        mSceneProductTime = readSceneProductTime(context);
+        return mSceneProductTime;
+    }
+
+    private static int readSceneProductTime(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        return pref.getInt(Key_SceneProductTime, -1);
+    }
+
     public static int getSceneNum(Context context) {
         mSceneNum = readSceneNum(context);
         return mSceneNum;
@@ -174,5 +190,16 @@ public class SceneHelper {
         String sceneName = "位置" + getSceneNum(context);
         saveSceneNum(context, getSceneNum(context) + 1);
         return sceneName;
+    }
+
+    private static synchronized boolean saveSceneProductTimeInfo(Context context, int mSceneProductTime) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putInt(Key_SceneProductTime, mSceneProductTime);
+        return edit.commit();
+    }
+
+    public static void saveSceneProductTime(Context context, int mSceneProductTime) {
+        saveSceneProductTimeInfo(context, mSceneProductTime);
     }
 }

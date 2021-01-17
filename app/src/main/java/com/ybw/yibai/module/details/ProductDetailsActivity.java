@@ -818,12 +818,12 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         int useState = skuList.getUsestate();
         if (1 == useState) {
             // 使用
-            mUseStateTextView.setText("喜欢");
+            mUseStateTextView.setText("收藏");
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, android.R.color.white));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_button_unpressed));
         } else {
             // 不使用
-            mUseStateTextView.setText("喜欢");
+            mUseStateTextView.setText("收藏");
             mUseStateTextView.setTextColor(ContextCompat.getColor(this, R.color.prompt_low_text_color));
             mUseStateTextView.setBackground(getDrawable(R.drawable.background_image_view));
         }

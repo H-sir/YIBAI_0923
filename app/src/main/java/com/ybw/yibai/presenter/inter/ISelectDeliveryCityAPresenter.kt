@@ -6,4 +6,5 @@ interface ISelectDeliveryCityAPresenter{
     fun onGetCurrentCity(loc:Location)
     fun onGetAllCities(phone:String)
     fun onSetCity(code:String)
+    fun onSetProduct(conOpen:Int)
 }

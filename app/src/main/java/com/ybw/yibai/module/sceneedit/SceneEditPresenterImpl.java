@@ -423,6 +423,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         mSceneEditView.onGetRecommendSuccess(recommend);
         if (CODE_SUCCEED != recommend.getCode()) {
             MessageUtil.showMessage(recommend.getMsg());
+            mSceneEditView.onHideLoading();
             return;
         }
         Recommend.DataBean data = recommend.getData();

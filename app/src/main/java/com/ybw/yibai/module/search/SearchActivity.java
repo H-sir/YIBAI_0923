@@ -1,27 +1,36 @@
 package com.ybw.yibai.module.search;
 
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.flexbox.FlexboxLayout;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
+import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.adapter.ProductAdapter;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.SKUList;
 import com.ybw.yibai.common.bean.SKUList.DataBean;
 import com.ybw.yibai.common.bean.SearchRecord;
+import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
@@ -34,6 +43,7 @@ import com.ybw.yibai.module.search.SearchContract.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_ID;
@@ -54,6 +64,13 @@ public class SearchActivity extends BaseActivity implements SearchView,
      * 搜索内容
      */
     private EditText mEditText;
+
+    /**
+     * 搜索分类
+     */
+    private TextView mSpnnerText;
+
+    private ImageView mSpnnerImg;
 
     /**
      * 取消搜索
@@ -116,13 +133,19 @@ public class SearchActivity extends BaseActivity implements SearchView,
      */
     private SearchPresenter mSearchPresenter;
 
+    private List<String> mSearchSpinnerList = new ArrayList<>();
+    private ArrayAdapter<String> adapter;
+
     @Override
     protected int setLayout() {
         return R.layout.activity_search;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void initView() {
+        mSpnnerText = findViewById(R.id.spnnerText);
+        mSpnnerImg = findViewById(R.id.spnnerImg);
         mEditText = findViewById(R.id.editText);
         mCancelTextView = findViewById(R.id.cancelTextView);
         mRecentSearchLayout = findViewById(R.id.recentSearchLayout);
@@ -144,12 +167,20 @@ public class SearchActivity extends BaseActivity implements SearchView,
         OtherUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initData() {
         mSKUList = new ArrayList<>();
         mAdapter = new ProductAdapter(this, mSKUList);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
+
+        SystemParameter systemParameter = YiBaiApplication.getSystemParameter();
+        List<SystemParameter.DataBean.SearchcateBean> searchcate = systemParameter.getData().getSearchcate();
+        if (searchcate != null && searchcate.size() > 0) {
+            List<String> collect = searchcate.stream().map(SystemParameter.DataBean.SearchcateBean::getName).collect(Collectors.toList());
+            mSearchSpinnerList.addAll(collect);
+        }
     }
 
     @Override

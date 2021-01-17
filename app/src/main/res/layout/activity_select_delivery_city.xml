@@ -2,30 +2,93 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:orientation="vertical"
     tools:context=".view.activity.SelectDeliveryCityActivity">
 
-    <include layout="@layout/partial_base_title"/>
+    <include layout="@layout/partial_base_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="10dp"
+            android:paddingLeft="15dp"
+            android:text="产品模式" />
+
+        <LinearLayout
+            android:id="@+id/productAllSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingLeft="15dp">
+
+            <ImageView
+                android:id="@+id/productAllSelectImg"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/selected_img" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="展示所有产品" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/productOneSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingVertical="10dp"
+            android:paddingLeft="15dp">
+
+            <ImageView
+                android:id="@+id/productOneSelectImg"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/selected_img" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:text="仅展示有供货的产品" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
     <TextView
-        android:background="@color/text_normal_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/text_normal_color"
         android:paddingVertical="10dp"
         android:paddingLeft="15dp"
-        android:text="定位城市"/>
+        android:text="定位城市" />
 
     <RelativeLayout
-        android:paddingVertical="20dp"
-        android:paddingHorizontal="15dp"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical">
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="15dp"
+        android:paddingVertical="20dp">
 
         <TextView
             android:id="@+id/current_location_text"
@@ -34,44 +97,44 @@
             android:background="@color/normal_color"
             android:paddingHorizontal="30dp"
             android:paddingVertical="15dp"
-            android:textColor="@color/black"
-            android:text="正在定位..."/>
+            android:text="正在定位..."
+            android:textColor="@color/black" />
 
         <TextView
             android:id="@+id/btnGetLocation"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginLeft="30dp"
             android:layout_toRightOf="@+id/current_location_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:gravity="center"
             android:padding="10dp"
-            android:textColor="#2196F3"
-            android:text="重新定位"/>
+            android:text="重新定位"
+            android:textColor="#2196F3" />
 
     </RelativeLayout>
 
     <TextView
-        android:visibility="gone"
         android:id="@+id/warn_text"
-        android:gravity="center"
-        android:textColor="@color/red"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="【当前城市未开放，敬请期待】"/>
+        android:gravity="center"
+        android:text="【当前城市未开放，敬请期待】"
+        android:textColor="@color/red"
+        android:visibility="gone" />
 
     <TextView
-        android:background="@color/text_normal_color"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/text_normal_color"
         android:paddingVertical="10dp"
         android:paddingLeft="15dp"
-        android:text="已开放城市"/>
+        android:text="已开放城市" />
 
     <com.jude.easyrecyclerview.EasyRecyclerView
-        android:paddingTop="15dp"
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:paddingTop="15dp" />
 
 </LinearLayout>

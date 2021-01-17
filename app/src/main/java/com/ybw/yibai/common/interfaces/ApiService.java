@@ -1704,6 +1704,23 @@ public interface ApiService {
      * @param timestamp 时间搓
      * @param sign      签名
      * @param uid       用户的ID
+     * @param com_open  全局货源筛选开关：1仅展示供货的2全部
+     * @return 修改用户基础信息时服务器端返回的数据
+     */
+    @Multipart
+    @POST(HttpUrls.EDIT_USER_INFO_URL)
+    Observable<EditUserInfo> editUserProductInfo(@Header("timestamp") String timestamp,
+                                          @Header("sign") String sign,
+                                          @Part("uid") int uid,
+                                          @Part("com_open") int com_open);
+
+
+    /**
+     * 修改用户基础信息
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
      * @param params    头像
      * @return 修改用户基础信息时服务器端返回的数据
      */

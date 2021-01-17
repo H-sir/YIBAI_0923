@@ -69,6 +69,16 @@ public class SystemParameter {
          */
         private List<SpectypeBean> spectype;
 
+        private List<SearchcateBean> searchcate;
+
+        public List<SearchcateBean> getSearchcate() {
+            return searchcate;
+        }
+
+        public void setSearchcate(List<SearchcateBean> searchcate) {
+            this.searchcate = searchcate;
+        }
+
         public List<String> getScene() {
             return scene;
         }
@@ -270,6 +280,28 @@ public class SystemParameter {
         }
 
         public static class SpectypeBean {
+
+            private int id;
+            private String name;
+
+            public int getId() {
+                return id;
+            }
+
+            public void setId(int id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+        }
+
+        public static class SearchcateBean {
 
             private int id;
             private String name;

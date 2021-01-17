@@ -21,10 +21,10 @@ import kotlinx.android.synthetic.main.activity_select_delivery_city.*
 import kotlinx.android.synthetic.main.partial_base_title.*
 
 
-class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(),
+public class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(),
         ISelectDeliveryCityAView {
 
-    private var cityCode:String? = ""
+    private var cityCode: String? = ""
 
     private lateinit var mAdapter: SDCityAdapter
 
@@ -38,17 +38,18 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
 
     override fun onBindCtrlInstance() {
         super.onBindCtrlInstance()
-        backImageView.setOnClickListener{
+        backImageView.setOnClickListener {
             finish()
         }
         btnGetLocation.setOnClickListener {
             askCompactPermissions(arrayOf(
                     PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
                     PermissionUtils.Manifest_ACCESS_FINE_LOCATION
-            ),object: PermissionResult {
+            ), object : PermissionResult {
                 override fun permissionDenied() {
                     onShowToastShort("拒绝此权限将无法使用定位功能！")
                 }
+
                 override fun permissionForeverDenied() {
                     onShowToastShort("请先打开定位全县才能使用此功能！")
                     val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -56,6 +57,7 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
                     intent.data = uri
                     startActivity(intent)
                 }
+
                 override fun permissionGranted() {
                     val loc = LocUtil.getLastKnownLocation(onGetContext())
                     presenter?.onGetCurrentCity(loc)
@@ -64,28 +66,39 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
         }
         current_location_text.setOnClickListener {
             val code = it.tag as String
-            if(mAdapter.allData.find{ it.Code == code } != null){
+            if (mAdapter.allData.find { it.Code == code } != null) {
                 warn_text.visibility = View.GONE
                 presenter?.onSetCity(code)
-            }else{
+            } else {
                 warn_text.visibility = View.VISIBLE
             }
+        }
+        productAllSelect.setOnClickListener {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_select)
+            productOneSelectImg.setImageResource(R.mipmap.purcart_no_select)
+            presenter?.onSetProduct(2)
+        }
+
+        productOneSelect.setOnClickListener {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_no_select)
+            productOneSelectImg.setImageResource(R.mipmap.purcart_select)
+            presenter?.onSetProduct(1)
         }
     }
 
     override fun onFinish() {
-        if(cityCode?.isNotEmpty() == true){
+        if (cityCode?.isNotEmpty() == true) {
             val intent = Intent()
-            intent.putExtra("city_code",cityCode)
-            setResult(1,intent)
+            intent.putExtra("city_code", cityCode)
+            setResult(1, intent)
         }
         super.onFinish()
     }
 
     override fun onInit(savedInstanceState: Bundle?) {
         titleTextView.text = "选择配送城市"
-        val curCity = SPUtil.getValue(onGetContext(),"cur_city",String::class.java)
-        current_location_text.text = if(curCity.isNullOrBlank())"正在定位..." else curCity
+        val curCity = SPUtil.getValue(onGetContext(), "cur_city", String::class.java)
+        current_location_text.text = if (curCity.isNullOrBlank()) "正在定位..." else curCity
         mAdapter = SDCityAdapter(onGetContext())
         mAdapter.setOnItemClickListener {
             val item = mAdapter.allData[it]
@@ -94,15 +107,16 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
         recyclerView.adapter = mAdapter
         recyclerView.setLayoutManager(GridLayoutManager(this, 3))
 
-        val telephone = SPUtil.getShared(onGetContext(),USER_INFO).getString("telephone","")
+        val telephone = SPUtil.getShared(onGetContext(), USER_INFO).getString("telephone", "")
 
         askCompactPermissions(arrayOf(
                 PermissionUtils.Manifest_ACCESS_COARSE_LOCATION,
                 PermissionUtils.Manifest_ACCESS_FINE_LOCATION
-        ),object:PermissionResult{
+        ), object : PermissionResult {
             override fun permissionDenied() {
                 onShowToastShort("拒绝此权限将无法使用定位功能！")
             }
+
             override fun permissionForeverDenied() {
                 onShowToastShort("请先打开定位全县才能使用此功能！")
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
@@ -110,9 +124,11 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
                 intent.data = uri
                 startActivity(intent)
             }
+
             override fun permissionGranted() {
                 val loc = LocUtil.getLastKnownLocation(onGetContext())
-                presenter?.onGetCurrentCity(loc)
+                if (loc != null)
+                    presenter?.onGetCurrentCity(loc)
             }
         })
 
@@ -122,7 +138,7 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
     override fun onGetCurCityCallback(city: String, code: String) {
         current_location_text.text = city
         current_location_text.tag = code
-        SPUtil.putValue(onGetContext(),"cur_city",city)
+        SPUtil.putValue(onGetContext(), "cur_city", city)
         //onShowToastShort("定位成功,当前城市为$city")
     }
 
@@ -133,5 +149,9 @@ class SelectDeliveryCityActivity : BaseActivity<ISelectDeliveryCityAPresenter?>(
 
     override fun onSetCityCallback(city: String, code: String) {
         cityCode = code
+    }
+
+    override fun onSetProductCallback(cityName: String, code: Int) {
+        TODO("Not yet implemented")
     }
 }

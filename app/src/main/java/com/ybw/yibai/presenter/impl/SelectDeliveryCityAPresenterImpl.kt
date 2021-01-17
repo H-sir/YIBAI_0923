@@ -4,6 +4,7 @@ import android.location.Location
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.ybw.yibai.base.YiBaiApplication
+import com.ybw.yibai.common.bean.EditUserInfo
 import com.ybw.yibai.common.constants.HttpUrls
 import com.ybw.yibai.common.interfaces.ApiService
 import com.ybw.yibai.common.network.request.GetLocRequest
@@ -24,10 +25,11 @@ import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
 import org.xutils.common.util.KeyValue
 
-class SelectDeliveryCityAPresenterImpl(val view:ISelectDeliveryCityAView)
+class SelectDeliveryCityAPresenterImpl(val view: ISelectDeliveryCityAView)
     : ISelectDeliveryCityAPresenter {
 
     private val mApiService: ApiService
+
     init {
         val instance = RetrofitManagerUtil.getInstance()
         mApiService = instance.apiService
@@ -35,20 +37,20 @@ class SelectDeliveryCityAPresenterImpl(val view:ISelectDeliveryCityAView)
 
     override fun onGetCurrentCity(loc: Location) {
         val data = JSONObject()
-        data.put("uid",YiBaiApplication.getUid().toString())
-        data.put("longitude",loc.longitude.toString())
-        data.put("latitude",loc.latitude.toString())
+        data.put("uid", YiBaiApplication.getUid().toString())
+        data.put("longitude", loc.longitude.toString())
+        data.put("latitude", loc.latitude.toString())
         val timestamp = TimeUtil.getTimestamp().toString()
         val observable = mApiService.getLocation(
                 timestamp,
-                OtherUtil.getSign(timestamp,"mybw.getplace"),
+                OtherUtil.getSign(timestamp, "mybw.getplace"),
                 data.toString());
         val observer: Observer<BaseResponse<CurAddrResponse>> = object : Observer<BaseResponse<CurAddrResponse>> {
-            override fun onSubscribe(d: Disposable){}
-            override fun onError(e: Throwable){}
-            override fun onComplete(){}
+            override fun onSubscribe(d: Disposable) {}
+            override fun onError(e: Throwable) {}
+            override fun onComplete() {}
             override fun onNext(t: BaseResponse<CurAddrResponse>) {
-                view.onGetCurCityCallback(t.data?.cityname ?: "",t.data?.citycode ?: "")
+                view.onGetCurCityCallback(t.data?.cityname ?: "", t.data?.citycode ?: "")
             }
         }
         observable
@@ -61,18 +63,18 @@ class SelectDeliveryCityAPresenterImpl(val view:ISelectDeliveryCityAView)
         val timestamp = TimeUtil.getTimestamp().toString()
         val observable = mApiService.getAllCities(
                 timestamp,
-                OtherUtil.getSign(timestamp,"mybw.getcity"),
+                OtherUtil.getSign(timestamp, "mybw.getcity"),
                 YiBaiApplication.getUid().toString()
         );
         val observer: Observer<BaseResponse<HotCityResponse>> = object : Observer<BaseResponse<HotCityResponse>> {
-            override fun onSubscribe(d: Disposable){}
-            override fun onError(e: Throwable){}
-            override fun onComplete(){}
+            override fun onSubscribe(d: Disposable) {}
+            override fun onError(e: Throwable) {}
+            override fun onComplete() {}
             override fun onNext(t: BaseResponse<HotCityResponse>) {
                 t.data?.let {
                     view.onGetCitiesCallback(it)
                 }
-                if(t.code != 200)view.onShowToastShort(t.msg)
+                if (t.code != 200) view.onShowToastShort(t.msg)
             }
         }
         observable
@@ -85,22 +87,48 @@ class SelectDeliveryCityAPresenterImpl(val view:ISelectDeliveryCityAView)
         val timestamp = TimeUtil.getTimestamp().toString()
         val observable = mApiService.setCity(
                 timestamp,
-                OtherUtil.getSign(timestamp,"mybw.setuserposition"),
+                OtherUtil.getSign(timestamp, "mybw.setuserposition"),
                 YiBaiApplication.getUid().toString(),
                 code
         );
         val observer: Observer<BaseResponse<Any>> = object : Observer<BaseResponse<Any>> {
-            override fun onSubscribe(d: Disposable){}
-            override fun onError(e: Throwable){}
-            override fun onComplete(){}
+            override fun onSubscribe(d: Disposable) {}
+            override fun onError(e: Throwable) {}
+            override fun onComplete() {}
             override fun onNext(t: BaseResponse<Any>) {
-                if(t.code != 200){
+                if (t.code != 200) {
                     view.onShowToastShort(t.msg)
-                }
-                else{
+                } else {
                     val obj = JSONObject(t.data.toString())
-                    view.onSetCityCallback(obj.optString("city_name"),code)
+                    view.onSetCityCallback(obj.optString("city_name"), code)
                     view.onShowToastShort("设置成功!")
+                    view.onFinish()
+                }
+            }
+        }
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer)
+    }
+
+    override fun onSetProduct(conOpen: Int) {
+        val timestamp = TimeUtil.getTimestamp().toString()
+        val observable = mApiService.editUserProductInfo(
+                timestamp,
+                OtherUtil.getSign(timestamp, "mybw.edituser"),
+                YiBaiApplication.getUid(),
+                conOpen
+        );
+        val observer: Observer<EditUserInfo> = object : Observer<EditUserInfo> {
+            override fun onSubscribe(d: Disposable) {}
+            override fun onError(e: Throwable) {}
+            override fun onComplete() {}
+            override fun onNext(t: EditUserInfo) {
+                if (t.code != 200) {
+                    view.onShowToastShort(t.msg)
+                } else {
+                    view.onShowToastShort(t.msg)
                     view.onFinish()
                 }
             }

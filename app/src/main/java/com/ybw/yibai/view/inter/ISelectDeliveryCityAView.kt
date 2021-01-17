@@ -7,4 +7,5 @@ interface ISelectDeliveryCityAView : IBaseView{
     fun onGetCurCityCallback(city:String,code:String)
     fun onGetCitiesCallback(cities: HotCityResponse)
     fun onSetCityCallback(cityName:String,code:String)
+    fun onSetProductCallback(cityName:String,code:Int)
 }

@@ -143,27 +143,6 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginBottom="5dp"
-        android:gravity="center_vertical"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:text="产品详情"
-        android:textColor="@color/prompt_high_text_color"
-        android:textSize="14sp" />
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/line_color" />
-
-    <TextView
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:paddingStart="16dp"
@@ -180,6 +159,28 @@
         android:layout_marginTop="10dp"
         android:paddingStart="16dp"
         android:paddingEnd="16dp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/line_color" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="产品详情"
+        android:textColor="@color/prompt_high_text_color"
+        android:textSize="14sp" />
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <!--<View
         android:layout_width="match_parent"

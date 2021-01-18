@@ -3332,7 +3332,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
              * 发送数据到{@link SceneActivity#barViewSelected(BarViewSelected)}
              */
             EventBus.getDefault().postSticky(new BarViewSelected(true));
-            if (!addSpec)
+//            if (!addSpec)
                 hideToolsIsHidden();
             addSpec = false;
 

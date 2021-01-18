@@ -414,4 +414,8 @@ public class Preferences {
      * 租摆订单的订单号
      */
     public static final String ORDER_NUMBER = "orderNumber";
+    /**
+     * 全局货源筛选开关
+     */
+    public static final String COM_OPEN = "com_open";
 }

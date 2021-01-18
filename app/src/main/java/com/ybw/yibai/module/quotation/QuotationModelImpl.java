@@ -14,6 +14,7 @@ import com.ybw.yibai.common.bean.UpdateQuotationPrice;
 import com.ybw.yibai.common.bean.VerifyPassword;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.interfaces.ApiService;
+import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
@@ -424,7 +425,12 @@ public class QuotationModelImpl implements QuotationModel {
                 if (createQuotationOrder.getCode() == 200) {
                     callBack.onCreateQuotationOrderSuccess(createQuotationOrder);
                 } else if (createQuotationOrder.getCode() == 201) {
-                    callBack.insufficientPermissions();
+                    if (createQuotationOrder.getMsg().contains("请先选产品")) {
+                        MessageUtil.showMessage(createQuotationOrder.getMsg());
+                        callBack.onRequestFailure(new Throwable(createQuotationOrder.getMsg()));
+                    } else {
+                        callBack.insufficientPermissions();
+                    }
                 } else {
                     callBack.onRequestFailure(new Throwable(createQuotationOrder.getMsg()));
                 }

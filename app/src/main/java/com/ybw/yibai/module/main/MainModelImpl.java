@@ -64,6 +64,7 @@ import static com.ybw.yibai.common.constants.Preferences.COMPANY;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY_DETAILS;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY_DETAILS_PIC;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY_LOGO;
+import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
 import static com.ybw.yibai.common.constants.Preferences.CURRENCY_SYMBOL;
 import static com.ybw.yibai.common.constants.Preferences.EMAIL;
 import static com.ybw.yibai.common.constants.Preferences.HEAD;
@@ -425,6 +426,10 @@ public class MainModelImpl implements MainModel {
         if (!TextUtils.isEmpty(cityName)) {
             edit.putString(CITY_NAME, cityName);
             SceneHelper.saveCity(context,cityName);
+        }
+        String com_open = data.getCom_open();
+        if(!TextUtils.isEmpty(com_open)){
+            edit.putString(COM_OPEN, com_open);
         }
         edit.apply();
     }

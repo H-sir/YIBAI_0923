@@ -1322,7 +1322,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
             EventBus.getDefault().post(new BaseResponse<String>(1, "", sceneName));
         }
         EventBus.getDefault().postSticky(new ViewPagerPosition(editScenePosition));
-        onHideLoading();
+//        onHideLoading();
     }
 
     /**

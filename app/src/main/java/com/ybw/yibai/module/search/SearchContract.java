@@ -46,7 +46,7 @@ public interface SearchContract {
          *
          * @param keyWord 关键词搜索
          */
-        void getSKUList(String keyWord);
+        void getSKUList(String keyWord, int searchcate);
 
         /**
          * 显示删除搜索记录的Dialog
@@ -69,7 +69,7 @@ public interface SearchContract {
          * @param keyWord  关键词搜索
          * @param callBack 回调方法
          */
-        void getSKUList(String keyWord, CallBack callBack);
+        void getSKUList(String keyWord, int searchcate, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

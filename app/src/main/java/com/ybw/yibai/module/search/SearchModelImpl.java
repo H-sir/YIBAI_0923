@@ -70,21 +70,39 @@ public class SearchModelImpl implements SearchModel {
      * @param callBack 回调方法
      */
     @Override
-    public void getSKUList(String keyWord, CallBack callBack) {
+    public void getSKUList(String keyWord, int searchcate, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<SKUList> observable = mApiService.getSKUList(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_SUK_LIST_METHOD),
-                YiBaiApplication.getUid(),
-                1,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                keyWord,
-                null,
-                null);
+        Observable<SKUList> observable;
+        if (searchcate == -1) {
+            observable = mApiService.getSKUList(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_SUK_LIST_METHOD),
+                    YiBaiApplication.getUid(),
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    keyWord,
+                    null,
+                    null);
+        } else {
+            observable = mApiService.getSKUList(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_SUK_LIST_METHOD),
+                    YiBaiApplication.getUid(),
+                    1,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    keyWord,
+                    searchcate,
+                    1);
+        }
+
         Observer<SKUList> observer = new Observer<SKUList>() {
             @Override
             public void onSubscribe(Disposable d) {

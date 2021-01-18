@@ -2175,7 +2175,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onGetSimulationDataSuccess(List<SimulationData> simulationDataList) {
-        hideColor(mRootView);
+//        hideColor(mRootView);
         // 移除上一次全部Sticker
         mStickerView.removeAllStickers();
         mSimulationDataList.clear();
@@ -3617,9 +3617,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (exists) break;
         }
         if (exists) {
-            showColor(mRootView);
+//            showColor(mRootView);
             addSpec = true;
-//            new Handler().postDelayed(() -> {
             mSceneEditPresenter.getNewRecommedByAddSpec(mSelectType);
 //                replaceCollocation(true);
             /**
@@ -3630,7 +3629,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 mSceneContainerTool.setVisibility(View.GONE);
             }
             mChangeStyleTextView.setVisibility(View.VISIBLE);
-//            }, 1000);
         }
     }
 
@@ -3820,10 +3818,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onShowLoading() {
-//        if (!mWaitDialog.isShowing()) {
-//            mWaitDialog.setWaitDialogText(getResources().getString(R.string.loading));
-//            mWaitDialog.show();
-//        }
+        if (!mWaitDialog.isShowing()) {
+            mWaitDialog.setWaitDialogText(getResources().getString(R.string.loading));
+            mWaitDialog.show();
+        }
     }
 
     /**

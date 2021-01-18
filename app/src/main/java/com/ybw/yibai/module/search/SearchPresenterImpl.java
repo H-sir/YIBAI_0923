@@ -56,8 +56,8 @@ public class SearchPresenterImpl extends BasePresenterImpl<SearchView> implement
      * @param keyWord 关键词搜索
      */
     @Override
-    public void getSKUList(String keyWord) {
-        mSearchModel.getSKUList(keyWord, this);
+    public void getSKUList(String keyWord,int searchcate) {
+        mSearchModel.getSKUList(keyWord, searchcate,this);
     }
 
     /**

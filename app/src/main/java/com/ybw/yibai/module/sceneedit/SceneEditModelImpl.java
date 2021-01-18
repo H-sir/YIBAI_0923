@@ -391,6 +391,8 @@ public class SceneEditModelImpl implements SceneEditModel {
                 if (recommend.getCode() == 200) {
                     recommend.getData().setSpecTypeId(specTypeId);
                     callBack.onGetRecommendByAddSpecSuccess(recommend);
+                } else if (recommend.getCode() == 201) {
+                    callBack.onGetRecommendByAddSpecSuccess(recommend);
                 } else callBack.onRequestFailure(new Throwable(recommend.getMsg()));
             }
 

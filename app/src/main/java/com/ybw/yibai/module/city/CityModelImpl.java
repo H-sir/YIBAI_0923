@@ -1,7 +1,12 @@
 package com.ybw.yibai.module.city;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.text.TextUtils;
+
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.interfaces.ApiService;
@@ -15,9 +20,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.ybw.yibai.common.constants.HttpUrls.EDIT_USER_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.SET_USER_POSITION_METHOD;
+import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
 /**
  * 首页界面Model实现类
@@ -108,7 +117,7 @@ public class CityModelImpl implements CityContract.CityModel {
     }
 
     @Override
-    public void getLocation(double latitude, double longitude,CityContract.CallBack callBack) {
+    public void getLocation(double latitude, double longitude, CityContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<PlaceBean> observable = mApiService.getPlace(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_CITY_PLACE_METHOD),
@@ -125,6 +134,49 @@ public class CityModelImpl implements CityContract.CityModel {
                     callBack.onGetLocationSuccess(placeBean);
                 } else {
                     callBack.onRequestFailure(new Throwable(placeBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void onSetProduct(int comOpen, CityContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<EditUserInfo> observable = mApiService.editUserProductInfo(timeStamp,
+                OtherUtil.getSign(timeStamp, EDIT_USER_INFO_METHOD),
+                YiBaiApplication.getUid(), comOpen);
+        Observer<EditUserInfo> observer = new Observer<EditUserInfo>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(EditUserInfo editUserInfo) {
+                if (editUserInfo.getCode() == 200) {
+                    Context context = YiBaiApplication.getContext();
+                    SharedPreferences sharedPreferences = context.getSharedPreferences(USER_INFO, MODE_PRIVATE);
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putString(COM_OPEN, String.valueOf(comOpen));
+                    edit.apply();
+
+                    callBack.onSetProductSuccess(editUserInfo);
+                } else {
+                    callBack.onRequestFailure(new Throwable(editUserInfo.getMsg()));
                 }
             }
 

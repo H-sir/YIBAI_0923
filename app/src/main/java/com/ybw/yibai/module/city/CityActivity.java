@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.city;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.common.adapter.CityListAdapter;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
@@ -25,13 +27,13 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
+import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.home.HomeFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,6 +41,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
+import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
 /**
  * <pre>
@@ -60,6 +64,8 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
     ImageView backImageView;
     @BindView(R.id.rootLayout)
     NestedScrollView rootLayout;
+    @BindView(R.id.productAllSelectImg) ImageView productAllSelectImg;
+    @BindView(R.id.productOneSelectImg) ImageView productOneSelectImg;
 
     private CityContract.CityPresenter mCityPresenter = null;
 
@@ -95,6 +101,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
      * 设置的信息
      */
     private String cityName = "";
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected int setLayout() {
@@ -108,6 +115,16 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
 
     @Override
     protected void initData() {
+        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        String cityName = mSharedPreferences.getString(COM_OPEN, "1");
+        if (cityName.equals("1")) {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_select);
+            productOneSelectImg.setImageResource(R.mipmap.purcart_no_select);
+        } else {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_no_select);
+            productOneSelectImg.setImageResource(R.mipmap.purcart_select);
+        }
+
         mWaitDialog = new WaitDialog(this);
 
         // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
@@ -289,7 +306,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         }
     }
 
-    @OnClick({R.id.backImageView, R.id.cityCurrent})
+    @OnClick({R.id.backImageView, R.id.cityCurrent, R.id.productAllSelect, R.id.productOneSelect})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.backImageView:
@@ -315,6 +332,27 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
                     onBackPressed();
                 }
                 break;
+            case R.id.productAllSelect:
+                mCityPresenter.onSetProduct(2);
+                break;
+            case R.id.productOneSelect:
+                mCityPresenter.onSetProduct(1);
+                break;
+        }
+    }
+
+    @Override
+    public void onSetProductSuccess(EditUserInfo editUserInfo) {
+        MessageUtil.showMessage(editUserInfo.getMsg());
+
+        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        String cityName = mSharedPreferences.getString(COM_OPEN, "1");
+        if (cityName.equals("1")) {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_no_select);
+            productOneSelectImg.setImageResource(R.mipmap.purcart_select);
+        } else {
+            productAllSelectImg.setImageResource(R.mipmap.purcart_select);
+            productOneSelectImg.setImageResource(R.mipmap.purcart_no_select);
         }
     }
 }

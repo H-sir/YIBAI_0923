@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.search;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
@@ -37,11 +38,13 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.spinner.SpinnerPopWindow;
 import com.ybw.yibai.module.details.ProductDetailsActivity;
 import com.ybw.yibai.module.search.SearchContract.SearchPresenter;
 import com.ybw.yibai.module.search.SearchContract.SearchView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,6 +63,7 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_NAME;
 public class SearchActivity extends BaseActivity implements SearchView,
         TextView.OnEditorActionListener, ProductAdapter.OnItemClickListener, View.OnClickListener {
 
+    private SearchActivity mSearchActivity = null;
     /**
      * 搜索内容
      */
@@ -69,8 +73,6 @@ public class SearchActivity extends BaseActivity implements SearchView,
      * 搜索分类
      */
     private TextView mSpnnerText;
-
-    private ImageView mSpnnerImg;
 
     /**
      * 取消搜索
@@ -134,10 +136,12 @@ public class SearchActivity extends BaseActivity implements SearchView,
     private SearchPresenter mSearchPresenter;
 
     private List<String> mSearchSpinnerList = new ArrayList<>();
-    private ArrayAdapter<String> adapter;
+    private SpinnerPopWindow<String> mSpinnerPopWindowType;
+
 
     @Override
     protected int setLayout() {
+        mSearchActivity = this;
         return R.layout.activity_search;
     }
 
@@ -145,7 +149,6 @@ public class SearchActivity extends BaseActivity implements SearchView,
     @Override
     protected void initView() {
         mSpnnerText = findViewById(R.id.spnnerText);
-        mSpnnerImg = findViewById(R.id.spnnerImg);
         mEditText = findViewById(R.id.editText);
         mCancelTextView = findViewById(R.id.cancelTextView);
         mRecentSearchLayout = findViewById(R.id.recentSearchLayout);
@@ -167,7 +170,6 @@ public class SearchActivity extends BaseActivity implements SearchView,
         OtherUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void initData() {
         mSKUList = new ArrayList<>();
@@ -178,9 +180,40 @@ public class SearchActivity extends BaseActivity implements SearchView,
         SystemParameter systemParameter = YiBaiApplication.getSystemParameter();
         List<SystemParameter.DataBean.SearchcateBean> searchcate = systemParameter.getData().getSearchcate();
         if (searchcate != null && searchcate.size() > 0) {
-            List<String> collect = searchcate.stream().map(SystemParameter.DataBean.SearchcateBean::getName).collect(Collectors.toList());
-            mSearchSpinnerList.addAll(collect);
+            for (Iterator<SystemParameter.DataBean.SearchcateBean> iterator = systemParameter.getData().getSearchcate().iterator(); iterator.hasNext(); ) {
+                SystemParameter.DataBean.SearchcateBean next = iterator.next();
+                mSearchSpinnerList.add(next.getName());
+            }
         }
+
+        mSpinnerPopWindowType = new SpinnerPopWindow<>(mSearchActivity, mSearchSpinnerList, new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mSpinnerPopWindowType.dismiss();
+                mSpnnerText.setText(mSearchSpinnerList.get(position));
+                search();
+            }
+        });
+        mSpnnerText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSpinnerPopWindowType.setWidth(mSpnnerText.getWidth());
+                mSpinnerPopWindowType.showAsDropDown(mSpnnerText);
+                setTextImage(R.mipmap.up, mSpnnerText);
+            }
+        });
+    }
+
+    /**
+     * 给TextView右边设置图片
+     *
+     * @param resId
+     * @param binding_anew_spinner
+     */
+    private void setTextImage(int resId, TextView binding_anew_spinner) {
+        Drawable drawable = getResources().getDrawable(resId);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());// 必须设置图片大小，否则不显示
+        binding_anew_spinner.setCompoundDrawables(null, null, drawable, null);
     }
 
     @Override
@@ -306,8 +339,22 @@ public class SearchActivity extends BaseActivity implements SearchView,
      * 搜索
      */
     private void search() {
+        SystemParameter systemParameter = YiBaiApplication.getSystemParameter();
+        List<SystemParameter.DataBean.SearchcateBean> searchcate = systemParameter.getData().getSearchcate();
+        int productId = -1;
+        if (searchcate != null && searchcate.size() > 0) {
+            String product = mSpnnerText.getText().toString();
+            for (Iterator<SystemParameter.DataBean.SearchcateBean> iterator = systemParameter.getData().getSearchcate().iterator(); iterator.hasNext(); ) {
+                SystemParameter.DataBean.SearchcateBean next = iterator.next();
+                if (product.equals(next.getName())) {
+                    productId = next.getId();
+                    break;
+                }
+            }
+        }
+
         String keyWord = mEditText.getText().toString().trim();
-        mSearchPresenter.getSKUList(keyWord);
+        mSearchPresenter.getSKUList(keyWord,productId);
     }
 
     /**

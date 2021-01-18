@@ -6,6 +6,7 @@ import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 
@@ -46,6 +47,8 @@ public interface CityContract {
         void onGetCitySuccess(CityListBean cityListBean);
 
         void onGetLocationSuccess(PlaceBean placeBean);
+
+        void onSetProductSuccess(EditUserInfo editUserInfo);
     }
 
     interface CityPresenter extends BasePresenter<CityView> {
@@ -82,6 +85,8 @@ public interface CityContract {
         void getCity();
 
         void getLocation(double latitude, double longitude);
+
+        void onSetProduct(int comOpen);
     }
 
     interface CityModel {
@@ -100,6 +105,8 @@ public interface CityContract {
         void getCity(CallBack callBack);
 
         void getLocation(double latitude, double longitude,CallBack callBack);
+
+        void onSetProduct(int comOpen,CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -116,5 +123,7 @@ public interface CityContract {
         void onGetCitySuccess(CityListBean cityListBean);
 
         void onGetLocationSuccess(PlaceBean placeBean);
+
+        void onSetProductSuccess(EditUserInfo editUserInfo);
     }
 }

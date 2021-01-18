@@ -45,6 +45,7 @@ import com.ybw.yibai.common.model.CreateDesignModel;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.model.ItemDesignSceneModel;
 import com.ybw.yibai.common.network.response.ResponsePage;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.FileUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
@@ -420,15 +421,13 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 
     @Override
     public void onGetRecommendByAddSpecSuccess(Recommend recommend) {
-        mSceneEditView.onGetRecommendSuccess(recommend);
         if (CODE_SUCCEED != recommend.getCode()) {
             MessageUtil.showMessage(recommend.getMsg());
-            mSceneEditView.onHideLoading();
             return;
         }
+        mSceneEditView.onGetRecommendSuccess(recommend);
         Recommend.DataBean data = recommend.getData();
         if (null == data) {
-            mSceneEditView.onHideLoading();
             MessageUtil.showMessage("无对应产品");
             return;
         }

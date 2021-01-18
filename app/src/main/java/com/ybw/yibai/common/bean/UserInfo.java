@@ -176,6 +176,19 @@ public class UserInfo {
          * 当前货源城市名称
          */
         private String city_name;
+        /**
+         * 全局货源筛选开关：1仅展示供货的2全部
+         */
+        private String com_open;
+
+
+        public String getCom_open() {
+            return com_open;
+        }
+
+        public void setCom_open(String com_open) {
+            this.com_open = com_open;
+        }
 
         public int getUid() {
             return uid;

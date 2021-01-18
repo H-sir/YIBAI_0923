@@ -9,6 +9,7 @@ import android.view.View;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.utils.LocationUtil;
@@ -157,5 +158,15 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
     @Override
     public void onGetLocationSuccess(PlaceBean placeBean) {
         mCityView.onGetLocationSuccess(placeBean);
+    }
+
+    @Override
+    public void onSetProduct(int comOpen) {
+        mCityModel.onSetProduct(comOpen,this);
+    }
+
+    @Override
+    public void onSetProductSuccess(EditUserInfo editUserInfo) {
+        mCityView.onSetProductSuccess(editUserInfo);
     }
 }

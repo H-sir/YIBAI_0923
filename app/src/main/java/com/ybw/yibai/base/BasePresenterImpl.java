@@ -1,6 +1,7 @@
 package com.ybw.yibai.base;
 
 import com.ybw.yibai.common.utils.LogUtil;
+import com.ybw.yibai.common.utils.MessageUtil;
 
 import java.lang.ref.WeakReference;
 

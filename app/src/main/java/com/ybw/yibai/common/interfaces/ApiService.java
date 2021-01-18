@@ -381,9 +381,9 @@ public interface ApiService {
     /**
      * 查询设计分享的权限
      *
-     * @param timestamp    时间搓
-     * @param sign         签名
-     * @param uid          用户的ID
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
      */
     @Multipart
     @POST(HttpUrls.CHECK_SHARE_URL)
@@ -711,6 +711,39 @@ public interface ApiService {
                                    @Query("keyword") String keyword,
                                    @Query("page") Integer page,
                                    @Query("pagesize") Integer pageSize);
+
+    /**
+     * 获取产品sku列表
+     *
+     * @param timestamp   时间搓
+     * @param sign        签名
+     * @param uid         用户的ID
+     * @param isAll       是否获取全部:1获取全部0分页(默认为0分页)
+     * @param cateCode    产品类别(产品筛选参数大类别名)默认获取植物
+     * @param useState    使用状态
+     * @param pcId        产品类别id(多个用逗号拼接)
+     * @param curDiameter 当前口径:搭配口径+边距*2的值
+     * @param diameter    搭配口径:格式同上
+     * @param height      搭配高度
+     * @param keyword     关键词搜索
+     * @return 获取产品sku列表时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_SUK_LIST_URL)
+    Observable<SKUList> getSKUList(@Header("timestamp") String timestamp,
+                                   @Header("sign") String sign,
+                                   @Query("uid") int uid,
+                                   @Query("isall") int isAll,
+                                   @Query("cate_code") String cateCode,
+                                   @Query("usestate") Integer useState,
+                                   @Query("pcid") String pcId,
+                                   @Query("curdiameter") Double curDiameter,
+                                   @Query("diameter") Double diameter,
+                                   @Query("height") String height,
+                                   @Query("keyword") String keyword,
+                                   @Query("page") Integer page,
+                                   @Query("pagesize") Integer pageSize,
+                                   @Query("searchcate") Integer searchcate,
+                                   @Query("searchmodel") Integer searchmodel);
 
     /**
      * 获取产品sku列表
@@ -1710,9 +1743,9 @@ public interface ApiService {
     @Multipart
     @POST(HttpUrls.EDIT_USER_INFO_URL)
     Observable<EditUserInfo> editUserProductInfo(@Header("timestamp") String timestamp,
-                                          @Header("sign") String sign,
-                                          @Part("uid") int uid,
-                                          @Part("com_open") int com_open);
+                                                 @Header("sign") String sign,
+                                                 @Part("uid") int uid,
+                                                 @Part("com_open") int com_open);
 
 
     /**

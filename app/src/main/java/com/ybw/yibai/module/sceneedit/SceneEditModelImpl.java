@@ -512,7 +512,7 @@ public class SceneEditModelImpl implements SceneEditModel {
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {
-                callBack.onRequestBefore(d);
+//                callBack.onRequestBefore(d);
             }
 
             @Override
@@ -1761,12 +1761,14 @@ public class SceneEditModelImpl implements SceneEditModel {
         Observer<BaseResponse<List<BTCBean>>> observer = new Observer<BaseResponse<List<BTCBean>>>() {
             @Override
             public void onSubscribe(Disposable d) {
-                callBack.onRequestBefore(d);
+//                callBack.onRequestBefore(d);
             }
 
             @Override
             public void onNext(BaseResponse<List<BTCBean>> response) {
-                if (response.getCode() == 200) callBack.onAddParam(response.getData());
+                if (response.getCode() == 200) {
+                    callBack.onAddParam(response.getData());
+                } else callBack.onRequestFailure(new Throwable(response.getMsg()));
             }
 
             @Override
@@ -1800,7 +1802,9 @@ public class SceneEditModelImpl implements SceneEditModel {
 
             @Override
             public void onNext(UserPosition userPosition) {
-                callBack.onSetUserPositionSuccess(userPosition);
+                if (userPosition.getCode() == 200)
+                    callBack.onSetUserPositionSuccess(userPosition);
+                else callBack.onRequestFailure(new Throwable(userPosition.getMsg()));
             }
 
             @Override

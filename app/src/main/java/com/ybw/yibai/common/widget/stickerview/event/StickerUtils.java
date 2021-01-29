@@ -1,19 +1,26 @@
 package com.ybw.yibai.common.widget.stickerview.event;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.common.utils.FileUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static com.ybw.yibai.common.constants.Folder.PICTURES_PATH;
 import static java.lang.Math.round;
@@ -46,6 +53,8 @@ public class StickerUtils {
             bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
             fos.flush();
             fos.close();
+
+            MediaStore.Images.Media.insertImage(context.getContentResolver(), bmp, "title", "description");
 
             String path = FileUtil.createExternalStorageFile(PICTURES_PATH);
             try {

@@ -1605,10 +1605,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     }
 
     private void hideToolsIsHidden() {
-        mBonsaiEditLayout.setVisibility(View.INVISIBLE);
+//        mBonsaiEditLayout.setVisibility(View.INVISIBLE);
         mBtnChangeLocation.setVisibility(View.INVISIBLE);
         mProductCodeImageButton.setVisibility(View.INVISIBLE);
-        mChangeStyleTextView.setVisibility(View.INVISIBLE);
+//        mChangeStyleTextView.setVisibility(View.INVISIBLE);
         mPlantRecyclerView.setVisibility(View.INVISIBLE);
         mPotRecyclerView.setVisibility(View.INVISIBLE);
         mBottomCatTab.setVisibility(View.INVISIBLE);
@@ -2111,10 +2111,12 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //            GuideUtil.showGuideView(SceneEditFragment.this, R.layout.guide_scene_edit_two_layout, label);
             StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
             stickerViewSelected.setBaseSticker(currentSticker);
+
             /**
              * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
              */
             EventBus.getDefault().postSticky(stickerViewSelected);
+
             if (mComType != null && mComType.equals("1")) {
                 mSceneContainerTool.setVisibility(View.GONE);
             }
@@ -2146,6 +2148,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
         }
     };
+
+    private int oneFlag = 0;
 
     /**
      * BottomSheetBehavior的回调方法
@@ -2206,9 +2210,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 EventBus.getDefault().postSticky(new ExistSimulationData(false));
             }
             /**
-             * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+             * 发送数据到{@link SceneActivity#stickerViewNoSelected(StickerViewSelected)}
              */
             EventBus.getDefault().postSticky(new StickerViewSelected(false));
+
             if (mComType != null && mComType.equals("1")) {
                 mSceneContainerTool.setVisibility(View.GONE);
             }
@@ -2883,6 +2888,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mParamAdapter.notifyDataSetChanged();
             mParamSonAdapter.notifyDataSetChanged();
         }
+        onHideLoading();
     }
 
     @Override
@@ -3333,7 +3339,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
              */
             EventBus.getDefault().postSticky(new BarViewSelected(true));
 //            if (!addSpec)
-                hideToolsIsHidden();
+            hideToolsIsHidden();
             addSpec = false;
 
             // 显示第三个引导层
@@ -3630,20 +3636,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             mChangeStyleTextView.setVisibility(View.VISIBLE);
         }
-    }
-
-    public void showColor(View mParent) {
-        CustomLoadingFactory factory = new CustomLoadingFactory();
-        LoadingBar.make(mParent, factory).show();
-    }
-
-    public void hideColor(View mParent) {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                LoadingBar.cancel(mParent);
-            }
-        }, 1000);
     }
 
     private Handler mHandler = new Handler();

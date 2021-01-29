@@ -709,8 +709,8 @@ public interface ApiService {
                                    @Query("diameter") Double diameter,
                                    @Query("height") String height,
                                    @Query("keyword") String keyword,
-                                   @Query("page") Integer page,
-                                   @Query("pagesize") Integer pageSize);
+                                   @Query("searchcate") Integer searchcate,
+                                   @Query("searchmodel") Integer searchmodel);
 
     /**
      * 获取产品sku列表

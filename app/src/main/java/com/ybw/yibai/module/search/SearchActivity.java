@@ -3,11 +3,15 @@ package com.ybw.yibai.module.search;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -202,7 +206,39 @@ public class SearchActivity extends BaseActivity implements SearchView,
                 setTextImage(R.mipmap.up, mSpnnerText);
             }
         });
+
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //每次内容改变时，先移除前面的消息，避免太过频繁的搜索
+                taskHandler.removeMessages(1);
+                if (s.length() <= 0){
+                    return;
+                }
+                //间隔500后发送消息
+                taskHandler.sendEmptyMessageDelayed(1, 500);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
+
+    private Handler taskHandler = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            //收到消息
+            search();
+            return false;
+        }
+    });
 
     /**
      * 给TextView右边设置图片
@@ -223,6 +259,12 @@ public class SearchActivity extends BaseActivity implements SearchView,
         mCancelTextView.setOnClickListener(this);
         mDeleteImageView.setOnClickListener(this);
         mEditText.setOnEditorActionListener(this);
+
+
+        if(mSearchSpinnerList != null && mSearchSpinnerList.size() > 0){
+            mSpnnerText.setText(mSearchSpinnerList.get(0));
+            search();
+        }
     }
 
     @Override

@@ -86,7 +86,6 @@ import com.ybw.yibai.common.utils.SPUtil;
 import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
-import com.ybw.yibai.common.widget.loading.CustomLoadingFactory;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
@@ -1322,7 +1321,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
             EventBus.getDefault().post(new BaseResponse<String>(1, "", sceneName));
         }
         EventBus.getDefault().postSticky(new ViewPagerPosition(editScenePosition));
-//        onHideLoading();
+        onHideLoading();
     }
 
     /**
@@ -1596,6 +1595,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
             mArcMenu.hide();
             mFloatingActionButton.hide();
             mFunctionLayout.setVisibility(View.GONE);
+            sceneFlagShow = false;
         } else {
             sceneFlagShow = !sceneFlagShow;
             if (sceneFlagShow) {
@@ -1610,6 +1610,36 @@ public class SceneActivity extends BaseActivity implements SceneView,
                 mFloatingActionButton.hide();
                 mFunctionLayout.setVisibility(View.INVISIBLE);
             }
+            mTitleTextView.setText(mSceneInfo.getSceneName());
+            if (mComType != null && mComType.equals("1")) return;
+        }
+    }
+
+    /**
+     * EventBus
+     * 接收用户从{@link SceneEditFragment} 传递过来的数据在"贴纸View"被选中状态发生改变时
+     *
+     * @param stickerViewSelected "贴纸View"被选中状态
+     */
+    @SuppressLint("RestrictedApi")
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void stickerViewNoSelected(@NonNull StickerViewSelected stickerViewSelected) {
+        boolean selected = stickerViewSelected.isSelected();
+        BaseSticker baseSticker = stickerViewSelected.getBaseSticker();
+        if (selected) {
+            if (baseSticker != null) {
+                mTitleTextView.setText(String.valueOf(baseSticker.getPottedName()));
+            }
+            mArcMenu.hide();
+            mFloatingActionButton.hide();
+            mFunctionLayout.setVisibility(View.GONE);
+            sceneFlagShow = false;
+        } else {
+            mArcMenu.show();
+            mFloatingActionButton.show();
+            mBarView.setVisibility(View.VISIBLE);
+            mFloatingActionButton.setVisibility(View.VISIBLE);
+            mFunctionLayout.setVisibility(View.VISIBLE);
             mTitleTextView.setText(mSceneInfo.getSceneName());
             if (mComType != null && mComType.equals("1")) return;
         }

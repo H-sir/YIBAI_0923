@@ -149,7 +149,7 @@ public class SceneModelImpl implements SceneModel {
         Observer<DesignScheme> observer = new Observer<DesignScheme>() {
             @Override
             public void onSubscribe(Disposable d) {
-                callBack.onRequestBefore(d);
+//                callBack.onRequestBefore(d);
             }
 
             @Override

@@ -95,6 +95,7 @@ public class BasePresenterImpl<V extends BaseView> implements BasePresenter<V>, 
     public void onRequestFailure(Throwable throwable) {
         if (null != mWeakReference && null != mWeakReference.get()) {
             mWeakReference.get().onHideLoading();
+            MessageUtil.showMessage(throwable.getMessage());
             mWeakReference.get().onLoadDataFailure(throwable);
         } else {
             LogUtil.e(TAG, "mWeakReference是空的,请进行Debug调试");

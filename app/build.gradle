@@ -17,8 +17,8 @@ android {
         applicationId "com.ybw.yibai"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 24
-        versionName "3.1.4"
+        versionCode 25
+        versionName "3.1.5"
         flavorDimensions "default"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

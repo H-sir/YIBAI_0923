@@ -1927,8 +1927,8 @@ public interface ApiService {
             @Query("uid") int uid,
             @Query("longitude") String longitude,
             @Query("latitude") String latitude,
-            @Query("apiver") String apiver,
-            @Query("check") String check);
+            @Query("check") String check,
+            @Query("apiver") String apiver);
 
     /**
      * 设置货源城市

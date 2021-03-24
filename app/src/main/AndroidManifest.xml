@@ -248,7 +248,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="ASESHdPrQncxITVzI2uSyVRbN1avjEGu" />
+            android:value="L0OoFk5jSFrNGAg5vv4ODySCnviSz4DR" />
 
         <!-- value的值填写你在友盟后台申请的应用AppKey -->
         <meta-data

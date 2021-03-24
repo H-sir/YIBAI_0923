@@ -35,6 +35,8 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.module.change.ChangeAddressActivity;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -366,8 +368,11 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                 }
                 break;
             case R.id.changeAddress:
-//                Intent intent = new Intent(mSelectAddressActivity, ChangeAddressActivity.class);
-//                startActivity(intent);
+                if (null != mLocationInstance) {
+                    mLocationInstance.stopPositioning();
+                }
+                Intent intent = new Intent(mSelectAddressActivity, ChangeAddressActivity.class);
+                startActivity(intent);
                 break;
             case R.id.productSettingType:
                 String cityName = mSharedPreferences.getString(COM_OPEN, "1");

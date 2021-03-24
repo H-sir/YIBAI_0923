@@ -203,7 +203,7 @@ public class CityModelImpl implements CityContract.CityModel {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<MarketListBean> observable = mApiService.getMarketList(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_MARKET_LIST_METHOD),
-                YiBaiApplication.getUid(), String.valueOf(longitude), String.valueOf(latitude),"v3","no");
+                YiBaiApplication.getUid(), String.valueOf(longitude), String.valueOf(latitude),"no","v3");
         Observer<MarketListBean> observer = new Observer<MarketListBean>() {
             @Override
             public void onSubscribe(Disposable d) {

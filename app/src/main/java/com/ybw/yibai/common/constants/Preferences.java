@@ -418,4 +418,13 @@ public class Preferences {
      * 全局货源筛选开关
      */
     public static final String COM_OPEN = "com_open";
+
+    /**
+     * 选定的市场信息ID
+     */
+    public static final String MARKET_ID = "marketID";
+    /**
+     * 选定的市场信息name
+     */
+    public static final String MARKET_NAME = "marketName";
 }

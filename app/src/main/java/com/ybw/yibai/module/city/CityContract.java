@@ -7,6 +7,7 @@ import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.EditUserInfo;
+import com.ybw.yibai.common.bean.MarketListBean;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 
@@ -49,6 +50,8 @@ public interface CityContract {
         void onGetLocationSuccess(PlaceBean placeBean);
 
         void onSetProductSuccess(EditUserInfo editUserInfo);
+
+        void onGetMarketListSuccess(MarketListBean marketListBean);
     }
 
     interface CityPresenter extends BasePresenter<CityView> {
@@ -87,6 +90,13 @@ public interface CityContract {
         void getLocation(double latitude, double longitude);
 
         void onSetProduct(int comOpen);
+
+        /**
+         * 获取市场列表
+         * */
+        void getMarketList(double latitude, double longitude);
+
+        void selectProductType(View view, String cityName);
     }
 
     interface CityModel {
@@ -107,6 +117,8 @@ public interface CityContract {
         void getLocation(double latitude, double longitude,CallBack callBack);
 
         void onSetProduct(int comOpen,CallBack callBack);
+
+        void getMarketList(double latitude, double longitude, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -125,5 +137,7 @@ public interface CityContract {
         void onGetLocationSuccess(PlaceBean placeBean);
 
         void onSetProductSuccess(EditUserInfo editUserInfo);
+
+        void onGetMarketListSuccess(MarketListBean marketListBean);
     }
 }

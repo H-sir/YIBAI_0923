@@ -1,15 +1,19 @@
 package com.ybw.yibai.module.city;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -18,6 +22,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.common.adapter.CityListAdapter;
+import com.ybw.yibai.common.adapter.SelectAddressListAdapter;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.MarketListBean;
@@ -30,8 +35,6 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
-import com.ybw.yibai.module.home.HomeFragment;
-
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
@@ -48,25 +51,24 @@ import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 /**
  * <pre>
  *     author : HKR
- *     time   : 2020/09/07
+ *     time   : 2021/03/22
  *     desc   :
  * </pre>
  */
-public class CityActivity extends BaseActivity implements CityContract.CityView, CityListAdapter.OnCityClickListener {
-    @BindView(R.id.titleTextView)
-    TextView titleTextView;
-    @BindView(R.id.barView)
-    RelativeLayout barView;
+public class SelectAddressActivity extends BaseActivity implements CityContract.CityView, SelectAddressListAdapter.OnCityClickListener {
+    private SelectAddressActivity mSelectAddressActivity = null;
+
     @BindView(R.id.cityCurrent)
     TextView cityCurrent;
+    @BindView(R.id.noCityListView)
+    TextView noCityListView;
     @BindView(R.id.cityListView)
     RecyclerView cityListView;
     @BindView(R.id.backImageView)
     ImageView backImageView;
     @BindView(R.id.rootLayout)
     NestedScrollView rootLayout;
-    @BindView(R.id.productAllSelectImg) ImageView productAllSelectImg;
-    @BindView(R.id.productOneSelectImg) ImageView productOneSelectImg;
+    @BindView(R.id.productSettingName) TextView productSettingName;
 
     private CityContract.CityPresenter mCityPresenter = null;
 
@@ -85,15 +87,21 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
      */
     private LocationUtil mLocationInstance;
 
+//    /**
+//     * 城市列表
+//     */
+//    private List<CityListBean.DataBean.ListBean> hotcityList = new ArrayList<>();
+
     /**
-     * 城市列表
+     * shichang 列表
      */
-    private List<CityListBean.DataBean.ListBean> hotcityList = new ArrayList<>();
+    private List<MarketListBean.DataBean.ListBean> marketList = new ArrayList<>();
 
     /**
      * 城市列表适配器
      */
-    private CityListAdapter mCityListAdapter;
+//    private CityListAdapter mCityListAdapter;
+    private SelectAddressListAdapter mSelectAddressListAdapter;
     /**
      * 自定义等待Dialog
      */
@@ -106,7 +114,8 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
 
     @Override
     protected int setLayout() {
-        return R.layout.city_layout;
+        mSelectAddressActivity = this;
+        return R.layout.select_address_layout;
     }
 
     @Override
@@ -119,11 +128,9 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
         String cityName = mSharedPreferences.getString(COM_OPEN, "1");
         if (cityName.equals("1")) {
-            productAllSelectImg.setImageResource(R.mipmap.purcart_select);
-            productOneSelectImg.setImageResource(R.mipmap.purcart_no_select);
+            productSettingName.setText("展示所有产品");
         } else {
-            productAllSelectImg.setImageResource(R.mipmap.purcart_no_select);
-            productOneSelectImg.setImageResource(R.mipmap.purcart_select);
+            productSettingName.setText("仅展示有供货的产品");
         }
 
         mWaitDialog = new WaitDialog(this);
@@ -142,12 +149,17 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
 
     @Override
     protected void initEvent() {
-        mCityListAdapter = new CityListAdapter(this, hotcityList);
-        cityListView.setAdapter(mCityListAdapter);
-        mCityListAdapter.setOnCityClickListener(this);
+        mSelectAddressListAdapter = new SelectAddressListAdapter(this, marketList);
+        cityListView.setAdapter(mSelectAddressListAdapter);
+        mSelectAddressListAdapter.setOnCityClickListener(this);
+//        mCityListAdapter = new CityListAdapter(this, hotcityList);
+//        cityListView.setAdapter(mCityListAdapter);
+//        mCityListAdapter.setOnCityClickListener(this);
 
         mCityPresenter = new CityPresenterImpl(this);
         mCityPresenter.getCity();
+
+        mSelectAddressListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -155,10 +167,16 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
 
     }
 
+    @TargetApi(Build.VERSION_CODES.N)
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCityClick(int position) {
-        CityListBean.DataBean.ListBean listBean = hotcityList.get(position);
-        mCityPresenter.setUserPosition(listBean.getCode());
+//        CityListBean.DataBean.ListBean listBean = hotcityList.get(position);
+//        mCityPresenter.setUserPosition(listBean.getCode());
+        marketList.forEach(object -> object.setCheck(false));
+        MarketListBean.DataBean.ListBean listBean = marketList.get(position);
+        listBean.setCheck(true);
+        mSelectAddressListAdapter.notifyDataSetChanged();
     }
 
     PlaceBean placeBean;
@@ -169,19 +187,26 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
     }
 
     /**
+     * 市场列表
+     */
+    @Override
+    public void onGetMarketListSuccess(MarketListBean marketListBean) {
+        if (marketListBean.getData().getList().size() > 0) {
+            marketList.addAll(marketListBean.getData().getList());
+            mSelectAddressListAdapter.notifyDataSetChanged();
+            noCityListView.setVisibility(View.GONE);
+        } else {
+            noCityListView.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
      * 城市列表
      */
     @Override
     public void onGetCitySuccess(CityListBean cityListBean) {
-        hotcityList.addAll(cityListBean.getData().getList());
-        mCityListAdapter.notifyDataSetChanged();
+//        hotcityList.addAll(cityListBean.getData().getList());
         mCityPresenter.applyPermissions(permissions);
-    }
-
-
-    @Override
-    public void onGetMarketListSuccess(MarketListBean marketListBean) {
-
     }
 
     /**
@@ -240,6 +265,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
             }
             cityCurrent.setText(city);
             mCityPresenter.getLocation(latitude, longitude);
+            mCityPresenter.getMarketList(latitude, longitude);
         }
     };
 
@@ -313,7 +339,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         }
     }
 
-    @OnClick({R.id.backImageView, R.id.cityCurrent, R.id.productAllSelect, R.id.productOneSelect})
+    @OnClick({R.id.backImageView, R.id.cityCurrent, R.id.changeAddress, R.id.productSettingType})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.backImageView:
@@ -339,11 +365,18 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
                     onBackPressed();
                 }
                 break;
-            case R.id.productAllSelect:
-                mCityPresenter.onSetProduct(2);
+            case R.id.changeAddress:
+//                Intent intent = new Intent(mSelectAddressActivity, ChangeAddressActivity.class);
+//                startActivity(intent);
                 break;
-            case R.id.productOneSelect:
-                mCityPresenter.onSetProduct(1);
+            case R.id.productSettingType:
+                String cityName = mSharedPreferences.getString(COM_OPEN, "1");
+                mCityPresenter.selectProductType(rootLayout, cityName);
+//                if (cityName.equals("1")) {
+//                    mCityPresenter.onSetProduct(2);
+//                } else {
+//                    mCityPresenter.onSetProduct(1);
+//                }
                 break;
         }
     }
@@ -355,11 +388,9 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
         String cityName = mSharedPreferences.getString(COM_OPEN, "1");
         if (cityName.equals("1")) {
-            productAllSelectImg.setImageResource(R.mipmap.purcart_no_select);
-            productOneSelectImg.setImageResource(R.mipmap.purcart_select);
+            productSettingName.setText("展示所有产品");
         } else {
-            productAllSelectImg.setImageResource(R.mipmap.purcart_select);
-            productOneSelectImg.setImageResource(R.mipmap.purcart_no_select);
+            productSettingName.setText("仅展示有供货的产品");
         }
     }
 }

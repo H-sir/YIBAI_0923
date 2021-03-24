@@ -365,6 +365,11 @@ public class HttpUrls {
      */
     public static final String GET_CITY_METHOD = "mybw.getcity";
     /**
+     * 根据经纬度获取市场列表的方法
+     */
+    public static final String GET_MARKET_LIST_METHOD = "mybw.getmarketlist";
+
+    /**
      * 根据经纬度获取城市的方法
      */
     public static final String GET_CITY_PLACE_METHOD = "mybw.getplace";
@@ -443,6 +448,8 @@ public class HttpUrls {
     public static final String GET_CITY_URL = "?method=" + GET_CITY_METHOD;
 
     public static final String GET_CITY_PLACE_URL = "?method=" + GET_CITY_PLACE_METHOD;
+
+    public static final String GET_MARKET_LIST_URL = "?method=" + GET_MARKET_LIST_METHOD;
 
     /**
      * 修改用户公司信息的URL

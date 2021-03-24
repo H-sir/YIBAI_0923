@@ -15,6 +15,7 @@ import com.ybw.yibai.common.bean.CreateSceneData;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
+import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
@@ -62,6 +63,7 @@ import static com.ybw.yibai.common.constants.HttpUrls.EDIT_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.FAST_IMPORT_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CATEGORY_SIMILAR_SUK_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_NEWRECOMMEND_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_RECOMMEND_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SPEC_SUK_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.SET_USER_POSITION_METHOD;
@@ -638,6 +640,40 @@ public class SceneEditModelImpl implements SceneEditModel {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }
 
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getProductDetails(int productSkuId, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<ProductDetails> observable = mApiService.getProductDetails(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_PRODUCT_INFO_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId);
+        Observer<ProductDetails> observer = new Observer<ProductDetails>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(ProductDetails productDetails) {
+                callBack.onGetProductDetailsSuccess(productDetails);
             }
 
             @Override

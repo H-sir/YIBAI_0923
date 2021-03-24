@@ -117,6 +117,7 @@ import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
+import static com.ybw.yibai.common.constants.HttpUrls.USING_HELP_URL;
 import static com.ybw.yibai.common.constants.Preferences.CREATE_SCENE_DATA_LIST;
 import static com.ybw.yibai.common.constants.Preferences.CUSTOMERS_PRESELECTION_PRODUCT_LIST;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
@@ -197,6 +198,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
      * 将屏幕旋转90°
      */
     private ImageView mScreenRotationImageView;
+
+    /**
+     * 盆栽习性
+     */
+    private TextView screenHabitTextView;
 
     /**
      * 显示场景列表
@@ -496,6 +502,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mBackImageView = findViewById(R.id.backImageView);
         mTitleTextView = findViewById(R.id.titleTextView);
         mScreenRotationImageView = findViewById(R.id.screenRotationImageView);
+        screenHabitTextView = findViewById(R.id.screenHabitTextView);
         mListImageView = findViewById(R.id.listImageView);
         mFloatingActionButton = findViewById(R.id.floatingActionButton);
 
@@ -721,6 +728,17 @@ public class SceneActivity extends BaseActivity implements SceneView,
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
             isWindown = true;
+        }
+
+        /**
+         * 盆栽习性
+         * */
+        if (id == R.id.screenHabitTextView) {
+            /**
+             * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
+             * 使其跳转到对应的Fragment
+             */
+            EventBus.getDefault().postSticky(new HomeBean());
         }
 
         // 显示场景列表
@@ -1591,6 +1609,8 @@ public class SceneActivity extends BaseActivity implements SceneView,
         if (selected) {
             if (baseSticker != null) {
                 mTitleTextView.setText(String.valueOf(baseSticker.getPottedName()));
+                screenHabitTextView.setVisibility(View.VISIBLE);
+                mScreenRotationImageView.setVisibility(View.GONE);
             }
             mArcMenu.hide();
             mFloatingActionButton.hide();
@@ -1611,6 +1631,8 @@ public class SceneActivity extends BaseActivity implements SceneView,
                 mFunctionLayout.setVisibility(View.INVISIBLE);
             }
             mTitleTextView.setText(mSceneInfo.getSceneName());
+            screenHabitTextView.setVisibility(View.GONE);
+            mScreenRotationImageView.setVisibility(View.VISIBLE);
             if (mComType != null && mComType.equals("1")) return;
         }
     }

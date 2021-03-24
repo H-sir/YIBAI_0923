@@ -71,6 +71,7 @@ import com.ybw.yibai.common.widget.magicindicator.buildins.commonnavigator.title
 import com.ybw.yibai.common.widget.magicindicator.title.ScaleTransitionPagerTitleView;
 import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.city.CityActivity;
+import com.ybw.yibai.module.city.SelectAddressActivity;
 import com.ybw.yibai.module.company.CompanyInfoEditActivity;
 import com.ybw.yibai.module.design.DesignActivity;
 import com.ybw.yibai.module.details.ProductDetailsActivity;
@@ -502,7 +503,8 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
 
         // 定位
         if (id == R.id.locationTextView) {
-            Intent intent = new Intent(getActivity(), CityActivity.class);
+//            Intent intent = new Intent(getActivity(), CityActivity.class);
+            Intent intent = new Intent(getActivity(), SelectAddressActivity.class);
             startActivityForResult(intent, 1);
 //            Intent toIntent = new Intent(getActivity(), SelectDeliveryCityActivity.class);
 //            startActivityForResult(toIntent, 1001);

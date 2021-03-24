@@ -2,14 +2,26 @@ package com.ybw.yibai.module.city;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.EditUserInfo;
+import com.ybw.yibai.common.bean.MarketListBean;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.utils.LocationUtil;
@@ -149,10 +161,10 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
 
     /**
      * 根据经纬度获取定位
-     * */
+     */
     @Override
     public void getLocation(double latitude, double longitude) {
-        mCityModel.getLocation(latitude,longitude,this);
+        mCityModel.getLocation(latitude, longitude, this);
     }
 
     @Override
@@ -162,11 +174,79 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
 
     @Override
     public void onSetProduct(int comOpen) {
-        mCityModel.onSetProduct(comOpen,this);
+        mCityModel.onSetProduct(comOpen, this);
     }
 
     @Override
     public void onSetProductSuccess(EditUserInfo editUserInfo) {
         mCityView.onSetProductSuccess(editUserInfo);
+    }
+
+    @Override
+    public void getMarketList(double latitude, double longitude) {
+        mCityModel.getMarketList(latitude, longitude, this);
+    }
+
+    @Override
+    public void onGetMarketListSuccess(MarketListBean marketListBean) {
+        mCityView.onGetMarketListSuccess(marketListBean);
+    }
+
+    /**
+     * 显示产品设置切换的PopupWindow
+     *
+     * @param rootLayout 界面Root布局
+     */
+    @Override
+    public void selectProductType(View rootLayout, String cityName) {
+        Activity activity = (Activity) mCityView;
+        if (null == activity) {
+            return;
+        }
+
+        View view = activity.getLayoutInflater().inflate(R.layout.popup_window_select_type_layout, null);
+        PopupWindow mPopupWindow = new PopupWindow(view, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        CheckBox checkboxAll = view.findViewById(R.id.checkboxAll);
+        CheckBox checkboxOne = view.findViewById(R.id.checkboxOne);
+        if (cityName.equals("1")) {
+            checkboxAll.setChecked(true);
+            checkboxOne.setChecked(false);
+        } else {
+            checkboxAll.setChecked(false);
+            checkboxOne.setChecked(true);
+        }
+
+        checkboxAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+                onSetProduct(1);
+            }
+        });
+        checkboxOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+                onSetProduct(2);
+            }
+        });
+
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+
+        // 设置一个动画效果
+        mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
+
+        // 在弹出PopupWindow设置屏幕透明度
+        OtherUtil.setBackgroundAlpha(activity, 0.6f);
+        // 添加PopupWindow窗口关闭事件
+        mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
+        mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
     }
 }

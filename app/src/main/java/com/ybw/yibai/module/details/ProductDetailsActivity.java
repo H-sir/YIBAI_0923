@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -53,7 +52,6 @@ import com.ybw.yibai.module.scene.SceneActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -153,6 +151,15 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
      * 产品的高度
      */
     private double productHeight;
+
+    /**
+     * 产品详情
+     */
+    private TextView mProductDetailsBtn;
+    /**
+     * 盆栽习性
+     */
+    private TextView mProductHaBitBtn;
 
     /**
      * 主产品组合模式: 1组合2单产品
@@ -265,6 +272,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
      * H5
      */
     private WebView webView;
+    private WebView webViewHabit;
 
     /**
      * 显示相似推荐列表
@@ -352,6 +360,8 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mToQuotationImageView = findViewById(R.id.toQuotationImageView);
         mSaveTextViewNum = findViewById(R.id.saveTextViewNum);
         mUseStateTextView = findViewById(R.id.useStateTextView);
+        mProductDetailsBtn = findViewById(R.id.productDetailsBtn);
+        mProductHaBitBtn = findViewById(R.id.productHaBitBtn);
 
         mProductImageView = findViewById(R.id.productImageView);
         mProductNameTextView = findViewById(R.id.productNameTextView);
@@ -364,6 +374,7 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mSpecTextView = findViewById(R.id.specTextView);
         mProductPriceTextView = findViewById(R.id.priceTextView);
         webView = findViewById(R.id.webView);
+        webViewHabit = findViewById(R.id.webViewHabit);
         mRecyclerView = findViewById(R.id.recyclerView);
 
         mLookDesignTextView = findViewById(R.id.lookDesignTextView);
@@ -406,9 +417,15 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         mAdapter = new SimilarProductAdapter(this, mSimilarSkuList);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
-        WebSettings settings = webView.getSettings();
+
+        settingWeb(webView);
+        settingWeb(webViewHabit);
+    }
+
+    private void settingWeb(WebView mWebView) {
+        WebSettings settings = mWebView.getSettings();
         settings.setJavaScriptEnabled(true);
-        webView.requestFocusFromTouch();              //如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点
+        mWebView.requestFocusFromTouch();              //如果webView中需要用户手动输入用户名、密码或其他，则webview必须设置支持获取手势焦点
         settings.setDomStorageEnabled(true);
         settings.setBlockNetworkImage(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -431,7 +448,6 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         settings.setJavaScriptCanOpenWindowsAutomatically(true);                //支持通过JS打开新窗口
         settings.setLoadWithOverviewMode(true);                                 // 缩放至屏幕的大小
         settings.setLoadsImagesAutomatically(true);                             //支持自动加载图片
-
     }
 
     @Override
@@ -562,9 +578,26 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (id == R.id.joinQuotationTextView) {
             mProductDetailsPresenter.addQuotation(productSkuId);
         }
+        // 产品详情
+        if (id == R.id.productDetailsBtn) {
+            MessageUtil.showMessage("33333");
+            mProductDetailsBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+            mProductHaBitBtn.setBackground(null);
+            webViewHabit.setVisibility(View.GONE);
+            webView.setVisibility(View.VISIBLE);
+        }
+        // 盆栽习性
+        if (id == R.id.productHaBitBtn) {
+            MessageUtil.showMessage("11111");
+            mProductHaBitBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+            mProductDetailsBtn.setBackground(null);
+            webViewHabit.setVisibility(View.VISIBLE);
+            webView.setVisibility(View.GONE);
+        }
 
         // 调整货源
         if (id == R.id.marketLayout) {
+            MessageUtil.showMessage("22222");
             Intent intent = new Intent(ProductDetailsActivity.this, MarketActivity.class);
             intent.putExtra(PRODUCT_SKU_ID, productSkuId);
             intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
@@ -623,6 +656,15 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
                 webView.clearCache(true);
 //                String replace = htmlString.replace("http", "https");
                 webView.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);
+            }
+        }
+        if (!TextUtils.isEmpty(productDetails.getData().getHabit_url())) {
+            String content = productDetails.getData().getHabit_url();
+            String htmlString = EncryptionUtil.base64DecodeString(content);
+            if (!TextUtils.isEmpty(htmlString)) {
+                webViewHabit.clearCache(true);
+//                String replace = htmlString.replace("http", "https");
+                webViewHabit.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);
             }
         }
 

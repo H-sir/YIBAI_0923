@@ -74,6 +74,8 @@ import static com.ybw.yibai.common.constants.Preferences.INVITE_BG;
 import static com.ybw.yibai.common.constants.Preferences.INVITE_RULE_BG;
 import static com.ybw.yibai.common.constants.Preferences.INVITE_URL;
 import static com.ybw.yibai.common.constants.Preferences.IS_BIND_WX;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_NAME;
 import static com.ybw.yibai.common.constants.Preferences.MY_WALLET_URL;
 import static com.ybw.yibai.common.constants.Preferences.NICK_NAME;
 import static com.ybw.yibai.common.constants.Preferences.RECORD_URL;
@@ -425,11 +427,20 @@ public class MainModelImpl implements MainModel {
         String cityName = data.getCity_name();
         if (!TextUtils.isEmpty(cityName)) {
             edit.putString(CITY_NAME, cityName);
-            SceneHelper.saveCity(context,cityName);
+            SceneHelper.saveCity(context, cityName);
         }
         String com_open = data.getCom_open();
-        if(!TextUtils.isEmpty(com_open)){
+        if (!TextUtils.isEmpty(com_open)) {
             edit.putString(COM_OPEN, com_open);
+        }
+        DataBean.MarketData market = data.getMarket();
+        if (market != null) {
+            if (!TextUtils.isEmpty(market.getId())) {
+                edit.putString(MARKET_ID, market.getId());
+            }
+            if (!TextUtils.isEmpty(market.getName())) {
+                edit.putString(MARKET_NAME, market.getName());
+            }
         }
         edit.apply();
     }

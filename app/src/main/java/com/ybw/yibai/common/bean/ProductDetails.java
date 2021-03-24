@@ -62,6 +62,10 @@ public class ProductDetails {
          * 产品类别(plant=植物,pot=花盆)
          */
         private String cate_code;
+        /**
+         * 盆栽习性url地址
+         */
+        private String habit_url;
 
         /**
          * 产品描述需base64解码
@@ -84,6 +88,14 @@ public class ProductDetails {
         private List<SkuListBean> skulist;
 
         private SourceBean source;
+
+        public String getHabit_url() {
+            return habit_url;
+        }
+
+        public void setHabit_url(String habit_url) {
+            this.habit_url = habit_url;
+        }
 
         public int getId() {
             return id;

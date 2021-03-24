@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.EditUserInfo;
+import com.ybw.yibai.common.bean.MarketListBean;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.interfaces.ApiService;
@@ -24,6 +25,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.ybw.yibai.common.constants.HttpUrls.EDIT_USER_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_MARKET_LIST_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.SET_USER_POSITION_METHOD;
 import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
@@ -177,6 +179,43 @@ public class CityModelImpl implements CityContract.CityModel {
                     callBack.onSetProductSuccess(editUserInfo);
                 } else {
                     callBack.onRequestFailure(new Throwable(editUserInfo.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void getMarketList(double latitude, double longitude, CityContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<MarketListBean> observable = mApiService.getMarketList(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_MARKET_LIST_METHOD),
+                YiBaiApplication.getUid(), String.valueOf(longitude), String.valueOf(latitude),"v3","no");
+        Observer<MarketListBean> observer = new Observer<MarketListBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(MarketListBean marketListBean) {
+                if (marketListBean.getCode() == 200) {
+                    callBack.onGetMarketListSuccess(marketListBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(marketListBean.getMsg()));
                 }
             }
 

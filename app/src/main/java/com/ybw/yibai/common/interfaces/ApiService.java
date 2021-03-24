@@ -34,6 +34,7 @@ import com.ybw.yibai.common.bean.HotScheme;
 import com.ybw.yibai.common.bean.HotSchemeCategory;
 import com.ybw.yibai.common.bean.HotSchemes;
 import com.ybw.yibai.common.bean.LoginInfo;
+import com.ybw.yibai.common.bean.MarketListBean;
 import com.ybw.yibai.common.bean.ModifyPassword;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
@@ -96,6 +97,7 @@ import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_URL;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_MARKET_LIST_URL;
 
 /**
  * 这个接口存放所有联网的方法
@@ -1913,6 +1915,20 @@ public interface ApiService {
             @Query("uid") int uid,
             @Query("longitude") String longitude,
             @Query("latitude") String latitude);
+
+
+    /**
+     * 经纬度获取城市地区信息
+     */
+    @GET(GET_MARKET_LIST_URL)
+    Observable<MarketListBean> getMarketList(
+            @Header("timestamp") String timestamp,
+            @Header("sign") String sign,
+            @Query("uid") int uid,
+            @Query("longitude") String longitude,
+            @Query("latitude") String latitude,
+            @Query("apiver") String apiver,
+            @Query("check") String check);
 
     /**
      * 设置货源城市

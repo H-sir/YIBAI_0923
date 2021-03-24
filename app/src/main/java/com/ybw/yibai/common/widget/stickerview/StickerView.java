@@ -1394,7 +1394,7 @@ public class StickerView extends FrameLayout {
 
         Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bmp);
-        Bitmap bitmap = loadBitmapFromView(v);
+        Bitmap bitmap = loadBitmapFromView(bg);
 
         c.drawBitmap(bitmap, 0, 0, null);
 

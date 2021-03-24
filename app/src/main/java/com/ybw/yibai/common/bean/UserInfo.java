@@ -181,6 +181,11 @@ public class UserInfo {
          */
         private String com_open;
 
+        /**
+         * 选定的市场信息
+         */
+        private MarketData market;
+
 
         public String getCom_open() {
             return com_open;
@@ -412,6 +417,35 @@ public class UserInfo {
 
         public void setCity_name(String city_name) {
             this.city_name = city_name;
+        }
+
+        public MarketData getMarket() {
+            return market;
+        }
+
+        public void setMarket(MarketData market) {
+            this.market = market;
+        }
+
+        public static class MarketData {
+            private String id;
+            private String name;
+
+            public String getId() {
+                return id;
+            }
+
+            public void setId(String id) {
+                this.id = id;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
         }
     }
 }

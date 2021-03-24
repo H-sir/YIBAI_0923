@@ -69,7 +69,7 @@
                 <ImageView
                     android:id="@+id/productAllSelectImg"
                     android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@mipmap/selected_img" />
 

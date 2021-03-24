@@ -17,6 +17,7 @@ import com.ybw.yibai.common.bean.CategorySimilarSKU;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
+import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
@@ -164,6 +165,7 @@ public interface SceneEditContract {
 
         void updateSceneBgSuccess();
 
+        void onGetProductDetailsSuccess(ProductDetails productDetails);
     }
 
     interface SceneEditPresenter extends BasePresenter<SceneEditView> {
@@ -478,6 +480,8 @@ public interface SceneEditContract {
         void addQuotation(ProductData productData);
 
         void addQuotationData(ProductData productData);
+
+        void getProductDetails(int productSkuId);
     }
 
     interface SceneEditModel {
@@ -677,6 +681,8 @@ public interface SceneEditContract {
         void updateSceneBg(String absolutePath, String sceneName, String scheme_id, CallBack callBack);
 
         void addQuotationData(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack);
+
+        void getProductDetails(int productSkuId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -765,5 +771,6 @@ public interface SceneEditContract {
 
         void updateSceneBgSuccess();
 
+        void onGetProductDetailsSuccess(ProductDetails productDetails);
     }
 }

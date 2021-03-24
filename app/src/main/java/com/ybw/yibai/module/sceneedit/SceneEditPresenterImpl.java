@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.ybw.yibai.common.bean.CategorySimilarSKU;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
+import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
@@ -901,7 +903,15 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 Bitmap bitmap = getLocalBitmap(picturePath);
                 Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
                 DrawableSticker drawableSticker = new DrawableSticker(drawable);
-                stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
+
+                DisplayMetrics metric = new DisplayMetrics();
+                fragment.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+                float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
+                if (density > 2.0)
+                    stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
+                else
+                    stickerView.addSticker(simulationData, drawableSticker, x, y, xScale / 2, yScale / 2, i, finallySkuId, pottedName, pottedHeight);
+
             } else {
                 // 图片不存在,可能被删除了
                 LogUtil.e(TAG, "图片不存在,可能被删除了");
@@ -1852,5 +1862,18 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
         if (null != mPlantInfoPopupWindow && mPlantInfoPopupWindow.isShowing()) {
             mPlantInfoPopupWindow.dismiss();
         }
+    }
+
+    /**
+    * 获取详情
+    * */
+    @Override
+    public void getProductDetails(int productSkuId) {
+        mSceneEditModel.getProductDetails(productSkuId,this);
+    }
+
+    @Override
+    public void onGetProductDetailsSuccess(ProductDetails productDetails) {
+        mSceneEditView.onGetProductDetailsSuccess(productDetails);
     }
 }

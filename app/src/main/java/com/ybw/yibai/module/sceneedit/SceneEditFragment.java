@@ -64,6 +64,7 @@ import com.ybw.yibai.common.bean.BottomSheetBehaviorState;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
 import com.ybw.yibai.common.bean.ExistSimulationData;
 import com.ybw.yibai.common.bean.FastImport;
+import com.ybw.yibai.common.bean.HomeBean;
 import com.ybw.yibai.common.bean.ImageContrastSelectedProduct;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
@@ -71,6 +72,7 @@ import com.ybw.yibai.common.bean.NewMatch;
 import com.ybw.yibai.common.bean.ParamSonBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.ProductData;
+import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SaveAddSchemeBean;
@@ -114,6 +116,7 @@ import com.ybw.yibai.common.widget.stickerview.event.StickerIconEvent;
 import com.ybw.yibai.common.widget.stickerview.event.StickerViewEvent;
 import com.ybw.yibai.common.widget.stickerview.event.StickerViewSelectedListener;
 import com.ybw.yibai.common.widget.stickerview.event.ZoomIconEvent;
+import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.filter.FilterActivity;
 import com.ybw.yibai.module.filter.FilterFragment;
 import com.ybw.yibai.module.imagecontrast.ImageContrastActivity;
@@ -166,6 +169,7 @@ import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Folder.SIMULATION_IMAGE_PREFIX;
+import static com.ybw.yibai.common.constants.HttpUrls.USING_HELP_URL;
 import static com.ybw.yibai.common.constants.Preferences.CATEGORY_CODE;
 import static com.ybw.yibai.common.constants.Preferences.FILE_PATH;
 import static com.ybw.yibai.common.constants.Preferences.OPEN_WATERMARK;
@@ -180,6 +184,7 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_LIST;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_TYPE;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
 import static com.ybw.yibai.common.constants.Preferences.SIMULATION_DATA;
+import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.constants.Preferences.WATERMARK_PIC;
@@ -1615,6 +1620,27 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mMultipleImageContrastTextView.setVisibility(View.INVISIBLE);
         mSavePhoto.setVisibility(View.INVISIBLE);
         btnHideTools.setTag(false);
+    }
+
+    /**
+     * EventBus
+     * 接收用户从{@link SceneActivity} 传递过来的数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void screenHabitTextViewData(HomeBean homeBean) {
+        mSceneEditPresenter.getProductDetails(productSkuId);
+    }
+
+    @Override
+    public void onGetProductDetailsSuccess(ProductDetails productDetails) {
+        if (productDetails.getData() != null && productDetails.getData().getHabit_url() != null
+                && !productDetails.getData().getHabit_url().isEmpty()) {
+            Intent intent = new Intent(getActivity(), BrowserActivity.class);
+            intent.putExtra(URL, productDetails.getData().getHabit_url());
+            startActivity(intent);
+        }else{
+            MessageUtil.showMessage("盆栽习性地址为空");
+        }
     }
 
     private void onResert() {

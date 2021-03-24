@@ -84,4 +84,6 @@
     <color name="trans_grey">#CDCFCFCF</color>
     <color name="red">#E41000</color>
     <color name="blue_s">#334DDB</color>
+    <color name="select_address_click">#FF1742D8</color>
+    <color name="select_address_bg">#FFF8F8F8</color>
 </resources>

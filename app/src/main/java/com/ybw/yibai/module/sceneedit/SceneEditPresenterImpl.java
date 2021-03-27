@@ -904,14 +904,14 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
                 Drawable drawable = new BitmapDrawable(fragment.getResources(), bitmap);
                 DrawableSticker drawableSticker = new DrawableSticker(drawable);
 
-                DisplayMetrics metric = new DisplayMetrics();
-                fragment.getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-                float density = metric.density;  // 屏幕密度（0.75 / 1.0 / 1.5）
-                if (density > 2.0)
+                DisplayMetrics dm = new DisplayMetrics();
+                fragment.getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+                float density = dm.density;
+                if(density >2.0){
                     stickerView.addSticker(simulationData, drawableSticker, x, y, xScale, yScale, i, finallySkuId, pottedName, pottedHeight);
-                else
-                    stickerView.addSticker(simulationData, drawableSticker, x, y, xScale / 2, yScale / 2, i, finallySkuId, pottedName, pottedHeight);
-
+                }else{
+                    stickerView.addSticker(simulationData, drawableSticker, x, y, xScale /2, yScale/2, i, finallySkuId, pottedName, pottedHeight);
+                }
             } else {
                 // 图片不存在,可能被删除了
                 LogUtil.e(TAG, "图片不存在,可能被删除了");

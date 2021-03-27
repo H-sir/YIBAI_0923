@@ -6,7 +6,6 @@ import android.os.Build;
 import android.text.TextUtils;
 
 import com.ybw.yibai.base.BasePresenterImpl;
-import com.ybw.yibai.common.data.OkHttpManager;
 import com.ybw.yibai.common.interfaces.ApiService;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
@@ -84,6 +83,5 @@ public class WelcomePresenterImpl extends BasePresenterImpl<WelComeView> impleme
 
     @Override
     public void getDataByGet(Context context) {
-         new OkHttpManager(context);
     }
 }

@@ -308,6 +308,10 @@ public class HttpUrls {
      * 修改用户基础信息的方法
      */
     public static final String EDIT_USER_INFO_METHOD = "mybw.edituser";
+    /**
+     * 绑定市场的方法
+     */
+    public static final String BIND_MARKET_METHOD = "mybw.bindmarket";
 
     /**
      * 创建设计的方法
@@ -724,6 +728,10 @@ public class HttpUrls {
      * 修改用户基础信息的URL
      */
     public static final String EDIT_USER_INFO_URL = "?method=" + EDIT_USER_INFO_METHOD;
+    /**
+     * 修改用户基础信息的URL
+     */
+    public static final String BIND_MARKET_URL = "?method=" + BIND_MARKET_METHOD;
 
     /**
      * 绑定更换手机的URL
@@ -770,7 +778,7 @@ public class HttpUrls {
     /**
      * 服务协议的URL
      */
-    public static final String AGREEMENT_URL = "http://f.100ybw.com/ybapp/agreement.html";
+    public static final String AGREEMENT_URL = "s";
 
     /**
      * 使用帮助的URL

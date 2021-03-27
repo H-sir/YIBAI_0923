@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.ybw.yibai.base.YiBaiApplication;
+import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.EditUserInfo;
 import com.ybw.yibai.common.bean.MarketListBean;
@@ -22,6 +23,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.ybw.yibai.common.constants.HttpUrls.BIND_MARKET_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.EDIT_USER_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CITY_PLACE_METHOD;
@@ -203,7 +205,7 @@ public class CityModelImpl implements CityContract.CityModel {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<MarketListBean> observable = mApiService.getMarketList(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_MARKET_LIST_METHOD),
-                YiBaiApplication.getUid(), String.valueOf(longitude), String.valueOf(latitude),"no","v3");
+                YiBaiApplication.getUid(), longitude, latitude,"no","v3");
         Observer<MarketListBean> observer = new Observer<MarketListBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -216,6 +218,43 @@ public class CityModelImpl implements CityContract.CityModel {
                     callBack.onGetMarketListSuccess(marketListBean);
                 } else {
                     callBack.onRequestFailure(new Throwable(marketListBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void bindMarket(MarketListBean marketListBean, int marketId, CityContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.bindMarket(timeStamp,
+                OtherUtil.getSign(timeStamp, BIND_MARKET_METHOD),
+                YiBaiApplication.getUid(), marketId);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean mBaseBean) {
+                if (mBaseBean.getCode() == 200) {
+                    callBack.onBindMarketSuccess(marketListBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(mBaseBean.getMsg()));
                 }
             }
 

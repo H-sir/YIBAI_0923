@@ -59,7 +59,6 @@ public class SelectAddressListAdapter extends RecyclerView.Adapter<RecyclerView.
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
 
         MarketListBean.DataBean.ListBean listBean = dataBeanList.get(position);
-        ImageUtil.displayImage(mContext, myViewHolder.selectAddressImg, listBean.getLogo());
         myViewHolder.selectAddressName.setText(listBean.getName());
         myViewHolder.selectAddressText.setText(listBean.getAddress());
         myViewHolder.selectAddressDistance.setText(listBean.getDistance());
@@ -68,6 +67,7 @@ public class SelectAddressListAdapter extends RecyclerView.Adapter<RecyclerView.
         } else {
             myViewHolder.productAllSelectImg.setVisibility(View.GONE);
         }
+        ImageUtil.displayImage(mContext, myViewHolder.selectAddressImg, listBean.getLogo());
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

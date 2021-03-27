@@ -118,7 +118,7 @@ public class ImageContrastModelImpl implements ImageContrastModel {
                 YiBaiApplication.getUid(),
                 productSkuId,
                 augmentedProductSkuId,
-                "v2",
+                "v3",
                 "no");
         Observer<Recommend> observer = new Observer<Recommend>() {
             @Override

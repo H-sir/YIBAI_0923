@@ -129,10 +129,10 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
         mWaitDialog = new WaitDialog(this);
 
         // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(3, VERTICAL);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1, VERTICAL);
         // 设置RecyclerView间距
         int gap = DensityUtil.dpToPx(getApplicationContext(), 8);
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, gap, false);
+        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(1, gap, false);
         // 给RecyclerView设置布局管理器(必须设置)
         cityListView.setLayoutManager(manager);
         cityListView.addItemDecoration(decoration);
@@ -181,6 +181,11 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
 
     @Override
     public void onGetMarketListSuccess(MarketListBean marketListBean) {
+
+    }
+
+    @Override
+    public void onBindMarketSuccess(MarketListBean marketListBean) {
 
     }
 

@@ -78,7 +78,7 @@ public class RetrofitManagerUtil {
                 request = request.newBuilder()
                         .addHeader("did", AppUtil.getDeviceId(YiBaiApplication.getContext()))
                         .addHeader("token", token)
-                        .addHeader("apiver", "v2")
+                        .addHeader("apiver", "v3")
                         .addHeader("version", String.valueOf(AppUtil.getVersionCode(YiBaiApplication.getContext())))
                         .addHeader("mobile_brand", AppUtil.getPhoneBrand())
                         .addHeader("mobile_model", AppUtil.getPhoneModel())

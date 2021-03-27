@@ -192,6 +192,16 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
         mCityView.onGetMarketListSuccess(marketListBean);
     }
 
+    @Override
+    public void bindMarket(MarketListBean marketListBean, MarketListBean.DataBean.ListBean listBean) {
+        mCityModel.bindMarket(marketListBean,listBean.getMarketId(),this);
+    }
+
+    @Override
+    public void onBindMarketSuccess(MarketListBean marketListBean) {
+        mCityView.onBindMarketSuccess(marketListBean);
+    }
+
     /**
      * 显示产品设置切换的PopupWindow
      *

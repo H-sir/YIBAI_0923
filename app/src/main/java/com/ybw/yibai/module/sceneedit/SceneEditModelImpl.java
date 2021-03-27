@@ -380,7 +380,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 OtherUtil.getSign(timeStamp, GET_NEWRECOMMEND_METHOD),
                 YiBaiApplication.getUid(),
                 specTypeId,
-                "v2",
+                "v3",
                 "no");
         Observer<Recommend> observer = new Observer<Recommend>() {
             @Override
@@ -422,7 +422,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 YiBaiApplication.getUid(),
                 productSkuId,
                 augmentedProductSkuId,
-                "v2",
+                "v3",
                 "no");
         Observer<Recommend> observer = new Observer<Recommend>() {
             @Override
@@ -468,7 +468,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 specType,
                 specid,
                 attrid,
-                "v2",
+                "v3",
                 "no");
         Observer<Recommend> observer = new Observer<Recommend>() {
             @Override

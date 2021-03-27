@@ -27,6 +27,7 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -1251,7 +1252,7 @@ public class StickerView extends FrameLayout {
 //            currentStickerX = (float) (x - ((currentStickerHeight - currentStickerWidth) / 2));
 //        }
 
-        sticker.getMatrix().postScale((float) xScale, (float) yScale, 0, 0);
+        sticker.getMatrix().postScale((float) (xScale), (float)( yScale), 0, 0);
 //        sticker.getMatrix().postScale((float) xScale/2, (float) yScale/2, 0, 0);
 
 

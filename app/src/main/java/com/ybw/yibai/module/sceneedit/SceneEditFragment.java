@@ -1930,7 +1930,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
          */
         @Override
         public void onActionDown(StickerView stickerView, MotionEvent event) {
-
+            isCopy = true;
         }
 
         /**
@@ -1968,6 +1968,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mSceneEditPresenter.getSimulationData(sceneId);
         }
     }
+
+
+    boolean isCopy = false;
 
     /**
      * 原购物Icon事件换成了下载事件
@@ -2083,8 +2086,12 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
             simulationData.setX(bounds[0]);
             simulationData.setY(bounds[1]);
-            simulationData.setxScale(xScale);
-            simulationData.setyScale(yScale);
+            if (isCopy) {
+                isCopy = false;
+            } else {
+                simulationData.setxScale(xScale);
+                simulationData.setyScale(yScale);
+            }
             mSceneEditPresenter.updateSimulationData(simulationData);
 
             productSkuId = simulationData.getProductSkuId();

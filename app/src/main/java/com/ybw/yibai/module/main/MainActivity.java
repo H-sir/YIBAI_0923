@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -205,7 +206,13 @@ public class MainActivity extends BaseActivity implements MainView,
 
     @Override
     protected void initData() {
-
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int widthPixels= dm.widthPixels;
+        int heightPixels= dm.heightPixels;
+        float density = dm.density;
+        int screenWidth = (int) (widthPixels * density);
+        int screenHeight = (int) (heightPixels * density);
     }
 
     @Override

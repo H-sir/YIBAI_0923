@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
@@ -15,6 +16,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +34,16 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
+import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
+import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
+import com.ybw.yibai.common.widget.nestlistview.NestFullViewHolder;
 import com.ybw.yibai.module.change.ChangeAddressActivity;
 import com.ybw.yibai.module.main.MainActivity;
 
@@ -68,12 +75,13 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     @BindView(R.id.noCityListView)
     TextView noCityListView;
     @BindView(R.id.cityListView)
-    RecyclerView cityListView;
+    NestFullListView cityListView;
     @BindView(R.id.backImageView)
     ImageView backImageView;
     @BindView(R.id.rootLayout)
     NestedScrollView rootLayout;
-    @BindView(R.id.productSettingName) TextView productSettingName;
+    @BindView(R.id.productSettingName)
+    TextView productSettingName;
 
     private CityContract.CityPresenter mCityPresenter = null;
 
@@ -92,21 +100,6 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
      */
     private LocationUtil mLocationInstance;
 
-//    /**
-//     * 城市列表
-//     */
-//    private List<CityListBean.DataBean.ListBean> hotcityList = new ArrayList<>();
-
-    /**
-     * shichang 列表
-     */
-    private List<MarketListBean.DataBean.ListBean> marketList = new ArrayList<>();
-
-    /**
-     * 城市列表适配器
-     */
-//    private CityListAdapter mCityListAdapter;
-    private SelectAddressListAdapter mSelectAddressListAdapter;
     /**
      * 自定义等待Dialog
      */
@@ -128,6 +121,11 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
 
     }
 
+    /**
+     * 设计详情列表适配器
+     */
+    private NestFullListViewAdapter mNestFullListViewAdapter;
+
     @Override
     protected void initData() {
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
@@ -139,32 +137,12 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
         }
 
         mWaitDialog = new WaitDialog(this);
-
-        // 获取GridLayout布局管理器设置参数控制RecyclerView显示的样式
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(3, VERTICAL);
-        // 设置RecyclerView间距
-        int gap = DensityUtil.dpToPx(getApplicationContext(), 8);
-        GridSpacingItemDecoration decoration = new GridSpacingItemDecoration(3, gap, false);
-        // 给RecyclerView设置布局管理器(必须设置)
-        cityListView.setLayoutManager(manager);
-        cityListView.addItemDecoration(decoration);
-        cityListView.setNestedScrollingEnabled(false);
-        cityListView.setHasFixedSize(false);
     }
 
     @Override
     protected void initEvent() {
-        mSelectAddressListAdapter = new SelectAddressListAdapter(this, marketList);
-        cityListView.setAdapter(mSelectAddressListAdapter);
-        mSelectAddressListAdapter.setOnCityClickListener(this);
-//        mCityListAdapter = new CityListAdapter(this, hotcityList);
-//        cityListView.setAdapter(mCityListAdapter);
-//        mCityListAdapter.setOnCityClickListener(this);
-
         mCityPresenter = new CityPresenterImpl(this);
         mCityPresenter.getCity();
-
-        mSelectAddressListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -178,10 +156,10 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     public void onCityClick(int position) {
 //        CityListBean.DataBean.ListBean listBean = hotcityList.get(position);
 //        mCityPresenter.setUserPosition(listBean.getCode());
-        marketList.forEach(object -> object.setCheck(false));
-        MarketListBean.DataBean.ListBean listBean = marketList.get(position);
-        listBean.setCheck(true);
-        mSelectAddressListAdapter.notifyDataSetChanged();
+//        marketList.forEach(object -> object.setCheck(false));
+//        MarketListBean.DataBean.ListBean listBean = marketList.get(position);
+//        listBean.setCheck(true);
+//        mSelectAddressListAdapter.notifyDataSetChanged();
     }
 
     PlaceBean placeBean;
@@ -189,6 +167,12 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     @Override
     public void onGetLocationSuccess(PlaceBean placeBean) {
         this.placeBean = placeBean;
+        AndroidUtils.MainHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mCityPresenter.getMarketList(latitude, longitude);
+            }
+        }, 300);
     }
 
     /**
@@ -196,13 +180,57 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
      */
     @Override
     public void onGetMarketListSuccess(MarketListBean marketListBean) {
+//        marketList.clear();
         if (marketListBean.getData().getList().size() > 0) {
-            marketList.addAll(marketListBean.getData().getList());
-            mSelectAddressListAdapter.notifyDataSetChanged();
+            mNestFullListViewAdapter = new NestFullListViewAdapter<MarketListBean.DataBean.ListBean>(
+                    R.layout.listview_select_address_list_item_layout, marketListBean.getData().getList()) {
+                @Override
+                public void onBind(int pos, MarketListBean.DataBean.ListBean listBean, NestFullViewHolder holder) {
+                    LinearLayout selectAddressItem = holder.getView(R.id.select_address_item);
+                    ImageView productAllSelectImg = holder.getView(R.id.productAllSelectImg);
+                    ImageView selectAddressImg = holder.getView(R.id.selectAddressImg);
+                    TextView selectAddressName = holder.getView(R.id.selectAddressName);
+                    TextView selectAddressText = holder.getView(R.id.selectAddressText);
+                    TextView selectAddressDistance = holder.getView(R.id.selectAddressDistance);
+
+                    selectAddressName.setText(listBean.getName());
+                    selectAddressText.setText(listBean.getAddress());
+                    selectAddressDistance.setText(listBean.getDistance());
+                    if (listBean.isCheck()) {
+                        productAllSelectImg.setVisibility(View.VISIBLE);
+                    } else {
+                        productAllSelectImg.setVisibility(View.GONE);
+                    }
+                    ImageUtil.displayImage(getApplicationContext(), selectAddressImg, listBean.getLogo());
+                    selectAddressItem.setOnClickListener(new View.OnClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onClick(View view) {
+                            marketListBean.getData().getList().forEach(object -> object.setCheck(false));
+                            MarketListBean.DataBean.ListBean listBean = marketListBean.getData()
+                                    .getList().get(pos);
+                            listBean.setCheck(true);
+                            bindMarket(marketListBean, listBean);
+
+                        }
+                    });
+                }
+            };
+            cityListView.setAdapter(mNestFullListViewAdapter);
             noCityListView.setVisibility(View.GONE);
         } else {
             noCityListView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void bindMarket(MarketListBean marketListBean, MarketListBean.DataBean.ListBean listBean) {
+        mCityPresenter.bindMarket(marketListBean, listBean);
+    }
+
+    @Override
+    public void onBindMarketSuccess(MarketListBean marketListBean) {
+        MessageUtil.showMessage("绑定成功");
+        onGetMarketListSuccess(marketListBean);
     }
 
     /**
@@ -261,19 +289,20 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             //以下只列举部分获取经纬度相关（常用）的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
 
-            double latitude = bdLocation.getLatitude();    //获取纬度信息
-            double longitude = bdLocation.getLongitude();    //获取经度信息
+            latitude = bdLocation.getLatitude();    //获取纬度信息
+            longitude = bdLocation.getLongitude();    //获取经度信息
             // 获取城市
             String city = bdLocation.getCity();
             if (TextUtils.isEmpty(city)) {
                 return;
             }
             cityCurrent.setText(city);
-            mCityPresenter.getLocation(latitude, longitude);
             mCityPresenter.getMarketList(latitude, longitude);
+//            mCityPresenter.getLocation(latitude, longitude);
         }
     };
-
+    double latitude;
+    double longitude;
 
     @Override
     public void onSetUserPositionSuccess(UserPosition userPosition) {

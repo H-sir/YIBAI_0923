@@ -1925,10 +1925,20 @@ public interface ApiService {
             @Header("timestamp") String timestamp,
             @Header("sign") String sign,
             @Query("uid") int uid,
-            @Query("longitude") String longitude,
-            @Query("latitude") String latitude,
+            @Query("longitude") double longitude,
+            @Query("latitude") double latitude,
             @Query("check") String check,
             @Query("apiver") String apiver);
+
+    /**
+     * 绑定市场
+     */
+    @Multipart
+    @POST(HttpUrls.BIND_MARKET_URL)
+    Observable<BaseBean> bindMarket(@Header("timestamp") String timestamp,
+                                        @Header("sign") String sign,
+                                        @Part("uid") int uid,
+                                        @Part("market_id") int marketId);
 
     /**
      * 设置货源城市

@@ -83,6 +83,7 @@ public class ChangeAddressActivity extends BaseActivity {
     private LatLng locationLatLng;
     private int REQUEST_CODE_CITY = 999;
     private boolean acStateIsMap = true;//当前页面是地图还是搜索
+    public final static int RESULT_CODE=1;
 
     @Override
     protected int setLayout() {
@@ -177,8 +178,10 @@ public class ChangeAddressActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 PoiInfo poiInfo = mPoiInfoList.get(position);
                 Intent intent = new Intent();
-                intent.putExtra("address", poiInfo.name);
-                setResult(RESULT_OK, intent);
+                intent.putExtra("name", poiInfo.name);
+                intent.putExtra("latitude", poiInfo.getLocation().latitude);
+                intent.putExtra("longitude", poiInfo.getLocation().longitude);
+                setResult(RESULT_CODE, intent);
                 finish();
             }
         });

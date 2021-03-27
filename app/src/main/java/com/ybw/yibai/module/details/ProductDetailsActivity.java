@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,10 +38,10 @@ import com.ybw.yibai.common.bean.UpdateSKUUseState;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.EncryptionUtil;
-import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.collocation.CollocationActivity;
 import com.ybw.yibai.module.details.ProductDetailsContract.ProductDetailsPresenter;
@@ -56,6 +57,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
@@ -578,26 +582,23 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (id == R.id.joinQuotationTextView) {
             mProductDetailsPresenter.addQuotation(productSkuId);
         }
-        // 产品详情
-        if (id == R.id.productDetailsBtn) {
-            MessageUtil.showMessage("33333");
-            mProductDetailsBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
-            mProductHaBitBtn.setBackground(null);
-            webViewHabit.setVisibility(View.GONE);
-            webView.setVisibility(View.VISIBLE);
-        }
-        // 盆栽习性
-        if (id == R.id.productHaBitBtn) {
-            MessageUtil.showMessage("11111");
-            mProductHaBitBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
-            mProductDetailsBtn.setBackground(null);
-            webViewHabit.setVisibility(View.VISIBLE);
-            webView.setVisibility(View.GONE);
-        }
+//        // 产品详情
+//        if (id == R.id.productDetailsBtn) {
+//            mProductDetailsBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+//            mProductHaBitBtn.setBackground(null);
+//            webViewHabit.setVisibility(View.GONE);
+//            webView.setVisibility(View.VISIBLE);
+//        }
+//        // 盆栽习性
+//        if (id == R.id.productHaBitBtn) {
+//            mProductHaBitBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+//            mProductDetailsBtn.setBackground(null);
+//            webViewHabit.setVisibility(View.VISIBLE);
+//            webView.setVisibility(View.GONE);
+//        }
 
         // 调整货源
         if (id == R.id.marketLayout) {
-            MessageUtil.showMessage("22222");
             Intent intent = new Intent(ProductDetailsActivity.this, MarketActivity.class);
             intent.putExtra(PRODUCT_SKU_ID, productSkuId);
             intent.putExtra(PRODUCT_SKU_ADDORSELECT, false);
@@ -978,6 +979,24 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         if (null != mProductDetailsPresenter) {
             mProductDetailsPresenter.onDetachView();
             mProductDetailsPresenter = null;
+        }
+    }
+
+    @OnClick({R.id.productDetailsBtn, R.id.productHaBitBtn})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.productDetailsBtn:
+                mProductDetailsBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+                mProductHaBitBtn.setBackground(null);
+                webViewHabit.setVisibility(View.GONE);
+                webView.setVisibility(View.VISIBLE);
+                break;
+            case R.id.productHaBitBtn:
+                mProductHaBitBtn.setBackground(getResources().getDrawable(R.drawable.sharp_underline));
+                mProductDetailsBtn.setBackground(null);
+                webViewHabit.setVisibility(View.VISIBLE);
+                webView.setVisibility(View.GONE);
+                break;
         }
     }
 }

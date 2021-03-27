@@ -2,14 +2,11 @@ package com.ybw.yibai.module.scene;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -36,7 +33,6 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -64,22 +60,17 @@ import com.ybw.yibai.common.bean.SaveAddSchemeBean;
 import com.ybw.yibai.common.bean.SceneDesign;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SceneInfoChange;
-import com.ybw.yibai.common.bean.SimulationData;
 import com.ybw.yibai.common.bean.StickerViewSelected;
 import com.ybw.yibai.common.bean.SystemParameter;
 import com.ybw.yibai.common.bean.SystemParameter.DataBean.SpectypeBean;
 import com.ybw.yibai.common.bean.ToFragment;
 import com.ybw.yibai.common.bean.ViewPagerPosition;
 import com.ybw.yibai.common.classs.ScenePopupMenu;
-import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.utils.ExceptionUtil;
-import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
-import com.ybw.yibai.common.utils.NavigationBarUtil;
-import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
 import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.SPUtil;
@@ -87,11 +78,8 @@ import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
-import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
-import com.ybw.yibai.module.drawing.SimulationDrawingActivity;
 import com.ybw.yibai.module.main.MainActivity;
-import com.ybw.yibai.module.market.MarketActivity;
 import com.ybw.yibai.module.more.MoreActivity;
 import com.ybw.yibai.module.preselection.ConsumerPreselectionFragment;
 import com.ybw.yibai.module.scene.SceneContract.ScenePresenter;
@@ -102,7 +90,6 @@ import com.ybw.yibai.module.startdesign.StartDesignActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.xutils.DbManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -111,23 +98,21 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.content.res.Configuration.ORIENTATION_PORTRAIT;
 import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
-import static com.ybw.yibai.common.constants.HttpUrls.USING_HELP_URL;
 import static com.ybw.yibai.common.constants.Preferences.CREATE_SCENE_DATA_LIST;
 import static com.ybw.yibai.common.constants.Preferences.CUSTOMERS_PRESELECTION_PRODUCT_LIST;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
-import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
-import static com.ybw.yibai.common.constants.Preferences.URL;
-import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
-import static com.ybw.yibai.common.constants.Preferences.USER_VIP_URL;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 import static com.ybw.yibai.common.utils.OtherUtil.splitList;
 import static com.ybw.yibai.common.utils.ViewPagerIndicatorUtil.initDots;
@@ -730,16 +715,16 @@ public class SceneActivity extends BaseActivity implements SceneView,
             isWindown = true;
         }
 
-        /**
-         * 盆栽习性
-         * */
-        if (id == R.id.screenHabitTextView) {
-            /**
-             * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
-             * 使其跳转到对应的Fragment
-             */
-            EventBus.getDefault().postSticky(new HomeBean());
-        }
+//        /**
+//         * 盆栽习性
+//         * */
+//        if (id == R.id.screenHabitTextView) {
+//            /**
+//             * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
+//             * 使其跳转到对应的Fragment
+//             */
+//            EventBus.getDefault().postSticky(new HomeBean());
+//        }
 
         // 显示场景列表
         if (id == R.id.listImageView || id == R.id.titleTextView) {
@@ -1747,5 +1732,14 @@ public class SceneActivity extends BaseActivity implements SceneView,
             mScenePresenter = null;
         }
         SPUtil.INSTANCE.putValue(getApplicationContext(), "com_type", mComType);
+    }
+
+    @OnClick(R.id.screenHabitTextView)
+    public void onViewClicked() {
+        /**
+         * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
+         * 使其跳转到对应的Fragment
+         */
+        EventBus.getDefault().postSticky(new HomeBean());
     }
 }

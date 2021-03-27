@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
@@ -36,6 +38,7 @@ import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.module.change.ChangeAddressActivity;
+import com.ybw.yibai.module.main.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -372,7 +375,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                     mLocationInstance.stopPositioning();
                 }
                 Intent intent = new Intent(mSelectAddressActivity, ChangeAddressActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE);
                 break;
             case R.id.productSettingType:
                 String cityName = mSharedPreferences.getString(COM_OPEN, "1");
@@ -396,6 +399,24 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             productSettingName.setText("展示所有产品");
         } else {
             productSettingName.setText("仅展示有供货的产品");
+        }
+    }
+
+    private final static int REQUEST_CODE = 1;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == ChangeAddressActivity.RESULT_CODE) {
+                Bundle bundle = data.getExtras();
+                String name = bundle.getString("name");
+                double latitude = bundle.getDouble("latitude");
+                double longitude = bundle.getDouble("longitude");
+                MessageUtil.showMessage(name);
+
+                mCityPresenter.getMarketList(latitude, longitude);
+                cityCurrent.setText(name);
+            }
         }
     }
 }

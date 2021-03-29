@@ -84,13 +84,20 @@ import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 public class ChangeAddressActivity extends BaseActivity implements ChangeAddressContract.ChangeAddressView {
     private ChangeAddressActivity mChangeAddressActivity = null;
 
-    @BindView(R.id.ll_map) LinearLayout llMap;
-    @BindView(R.id.ll_search) LinearLayout mLlSearch;
-    @BindView(R.id.tv_selected_city) TextView mTvSelectedCity;
-    @BindView(R.id.et_jiedao_name) EditText etJiedaoName;
-    @BindView(R.id.mMap) MapView mMap;
-    @BindView(R.id.rv_result) ListView mLvResult;
-    @BindView(R.id.lv_search) ListView mLvSearch;
+    @BindView(R.id.ll_map)
+    LinearLayout llMap;
+    @BindView(R.id.ll_search)
+    LinearLayout mLlSearch;
+    @BindView(R.id.tv_selected_city)
+    TextView mTvSelectedCity;
+    @BindView(R.id.et_jiedao_name)
+    EditText etJiedaoName;
+    @BindView(R.id.mMap)
+    MapView mMap;
+    @BindView(R.id.rv_result)
+    ListView mLvResult;
+    @BindView(R.id.lv_search)
+    ListView mLvSearch;
 
 
     private BaiduMap mBaiduMap;
@@ -429,6 +436,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 // 发起请求
                 String cityCode = mTvSelectedCity.getText().toString();
                 String etJiedao = etJiedaoName.getText().toString();
+                if (etJiedao.isEmpty()) etJiedao = cityCode;
 //                mPoiSearch.searchInCity((new PoiCitySearchOption())
 //                        .city(cityCode)
 //                        .keyword(etJiedao));
@@ -464,7 +472,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 mTvSelectedCity.setText(spinnerListCity.get(position));
                 for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
                     CityListBean.DataBean.ListBean listBean = iterator.next();
-                    if (spinnerListCity.get(position).equals(listBean.getRegionName())){
+                    if (spinnerListCity.get(position).equals(listBean.getRegionName())) {
                         mCitycode = listBean.getRegionName();
                     }
                 }

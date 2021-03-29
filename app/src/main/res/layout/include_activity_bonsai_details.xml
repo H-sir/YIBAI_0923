@@ -6,8 +6,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="304dp"
-        android:visibility="gone">
+        android:layout_height="304dp">
 
         <ImageView
             android:id="@+id/productImageView"

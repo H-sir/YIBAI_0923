@@ -53,7 +53,7 @@ public interface CityContract {
 
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
-        void onBindMarketSuccess(MarketListBean marketListBean);
+        void onBindMarketSuccess(MarketListBean marketListBean,int marketId);
     }
 
     interface CityPresenter extends BasePresenter<CityView> {
@@ -146,6 +146,6 @@ public interface CityContract {
 
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
-        void onBindMarketSuccess(MarketListBean marketListBean);
+        void onBindMarketSuccess(MarketListBean marketListBean,int marketId);
     }
 }

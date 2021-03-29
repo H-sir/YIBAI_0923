@@ -100,6 +100,7 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.FilterFactoryUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
+import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
@@ -1633,12 +1634,15 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     @Override
     public void onGetProductDetailsSuccess(ProductDetails productDetails) {
+        LogUtil.e("ChangeAddress:", "" + productDetails.toString());
+        LogUtil.e("ChangeAddress:", "" + productDetails.getData().toString());
+        LogUtil.e("ChangeAddress:", "getHabit_url" + productDetails.getData().getHabit_url());
         if (productDetails.getData() != null && productDetails.getData().getHabit_url() != null
                 && !productDetails.getData().getHabit_url().isEmpty()) {
             Intent intent = new Intent(getActivity(), BrowserActivity.class);
             intent.putExtra(URL, productDetails.getData().getHabit_url());
             startActivity(intent);
-        }else{
+        } else {
             MessageUtil.showMessage("盆栽习性地址为空");
         }
     }
@@ -2094,6 +2098,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             mSceneEditPresenter.updateSimulationData(simulationData);
 
+            LogUtil.e("ChangeAddress:", "getProductSkuId" + simulationData.getProductSkuId());
+            LogUtil.e("ChangeAddress:", "getAugmentedProductSkuId" + simulationData.getAugmentedProductSkuId());
+            LogUtil.e("ChangeAddress:", "getProductPic1" + simulationData.getProductPic1());
+            LogUtil.e("ChangeAddress:", "getAugmentedProductPic1" + simulationData.getAugmentedProductPic1());
             productSkuId = simulationData.getProductSkuId();
             augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
             productPic1 = simulationData.getProductPic1();

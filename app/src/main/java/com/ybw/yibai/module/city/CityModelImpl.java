@@ -252,7 +252,7 @@ public class CityModelImpl implements CityContract.CityModel {
             @Override
             public void onNext(BaseBean mBaseBean) {
                 if (mBaseBean.getCode() == 200) {
-                    callBack.onBindMarketSuccess(marketListBean);
+                    callBack.onBindMarketSuccess(marketListBean,marketId);
                 } else {
                     callBack.onRequestFailure(new Throwable(mBaseBean.getMsg()));
                 }

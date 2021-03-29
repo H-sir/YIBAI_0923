@@ -198,8 +198,8 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
     }
 
     @Override
-    public void onBindMarketSuccess(MarketListBean marketListBean) {
-        mCityView.onBindMarketSuccess(marketListBean);
+    public void onBindMarketSuccess(MarketListBean marketListBean,int marketId) {
+        mCityView.onBindMarketSuccess(marketListBean,marketId);
     }
 
     /**

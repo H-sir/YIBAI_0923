@@ -665,7 +665,11 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
             if (!TextUtils.isEmpty(htmlString)) {
                 webViewHabit.clearCache(true);
 //                String replace = htmlString.replace("http", "https");
-                webViewHabit.loadDataWithBaseURL(null, htmlString, "text/html", "utf-8", null);
+                Map<String, String> headMap = new HashMap<>(2);
+                headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
+                headMap.put("token", YiBaiApplication.getToken());
+                webViewHabit.loadUrl(htmlString, headMap);
+//                webViewHabit.loadDataWithBaseURL(htmlString, htmlString, "text/html", "utf-8", null);
             }
         }
 

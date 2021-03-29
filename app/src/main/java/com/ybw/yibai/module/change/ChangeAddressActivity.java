@@ -2,6 +2,7 @@ package com.ybw.yibai.module.change;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -20,27 +21,46 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
+import com.baidu.mapapi.search.core.SearchResult;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
+import com.baidu.mapapi.search.poi.PoiCitySearchOption;
+import com.baidu.mapapi.search.poi.PoiDetailResult;
+import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
+import com.baidu.mapapi.search.poi.PoiIndoorResult;
+import com.baidu.mapapi.search.poi.PoiResult;
+import com.baidu.mapapi.search.poi.PoiSearch;
 import com.baidu.mapapi.search.sug.OnGetSuggestionResultListener;
 import com.baidu.mapapi.search.sug.SuggestionResult;
 import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
+import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.NetworkType;
+import com.ybw.yibai.common.helper.SceneHelper;
+import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LogUtil;
+import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.spinner.SpinnerPopWindow;
+import com.ybw.yibai.module.city.CityContract;
+import com.ybw.yibai.module.city.CityPresenterImpl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,6 +70,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.ybw.yibai.common.constants.Preferences.CITY_NAME;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
+import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
+
 /**
  * <pre>
  *     author : HKR
@@ -57,7 +81,7 @@ import butterknife.OnClick;
  *     desc   :
  * </pre>
  */
-public class ChangeAddressActivity extends BaseActivity {
+public class ChangeAddressActivity extends BaseActivity implements ChangeAddressContract.ChangeAddressView {
     private ChangeAddressActivity mChangeAddressActivity = null;
 
     @BindView(R.id.ll_map) LinearLayout llMap;
@@ -73,6 +97,7 @@ public class ChangeAddressActivity extends BaseActivity {
     private MyLocationConfiguration.LocationMode mCurrentMode;
     private LocationClient mLocClient;
     private SuggestionSearch mSuggestionSearch;
+    private PoiSearch mPoiSearch;
     private List<SuggestionResult.SuggestionInfo> mSuggestionInfos = new ArrayList<>();// 搜索结果列表
     private ArrayAdapter<String> sugAdapter;//输入搜索内容显示的提示
     private GeoCoder geoCoder;
@@ -83,7 +108,17 @@ public class ChangeAddressActivity extends BaseActivity {
     private LatLng locationLatLng;
     private int REQUEST_CODE_CITY = 999;
     private boolean acStateIsMap = true;//当前页面是地图还是搜索
-    public final static int RESULT_CODE=1;
+    public final static int RESULT_CODE = 1;
+    private ChangeAddressContract.ChangeAddressPresenter mChangeAddressPresenter = null;
+
+    private SpinnerPopWindow<String> mSpinnerPopWindowCity;
+    private List<String> spinnerListCity;
+
+    /**
+     * 自定义等待Dialog
+     */
+    private WaitDialog mWaitDialog;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected int setLayout() {
@@ -98,21 +133,20 @@ public class ChangeAddressActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
+        mWaitDialog = new WaitDialog(this);
         initMap();
     }
 
     @Override
     protected void initEvent() {
-
+        mChangeAddressPresenter = new ChangeAddressPresenterImpl(this);
+        mChangeAddressPresenter.getCity();
     }
 
     @Override
     public void onNetworkStateChange(NetworkType networkType) {
 
-    }
-
-    @OnClick(R.id.backImageView)
-    public void onViewClicked() {
     }
 
     private void initMap() {
@@ -177,8 +211,14 @@ public class ChangeAddressActivity extends BaseActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 PoiInfo poiInfo = mPoiInfoList.get(position);
+                SharedPreferences.Editor edit = mSharedPreferences.edit();
+                edit.putString(CITY_NAME, poiInfo.getCity());
+                edit.apply();
+                SceneHelper.saveCity(getApplicationContext(), poiInfo.getCity());
+                SceneHelper.saveLatLng(getApplicationContext(), String.valueOf(poiInfo.getLocation().latitude), String.valueOf(poiInfo.getLocation().longitude));
                 Intent intent = new Intent();
                 intent.putExtra("name", poiInfo.name);
+                intent.putExtra("citycode", mCitycode);
                 intent.putExtra("latitude", poiInfo.getLocation().latitude);
                 intent.putExtra("longitude", poiInfo.getLocation().longitude);
                 setResult(RESULT_CODE, intent);
@@ -200,8 +240,50 @@ public class ChangeAddressActivity extends BaseActivity {
                     sugAdapter.add(suggestionInfo.district + suggestionInfo.key);
                 }
                 sugAdapter.notifyDataSetChanged();
+
+
+                MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(allSuggestions.get(0).getPt(), 18f);
+                mBaiduMap.animateMapStatus(msu);
+                // 发起反地理编码请求(经纬度->地址信息)
+                ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
+                // 设置反地理编码位置坐标
+                reverseGeoCodeOption.location(allSuggestions.get(0).getPt());
+                geoCoder.reverseGeoCode(reverseGeoCodeOption);
             }
         });
+
+        mPoiSearch = PoiSearch.newInstance();
+        mPoiSearch.setOnGetPoiSearchResultListener(new OnGetPoiSearchResultListener() {
+            @Override
+            public void onGetPoiResult(PoiResult poiResult) {
+                if (poiResult == null || poiResult.error != SearchResult.ERRORNO.NO_ERROR) {
+                    return;
+                }
+
+                //遍历所有POI，找到类型为公交线路的POI
+                if (poiResult.getAllPoi().size() > 0) {
+                    mPoiInfoList.clear();
+                    mPoiInfoList.addAll(poiResult.getAllPoi());//只读
+                    mPoiAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onGetPoiDetailResult(PoiDetailResult poiDetailResult) {
+
+            }
+
+            @Override
+            public void onGetPoiDetailResult(PoiDetailSearchResult poiDetailSearchResult) {
+
+            }
+
+            @Override
+            public void onGetPoiIndoorResult(PoiIndoorResult poiIndoorResult) {
+
+            }
+        });
+
         // 注册定位监听
         mLocClient.registerLocationListener(new BDAbstractLocationListener() {
             @Override
@@ -256,32 +338,32 @@ public class ChangeAddressActivity extends BaseActivity {
                 Intent intent = new Intent();
                 intent.putExtra("address", suggestionInfo.district + suggestionInfo.key);
                 setResult(RESULT_OK, intent);
-                finish();
+//                finish();
             }
         });
 
-        etJiedaoName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (charSequence.toString().isEmpty()) {
-                    return;
-                }
-                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
-                        .citylimit(true)
-                        .keyword(charSequence.toString())
-                        .city(mSelectCity));
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//        etJiedaoName.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                if (charSequence.toString().isEmpty()) {
+//                    return;
+//                }
+//                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+//                        .citylimit(true)
+//                        .keyword(charSequence.toString())
+//                        .city(mSelectCity));
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
     }
 
     @Override
@@ -303,6 +385,7 @@ public class ChangeAddressActivity extends BaseActivity {
         mBaiduMap.setMyLocationEnabled(false);
         mMap.onDestroy();
         geoCoder.destroy();
+        mPoiSearch.destroy();
         mSuggestionSearch.destroy();
     }
 
@@ -335,4 +418,96 @@ public class ChangeAddressActivity extends BaseActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
+    @OnClick({R.id.backImageView, R.id.btn_selected_city, R.id.serch_selected_city})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.backImageView:
+                finish();
+                break;
+            case R.id.serch_selected_city:
+                // 发起请求
+                String cityCode = mTvSelectedCity.getText().toString();
+                String etJiedao = etJiedaoName.getText().toString();
+//                mPoiSearch.searchInCity((new PoiCitySearchOption())
+//                        .city(cityCode)
+//                        .keyword(etJiedao));
+                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+                        .citylimit(true)
+                        .keyword(etJiedao)
+                        .city(cityCode));
+                break;
+            case R.id.btn_selected_city:
+                break;
+        }
+    }
+
+    private String mCitycode;
+
+    @Override
+    public void onGetCitySuccess(CityListBean cityListBean) {
+        String city = SceneHelper.getCity(getApplicationContext());
+        if (!city.equals("全国")) {
+            mTvSelectedCity.setText(city);
+        }
+
+        spinnerListCity = new ArrayList<>();
+        for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+            CityListBean.DataBean.ListBean listBean = iterator.next();
+            spinnerListCity.add(listBean.getRegionName());
+            if (city.equals(listBean.getCode())) mCitycode = listBean.getRegionName();
+        }
+        mSpinnerPopWindowCity = new SpinnerPopWindow<>(getApplication(), spinnerListCity, new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                mSpinnerPopWindowCity.dismiss();
+                mTvSelectedCity.setText(spinnerListCity.get(position));
+                for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                    CityListBean.DataBean.ListBean listBean = iterator.next();
+                    if (spinnerListCity.get(position).equals(listBean.getRegionName())){
+                        mCitycode = listBean.getRegionName();
+                    }
+                }
+            }
+        });
+        mTvSelectedCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mSpinnerPopWindowCity.setWidth(mTvSelectedCity.getWidth());
+                mSpinnerPopWindowCity.showAsDropDown(mTvSelectedCity);
+            }
+        });
+    }
+
+    /**
+     * 在请求网络数据之前显示Loading界面
+     */
+    @Override
+    public void onShowLoading() {
+        if (!mWaitDialog.isShowing()) {
+            mWaitDialog.setWaitDialogText(getResources().getString(R.string.loading));
+            mWaitDialog.show();
+        }
+    }
+
+    /**
+     * 在请求网络数据完成隐藏Loading界面
+     */
+    @Override
+    public void onHideLoading() {
+        if (mWaitDialog.isShowing()) {
+            mWaitDialog.dismiss();
+        }
+    }
+
+    /**
+     * 在请求网络数据失败时进行一些操作,如显示错误信息...
+     *
+     * @param throwable 异常类型
+     */
+    @Override
+    public void onLoadDataFailure(Throwable throwable) {
+        ExceptionUtil.handleException(throwable);
+    }
+
 }

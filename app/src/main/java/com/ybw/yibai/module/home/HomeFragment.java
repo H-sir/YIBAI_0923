@@ -103,6 +103,7 @@ import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_DESIGN_BACK_MAIN_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_LOCATION_PERMISSIONS_CODE;
 import static com.ybw.yibai.common.constants.Encoded.REQUEST_OPEN_GPS_CODE;
+import static com.ybw.yibai.common.constants.Preferences.CITY_NAME;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY_DETAILS;
 import static com.ybw.yibai.common.constants.Preferences.COMPANY_DETAILS_PIC;
@@ -111,6 +112,7 @@ import static com.ybw.yibai.common.constants.Preferences.CUSTOMERS_LOGO;
 import static com.ybw.yibai.common.constants.Preferences.CUSTOMERS_MANE;
 import static com.ybw.yibai.common.constants.Preferences.HOT_SCHEME_LIST;
 import static com.ybw.yibai.common.constants.Preferences.LOCAL_URL_TYPE;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_ID;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_ID;
@@ -587,6 +589,10 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetCity(String city) {
         mLocationTextView.setText(city);
+        SharedPreferences.Editor edit = mPreferences.edit();
+        edit.putString(CITY_NAME, city);
+        edit.apply();
+
         SceneHelper.saveCity(getActivity(), city);
     }
 

@@ -58,6 +58,37 @@ public class SceneHelper {
     private static final String Key_SceneProductTime = "SceneProductTime";
     private static int mSceneProductTime = -1;
 
+    /**
+     * 经度
+     */
+    private static final String Key_Latitude = "Latitude";
+    private static String mLatitude;
+    /**
+     * 纬度
+     */
+    private static final String Key_Longitude = "Longitude";
+    private static String mLongitude;
+
+    public static String getLatitude(Context context) {
+        mLatitude = readLatitude(context);
+        return mLatitude;
+    }
+
+    private static String readLatitude(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        return pref.getString(Key_Latitude, "");
+    }
+
+    public static String getLongitude(Context context) {
+        mLongitude = readLongitude(context);
+        return mLongitude;
+    }
+
+    private static String readLongitude(Context context) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        return pref.getString(Key_Longitude, "");
+    }
+
     public static int getSceneProductTime(Context context) {
         mSceneProductTime = readSceneProductTime(context);
         return mSceneProductTime;
@@ -155,6 +186,18 @@ public class SceneHelper {
 
     public static void saveCity(Context context, String mCity) {
         saveCityInfo(context, mCity);
+    }
+
+    private static synchronized boolean saveLatLngInfo(Context context, String latitude, String longitude) {
+        SharedPreferences pref = context.getSharedPreferences(Scene_Name, MODE_PRIVATE);
+        SharedPreferences.Editor edit = pref.edit();
+        edit.putString(Key_Latitude, latitude);
+        edit.putString(Key_Longitude, longitude);
+        return edit.commit();
+    }
+
+    public static void saveLatLng(Context context, String latitude, String longitude) {
+        saveLatLngInfo(context, latitude,longitude);
     }
 
     private static synchronized boolean saveCityInfo(Context context, String mCity) {

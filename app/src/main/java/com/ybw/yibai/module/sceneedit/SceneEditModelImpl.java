@@ -20,6 +20,7 @@ import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.helper.SceneHelper;
@@ -65,6 +66,7 @@ import static com.ybw.yibai.common.constants.HttpUrls.GET_CATEGORY_SIMILAR_SUK_M
 import static com.ybw.yibai.common.constants.HttpUrls.GET_NEWRECOMMEND_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_RECOMMEND_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_SKU_LIST_IDS_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_SPEC_SUK_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.SET_USER_POSITION_METHOD;
 import static com.ybw.yibai.common.constants.Preferences.PLANT;
@@ -661,19 +663,24 @@ public class SceneEditModelImpl implements SceneEditModel {
     @Override
     public void getProductDetails(int productSkuId, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<ProductDetails> observable = mApiService.getProductDetails(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_PRODUCT_INFO_METHOD),
+        Observable<SkuDetailsBean> observable = mApiService.getSkuDetails(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_SKU_LIST_IDS_METHOD),
                 YiBaiApplication.getUid(),
-                productSkuId);
-        Observer<ProductDetails> observer = new Observer<ProductDetails>() {
+                String.valueOf(productSkuId));
+        Observer<SkuDetailsBean> observer = new Observer<SkuDetailsBean>() {
             @Override
             public void onSubscribe(Disposable d) {
                 callBack.onRequestBefore(d);
             }
 
             @Override
-            public void onNext(ProductDetails productDetails) {
-                callBack.onGetProductDetailsSuccess(productDetails);
+            public void onNext(SkuDetailsBean skuDetailsBean) {
+                if (skuDetailsBean.getCode() == 200) {
+                    callBack.onGetProductDetailsSuccess(skuDetailsBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(skuDetailsBean.getMsg()));
+                }
+
             }
 
             @Override

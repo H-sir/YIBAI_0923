@@ -34,11 +34,13 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.PlaceBean;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
+import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.LocationUtil;
+import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListView;
@@ -50,6 +52,7 @@ import com.ybw.yibai.module.main.MainActivity;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -58,6 +61,8 @@ import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
+import static com.ybw.yibai.common.constants.Preferences.MARKET_NAME;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
 /**
@@ -142,7 +147,22 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     @Override
     protected void initEvent() {
         mCityPresenter = new CityPresenterImpl(this);
-        mCityPresenter.getCity();
+        String city = SceneHelper.getCity(getApplicationContext());
+        LogUtil.e("ChangeAddress", "city:" + city);
+        if (city.equals("全国")) {
+            mCityPresenter.applyPermissions(permissions);
+        } else {
+            cityCurrent.setText(city);
+            String latitude = SceneHelper.getLatitude(getApplicationContext());
+            String longitude = SceneHelper.getLongitude(getApplicationContext());
+            if (latitude.equals("") || longitude.equals("")) {
+                LogUtil.e("ChangeAddress", "latitude:" + true);
+                mCityPresenter.applyPermissions(permissions);
+            } else {
+                LogUtil.e("ChangeAddress", "latitude:" + false);
+                mCityPresenter.getMarketList(Double.valueOf(latitude), Double.valueOf(longitude));
+            }
+        }
     }
 
     @Override
@@ -154,25 +174,12 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onCityClick(int position) {
-//        CityListBean.DataBean.ListBean listBean = hotcityList.get(position);
-//        mCityPresenter.setUserPosition(listBean.getCode());
-//        marketList.forEach(object -> object.setCheck(false));
-//        MarketListBean.DataBean.ListBean listBean = marketList.get(position);
-//        listBean.setCheck(true);
-//        mSelectAddressListAdapter.notifyDataSetChanged();
     }
 
-    PlaceBean placeBean;
 
     @Override
     public void onGetLocationSuccess(PlaceBean placeBean) {
-        this.placeBean = placeBean;
-        AndroidUtils.MainHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mCityPresenter.getMarketList(latitude, longitude);
-            }
-        }, 300);
+
     }
 
     /**
@@ -180,8 +187,15 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
      */
     @Override
     public void onGetMarketListSuccess(MarketListBean marketListBean) {
-//        marketList.clear();
         if (marketListBean.getData().getList().size() > 0) {
+            String marketId = mSharedPreferences.getString(MARKET_ID, "0");
+            for (Iterator<MarketListBean.DataBean.ListBean> iterator = marketListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                MarketListBean.DataBean.ListBean bean = iterator.next();
+                if (marketId.equals(String.valueOf(bean.getMarketId()))) {
+                    bean.setCheck(true);
+                }
+                break;
+            }
             mNestFullListViewAdapter = new NestFullListViewAdapter<MarketListBean.DataBean.ListBean>(
                     R.layout.listview_select_address_list_item_layout, marketListBean.getData().getList()) {
                 @Override
@@ -202,13 +216,16 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                         productAllSelectImg.setVisibility(View.GONE);
                     }
                     ImageUtil.displayImage(getApplicationContext(), selectAddressImg, listBean.getLogo());
+
                     selectAddressItem.setOnClickListener(new View.OnClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.N)
                         @Override
                         public void onClick(View view) {
-                            marketListBean.getData().getList().forEach(object -> object.setCheck(false));
-                            MarketListBean.DataBean.ListBean listBean = marketListBean.getData()
-                                    .getList().get(pos);
+                            for (Iterator<MarketListBean.DataBean.ListBean> iterator = marketListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                                MarketListBean.DataBean.ListBean bean = iterator.next();
+                                bean.setCheck(false);
+                            }
+                            MarketListBean.DataBean.ListBean listBean = marketListBean.getData().getList().get(pos);
                             listBean.setCheck(true);
                             bindMarket(marketListBean, listBean);
 
@@ -228,8 +245,11 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     }
 
     @Override
-    public void onBindMarketSuccess(MarketListBean marketListBean) {
+    public void onBindMarketSuccess(MarketListBean marketListBean, int marketId) {
         MessageUtil.showMessage("绑定成功");
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.putString(MARKET_ID, String.valueOf(marketId));
+        edit.apply();
         onGetMarketListSuccess(marketListBean);
     }
 
@@ -238,7 +258,6 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
      */
     @Override
     public void onGetCitySuccess(CityListBean cityListBean) {
-//        hotcityList.addAll(cityListBean.getData().getList());
         mCityPresenter.applyPermissions(permissions);
     }
 
@@ -289,8 +308,8 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             //以下只列举部分获取经纬度相关（常用）的结果信息
             //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
 
-            latitude = bdLocation.getLatitude();    //获取纬度信息
-            longitude = bdLocation.getLongitude();    //获取经度信息
+            double latitude = bdLocation.getLatitude();    //获取纬度信息
+            double longitude = bdLocation.getLongitude();    //获取经度信息
             // 获取城市
             String city = bdLocation.getCity();
             if (TextUtils.isEmpty(city)) {
@@ -298,22 +317,20 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             }
             cityCurrent.setText(city);
             mCityPresenter.getMarketList(latitude, longitude);
-//            mCityPresenter.getLocation(latitude, longitude);
         }
     };
-    double latitude;
-    double longitude;
 
     @Override
     public void onSetUserPositionSuccess(UserPosition userPosition) {
-        cityName = userPosition.getData().getCity_name();
-        if (cityName != null) {
-            /**
-             * 发送数据到{@link HomeFragment#onSetCity(String)}
-             * 使其跳转到对应的Fragment
-             */
-            EventBus.getDefault().postSticky(cityName);
-            onBackPressed();
+        if (userPosition.getData() != null && userPosition.getData().getCity_name() != null) {
+            cityName = userPosition.getData().getCity_name();
+            if (cityName != null) {
+                /**
+                 * 发送数据到{@link HomeFragment#onSetCity(String)}
+                 * 使其跳转到对应的Fragment
+                 */
+                EventBus.getDefault().postSticky(cityName);
+            }
         }
     }
 
@@ -386,9 +403,6 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                 finish();
                 break;
             case R.id.cityCurrent:
-                if (placeBean != null) {
-                    mCityPresenter.setUserPosition(placeBean.getData().getCitycode());
-                }
                 cityName = cityCurrent.getText().toString();
                 if (cityName != null) {
                     /**
@@ -409,11 +423,6 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             case R.id.productSettingType:
                 String cityName = mSharedPreferences.getString(COM_OPEN, "1");
                 mCityPresenter.selectProductType(rootLayout, cityName);
-//                if (cityName.equals("1")) {
-//                    mCityPresenter.onSetProduct(2);
-//                } else {
-//                    mCityPresenter.onSetProduct(1);
-//                }
                 break;
         }
     }
@@ -439,10 +448,13 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             if (resultCode == ChangeAddressActivity.RESULT_CODE) {
                 Bundle bundle = data.getExtras();
                 String name = bundle.getString("name");
+                String mCitycode = bundle.getString("citycode");
                 double latitude = bundle.getDouble("latitude");
                 double longitude = bundle.getDouble("longitude");
                 MessageUtil.showMessage(name);
 
+                LogUtil.e("ChangeAddress", "mCitycode:" + mCitycode);
+                mCityPresenter.setUserPosition(mCitycode);
                 mCityPresenter.getMarketList(latitude, longitude);
                 cityCurrent.setText(name);
             }

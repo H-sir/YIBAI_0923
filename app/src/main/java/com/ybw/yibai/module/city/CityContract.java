@@ -53,7 +53,7 @@ public interface CityContract {
 
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
-        void onBindMarketSuccess(MarketListBean marketListBean);
+        void onBindMarketSuccess(MarketListBean marketListBean, int marketId);
     }
 
     interface CityPresenter extends BasePresenter<CityView> {
@@ -118,13 +118,13 @@ public interface CityContract {
          * */
         void getCity(CallBack callBack);
 
-        void getLocation(double latitude, double longitude,CallBack callBack);
+        void getLocation(double latitude, double longitude, CallBack callBack);
 
-        void onSetProduct(int comOpen,CallBack callBack);
+        void onSetProduct(int comOpen, CallBack callBack);
 
         void getMarketList(double latitude, double longitude, CallBack callBack);
 
-        void bindMarket(MarketListBean marketListBean, int marketId,CallBack callBack);
+        void bindMarket(MarketListBean marketListBean, int marketId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -146,6 +146,6 @@ public interface CityContract {
 
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
-        void onBindMarketSuccess(MarketListBean marketListBean);
+        void onBindMarketSuccess(MarketListBean marketListBean, int marketId);
     }
 }

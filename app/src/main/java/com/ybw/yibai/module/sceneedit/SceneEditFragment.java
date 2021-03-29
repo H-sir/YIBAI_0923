@@ -80,6 +80,7 @@ import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SceneInfoChange;
 import com.ybw.yibai.common.bean.SelectProductParam;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.SpecSuk.DataBean;
 import com.ybw.yibai.common.bean.StickerViewSelected;
@@ -1632,13 +1633,18 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     }
 
     @Override
-    public void onGetProductDetailsSuccess(ProductDetails productDetails) {
-        if (productDetails.getData() != null && productDetails.getData().getHabit_url() != null
-                && !productDetails.getData().getHabit_url().isEmpty()) {
-            Intent intent = new Intent(getActivity(), BrowserActivity.class);
-            intent.putExtra(URL, productDetails.getData().getHabit_url());
-            startActivity(intent);
-        }else{
+    public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
+                && skuDetailsBean.getData().getList().size() > 0) {
+            SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
+            if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
+                Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                intent.putExtra(URL, listBean.getHabit_url());
+                startActivity(intent);
+            } else {
+                MessageUtil.showMessage("盆栽习性地址为空");
+            }
+        } else {
             MessageUtil.showMessage("盆栽习性地址为空");
         }
     }

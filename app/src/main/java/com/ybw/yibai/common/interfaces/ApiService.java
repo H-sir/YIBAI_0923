@@ -55,6 +55,7 @@ import com.ybw.yibai.common.bean.SetIncrease;
 import com.ybw.yibai.common.bean.ShippingAddress;
 import com.ybw.yibai.common.bean.SimilarPlantSKU;
 import com.ybw.yibai.common.bean.SimilarSKU;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SkuMarketBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.SystemParameter;
@@ -789,7 +790,20 @@ public interface ApiService {
                                                  @Query("uid") int uid,
                                                  @Query("product_id") int productId);
 
-
+    /**
+     * 获取产品详情
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @param productId 产品ID
+     * @return 获取产品详情时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_SKU_LIST_IDS_URL)
+    Observable<SkuDetailsBean> getSkuDetails(@Header("timestamp") String timestamp,
+                                             @Header("sign") String sign,
+                                             @Query("uid") int uid,
+                                             @Query("skuids") String skuids);
     /**
      * 场景中产品一键创建并导入
      *

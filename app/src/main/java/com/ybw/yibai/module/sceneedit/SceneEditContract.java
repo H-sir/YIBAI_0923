@@ -22,6 +22,7 @@ import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.model.CreateDesignModel;
@@ -165,7 +166,7 @@ public interface SceneEditContract {
 
         void updateSceneBgSuccess();
 
-        void onGetProductDetailsSuccess(ProductDetails productDetails);
+        void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
     }
 
     interface SceneEditPresenter extends BasePresenter<SceneEditView> {
@@ -771,6 +772,6 @@ public interface SceneEditContract {
 
         void updateSceneBgSuccess();
 
-        void onGetProductDetailsSuccess(ProductDetails productDetails);
+        void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
     }
 }

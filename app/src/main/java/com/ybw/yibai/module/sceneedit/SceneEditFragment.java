@@ -80,6 +80,7 @@ import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SceneInfoChange;
 import com.ybw.yibai.common.bean.SelectProductParam;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.SpecSuk.DataBean;
 import com.ybw.yibai.common.bean.StickerViewSelected;
@@ -100,7 +101,6 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.FilterFactoryUtil;
 import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
-import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.PermissionsUtil;
@@ -1633,15 +1633,17 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     }
 
     @Override
-    public void onGetProductDetailsSuccess(ProductDetails productDetails) {
-        LogUtil.e("ChangeAddress:", "" + productDetails.toString());
-        LogUtil.e("ChangeAddress:", "" + productDetails.getData().toString());
-        LogUtil.e("ChangeAddress:", "getHabit_url" + productDetails.getData().getHabit_url());
-        if (productDetails.getData() != null && productDetails.getData().getHabit_url() != null
-                && !productDetails.getData().getHabit_url().isEmpty()) {
-            Intent intent = new Intent(getActivity(), BrowserActivity.class);
-            intent.putExtra(URL, productDetails.getData().getHabit_url());
-            startActivity(intent);
+    public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
+                && skuDetailsBean.getData().getList().size() > 0) {
+            SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
+            if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
+                Intent intent = new Intent(getActivity(), BrowserActivity.class);
+                intent.putExtra(URL, listBean.getHabit_url());
+                startActivity(intent);
+            } else {
+                MessageUtil.showMessage("盆栽习性地址为空");
+            }
         } else {
             MessageUtil.showMessage("盆栽习性地址为空");
         }
@@ -2098,10 +2100,6 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             }
             mSceneEditPresenter.updateSimulationData(simulationData);
 
-            LogUtil.e("ChangeAddress:", "getProductSkuId" + simulationData.getProductSkuId());
-            LogUtil.e("ChangeAddress:", "getAugmentedProductSkuId" + simulationData.getAugmentedProductSkuId());
-            LogUtil.e("ChangeAddress:", "getProductPic1" + simulationData.getProductPic1());
-            LogUtil.e("ChangeAddress:", "getAugmentedProductPic1" + simulationData.getAugmentedProductPic1());
             productSkuId = simulationData.getProductSkuId();
             augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
             productPic1 = simulationData.getProductPic1();

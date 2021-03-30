@@ -65,7 +65,12 @@ public class CityModelImpl implements CityContract.CityModel {
 
             @Override
             public void onNext(UserPosition userPosition) {
-                callBack.onSetUserPositionSuccess(userPosition);
+                if (userPosition.getCode() == 200) {
+                    callBack.onSetUserPositionSuccess(userPosition);
+                }
+//                else {
+//                    callBack.onRequestFailure(new Throwable(userPosition.getMsg()));
+//                }
             }
 
             @Override
@@ -101,7 +106,11 @@ public class CityModelImpl implements CityContract.CityModel {
 
             @Override
             public void onNext(CityListBean cityListBean) {
-                callBack.onGetCitySuccess(cityListBean);
+                if (cityListBean.getCode() == 200) {
+                    callBack.onGetCitySuccess(cityListBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(cityListBean.getMsg()));
+                }
             }
 
             @Override
@@ -205,7 +214,7 @@ public class CityModelImpl implements CityContract.CityModel {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<MarketListBean> observable = mApiService.getMarketList(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_MARKET_LIST_METHOD),
-                YiBaiApplication.getUid(), longitude, latitude,"no","v3");
+                YiBaiApplication.getUid(), longitude, latitude, "no", "v3");
         Observer<MarketListBean> observer = new Observer<MarketListBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -252,7 +261,7 @@ public class CityModelImpl implements CityContract.CityModel {
             @Override
             public void onNext(BaseBean mBaseBean) {
                 if (mBaseBean.getCode() == 200) {
-                    callBack.onBindMarketSuccess(marketListBean,marketId);
+                    callBack.onBindMarketSuccess(marketListBean, marketId);
                 } else {
                     callBack.onRequestFailure(new Throwable(mBaseBean.getMsg()));
                 }

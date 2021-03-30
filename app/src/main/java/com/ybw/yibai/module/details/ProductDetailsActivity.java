@@ -661,14 +661,13 @@ public class ProductDetailsActivity extends BaseActivity implements ProductDetai
         }
         if (!TextUtils.isEmpty(productDetails.getData().getHabit_url())) {
             String content = productDetails.getData().getHabit_url();
-            String htmlString = EncryptionUtil.base64DecodeString(content);
-            if (!TextUtils.isEmpty(htmlString)) {
+            if (!TextUtils.isEmpty(content)) {
                 webViewHabit.clearCache(true);
 //                String replace = htmlString.replace("http", "https");
                 Map<String, String> headMap = new HashMap<>(2);
                 headMap.put("uid", String.valueOf(YiBaiApplication.getUid()));
                 headMap.put("token", YiBaiApplication.getToken());
-                webViewHabit.loadUrl(htmlString, headMap);
+                webViewHabit.loadUrl(content, headMap);
 //                webViewHabit.loadDataWithBaseURL(htmlString, htmlString, "text/html", "utf-8", null);
             }
         }

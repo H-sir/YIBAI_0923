@@ -41,6 +41,7 @@ import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SceneInfo;
 import com.ybw.yibai.common.bean.SimulationData;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.bean.SpecSuk;
 import com.ybw.yibai.common.bean.UserPosition;
 import com.ybw.yibai.common.model.CreateDesignModel;
@@ -1873,7 +1874,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     }
 
     @Override
-    public void onGetProductDetailsSuccess(ProductDetails productDetails) {
-        mSceneEditView.onGetProductDetailsSuccess(productDetails);
+    public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        mSceneEditView.onGetProductDetailsSuccess(skuDetailsBean);
     }
 }

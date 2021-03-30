@@ -91,6 +91,7 @@ public class HttpUrls {
      * 获取产品详情的方法
      */
     public static final String GET_PRODUCT_INFO_METHOD = "mybw.productinfo";
+    public static final String GET_SKU_LIST_IDS_METHOD = "mybw.getskulistids";
 
     /**
      * 场景中产品一键创建并导入的方法
@@ -509,6 +510,11 @@ public class HttpUrls {
      * 获取产品详情的URL
      */
     public static final String GET_PRODUCT_INFO_URL = "?method=" + GET_PRODUCT_INFO_METHOD;
+
+    /**
+     * 获取指定sku信息
+     */
+    public static final String GET_SKU_LIST_IDS_URL = "?method=" + GET_SKU_LIST_IDS_METHOD;
 
     /**
      * 场景中产品一键创建并导入的URL

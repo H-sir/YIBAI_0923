@@ -54,6 +54,8 @@ public interface CityContract {
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
         void onBindMarketSuccess(MarketListBean marketListBean, int marketId);
+
+        void onSetEditUserSuccess(EditUserInfo editUserInfo);
     }
 
     interface CityPresenter extends BasePresenter<CityView> {
@@ -101,6 +103,11 @@ public interface CityContract {
         void selectProductType(View view, String cityName);
 
         void bindMarket(MarketListBean marketListBean, MarketListBean.DataBean.ListBean listBean);
+
+        /**
+         * 修改用户信息经纬度
+         * */
+        void setEditUser(double latitude, double longitude);
     }
 
     interface CityModel {
@@ -125,6 +132,8 @@ public interface CityContract {
         void getMarketList(double latitude, double longitude, CallBack callBack);
 
         void bindMarket(MarketListBean marketListBean, int marketId, CallBack callBack);
+
+        void setEditUser(double latitude, double longitude, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -147,5 +156,7 @@ public interface CityContract {
         void onGetMarketListSuccess(MarketListBean marketListBean);
 
         void onBindMarketSuccess(MarketListBean marketListBean, int marketId);
+
+        void onSetEditUserSuccess(EditUserInfo editUserInfo);
     }
 }

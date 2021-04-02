@@ -202,6 +202,16 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
         mCityView.onBindMarketSuccess(marketListBean,marketId);
     }
 
+    @Override
+    public void setEditUser(double latitude, double longitude) {
+        mCityModel.setEditUser(latitude,longitude,this);
+    }
+
+    @Override
+    public void onSetEditUserSuccess(EditUserInfo editUserInfo) {
+        mCityView.onSetEditUserSuccess(editUserInfo);
+    }
+
     /**
      * 显示产品设置切换的PopupWindow
      *

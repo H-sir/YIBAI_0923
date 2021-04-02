@@ -1634,19 +1634,33 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     @Override
     public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        BaseSticker currentSticker = mStickerView.getCurrentSticker();
+        if (null != currentSticker) {
+            currentSticker.setHabit(true);
+        }
+        StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
         if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
                 && skuDetailsBean.getData().getList().size() > 0) {
             SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
             if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
-                Intent intent = new Intent(getActivity(), BrowserActivity.class);
-                intent.putExtra(URL, listBean.getHabit_url());
-                startActivity(intent);
+                currentSticker.setHabitUrl(listBean.getHabit_url());
+                stickerViewSelected.setSelected(true);
             } else {
-                MessageUtil.showMessage("盆栽习性地址为空");
+                stickerViewSelected.setSelected(true);
+                currentSticker.setHabitUrl("");
             }
         } else {
-            MessageUtil.showMessage("盆栽习性地址为空");
+            stickerViewSelected.setSelected(false);
+            currentSticker.setHabitUrl("");
         }
+
+        stickerViewSelected.setBaseSticker(currentSticker);
+
+        /**
+         * 发送数据到{@link SceneActivity#getHabitTextViewData(StickerViewSelected)}
+         * 使其跳转到对应的Fragment
+         */
+        EventBus.getDefault().postSticky(stickerViewSelected);
     }
 
     private void onResert() {
@@ -2132,6 +2146,20 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 productTradePriceCode = mSimulationData.getProductTradePriceCode();
                 augmentedPriceCode = mSimulationData.getAugmentedPriceCode();
                 augmentedTradePriceCode = mSimulationData.getAugmentedTradePriceCode();
+
+                SimulationData simulationData = mSimulationDataList.get(position);
+                mSimulationData = simulationData;
+                if (null == simulationData) {
+                    return;
+                }
+
+                productSkuId = simulationData.getProductSkuId();
+                augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
+                productPic1 = simulationData.getProductPic1();
+                augmentedProductPic1 = simulationData.getAugmentedProductPic1();
+                productName = simulationData.getProductName();
+                specTypeName = simulationData.getProductSpecText();
+                augmentedProductName = simulationData.getAugmentedProductName();
             }
             if (View.GONE == mProductCodeImageButton.getVisibility()) {
                 mProductCodeImageButton.setVisibility(View.VISIBLE);

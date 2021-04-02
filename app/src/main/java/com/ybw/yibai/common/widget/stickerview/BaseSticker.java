@@ -42,8 +42,12 @@ public abstract class BaseSticker {
 
     /**
      * 对应的ID
-     * */
+     */
     private String productAndaugmentedSkuId;
+
+    private boolean isHabit = false;
+
+    private String habitUrl = "";
 
     /*
       /\_/\
@@ -452,6 +456,22 @@ public abstract class BaseSticker {
 
     public void setProductAndaugmentedSkuId(String productAndaugmentedSkuId) {
         this.productAndaugmentedSkuId = productAndaugmentedSkuId;
+    }
+
+    public boolean isHabit() {
+        return isHabit;
+    }
+
+    public void setHabit(boolean habit) {
+        isHabit = habit;
+    }
+
+    public String getHabitUrl() {
+        return habitUrl;
+    }
+
+    public void setHabitUrl(String habitUrl) {
+        this.habitUrl = habitUrl;
     }
 
     @NonNull

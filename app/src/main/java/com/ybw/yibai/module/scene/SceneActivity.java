@@ -78,6 +78,7 @@ import com.ybw.yibai.common.utils.ScreenAdaptationUtils;
 import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
+import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.main.MainActivity;
 import com.ybw.yibai.module.more.MoreActivity;
@@ -113,6 +114,7 @@ import static com.ybw.yibai.common.constants.Preferences.DESIGN_CREATE;
 import static com.ybw.yibai.common.constants.Preferences.DESIGN_NUMBER;
 import static com.ybw.yibai.common.constants.Preferences.POSITION;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
+import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.utils.OtherUtil.setNativeLightStatusBar;
 import static com.ybw.yibai.common.utils.OtherUtil.splitList;
 import static com.ybw.yibai.common.utils.ViewPagerIndicatorUtil.initDots;
@@ -1594,8 +1596,20 @@ public class SceneActivity extends BaseActivity implements SceneView,
         if (selected) {
             if (baseSticker != null) {
                 mTitleTextView.setText(String.valueOf(baseSticker.getPottedName()));
-                screenHabitTextView.setVisibility(View.VISIBLE);
                 mScreenRotationImageView.setVisibility(View.GONE);
+                if (baseSticker.isHabit()) {
+                    if (baseSticker.getHabitUrl() != null && !baseSticker.getHabitUrl().isEmpty()) {
+                        screenHabitTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        screenHabitTextView.setVisibility(View.GONE);
+                    }
+                } else {
+                    /**
+                     * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
+                     * 使其跳转到对应的Fragment
+                     */
+                    EventBus.getDefault().postSticky(new HomeBean());
+                }
             }
             mArcMenu.hide();
             mFloatingActionButton.hide();
@@ -1736,10 +1750,24 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
     @OnClick(R.id.screenHabitTextView)
     public void onViewClicked() {
-        /**
-         * 发送数据到{@link SceneEditFragment#screenHabitTextViewData(HomeBean)}
-         * 使其跳转到对应的Fragment
-         */
-        EventBus.getDefault().postSticky(new HomeBean());
+        Intent intent = new Intent(mSceneActivity, BrowserActivity.class);
+        intent.putExtra(URL, habitUrl);
+        startActivity(intent);
+    }
+
+    String habitUrl = "";
+
+    /**
+     * EventBus
+     * 接收用户从{@link SceneEditFragment} 传递过来的数据
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getHabitTextViewData(StickerViewSelected stickerViewSelected) {
+        if (stickerViewSelected.isSelected()) {
+            habitUrl = stickerViewSelected.getBaseSticker().getHabitUrl();
+            screenHabitTextView.setVisibility(View.VISIBLE);
+        } else {
+            screenHabitTextView.setVisibility(View.GONE);
+        }
     }
 }

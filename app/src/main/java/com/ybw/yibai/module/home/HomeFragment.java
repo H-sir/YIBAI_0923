@@ -51,6 +51,7 @@ import com.ybw.yibai.common.classs.GridSpacingItemDecoration;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.AnimationUtil.CustomTransformer;
 import com.ybw.yibai.common.utils.DensityUtil;
+import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.utils.EncryptionUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
@@ -439,7 +440,13 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
         }
         GuideUtil.showGuideView(this, R.layout.guide_home_layout);
 
-        mLocationTextView.setText(SceneHelper.getCity(getActivity()));
+        String citYname = mPreferences.getString(CITY_NAME, "");
+        if (!citYname.isEmpty()) {
+            mLocationTextView.setText(citYname);
+        } else {
+            mLocationTextView.setText("全国");
+        }
+
 
         if (isSceneFlag) {
             mStartDesignTextView.setText("继续设计");
@@ -588,10 +595,16 @@ public class HomeFragment extends BaseFragment implements HomeView, View.OnTouch
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSetCity(String city) {
-        mLocationTextView.setText(city);
-        SharedPreferences.Editor edit = mPreferences.edit();
-        edit.putString(CITY_NAME, city);
-        edit.apply();
+        String citYname = mPreferences.getString(CITY_NAME, "");
+        if (!citYname.isEmpty()) {
+            mLocationTextView.setText(citYname);
+        } else {
+            mLocationTextView.setText("全国");
+        }
+//        mLocationTextView.setText(city);
+//        SharedPreferences.Editor edit = mPreferences.edit();
+//        edit.putString(CITY_NAME, city);
+//        edit.apply();
 
         SceneHelper.saveCity(getActivity(), city);
     }

@@ -54,7 +54,25 @@ public class MarketListBean {
          */
 
         @SerializedName("address") private String address;
+        @SerializedName("lng") private String lng;
+        @SerializedName("lat") private String lat;
         @SerializedName("list") private List<ListBean> list;
+
+        public String getLng() {
+            return lng;
+        }
+
+        public void setLng(String lng) {
+            this.lng = lng;
+        }
+
+        public String getLat() {
+            return lat;
+        }
+
+        public void setLat(String lat) {
+            this.lat = lat;
+        }
 
         public String getAddress() {
             return address;

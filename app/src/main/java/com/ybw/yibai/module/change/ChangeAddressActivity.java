@@ -72,6 +72,7 @@ import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.Preferences.CITY_NAME;
 import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
+import static com.ybw.yibai.common.constants.Preferences.POSITION_ADDRESS;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
 /**
@@ -213,11 +214,13 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 PoiInfo poiInfo = mPoiInfoList.get(position);
                 SharedPreferences.Editor edit = mSharedPreferences.edit();
                 edit.putString(CITY_NAME, poiInfo.getCity());
+                edit.putString(POSITION_ADDRESS, poiInfo.name);
                 edit.apply();
                 SceneHelper.saveCity(getApplicationContext(), poiInfo.getCity());
                 SceneHelper.saveLatLng(getApplicationContext(), String.valueOf(poiInfo.getLocation().latitude), String.valueOf(poiInfo.getLocation().longitude));
                 Intent intent = new Intent();
                 intent.putExtra("name", poiInfo.name);
+                LogUtil.e("ChangeAddress", "mCitycode:" + mCitycode);
                 intent.putExtra("citycode", mCitycode);
                 intent.putExtra("latitude", poiInfo.getLocation().latitude);
                 intent.putExtra("longitude", poiInfo.getLocation().longitude);
@@ -232,23 +235,25 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             @Override
             public void onGetSuggestionResult(SuggestionResult suggestionResult) {
                 List<SuggestionResult.SuggestionInfo> allSuggestions = suggestionResult.getAllSuggestions();
-                mSuggestionInfos.clear();
-                sugAdapter.clear();
-                for (Iterator<SuggestionResult.SuggestionInfo> iterator = allSuggestions.iterator(); iterator.hasNext(); ) {
-                    SuggestionResult.SuggestionInfo suggestionInfo = iterator.next();
-                    mSuggestionInfos.add(suggestionInfo);
-                    sugAdapter.add(suggestionInfo.district + suggestionInfo.key);
+                if (allSuggestions != null && allSuggestions.size() > 0) {
+                    mSuggestionInfos.clear();
+                    sugAdapter.clear();
+                    for (Iterator<SuggestionResult.SuggestionInfo> iterator = allSuggestions.iterator(); iterator.hasNext(); ) {
+                        SuggestionResult.SuggestionInfo suggestionInfo = iterator.next();
+                        mSuggestionInfos.add(suggestionInfo);
+                        sugAdapter.add(suggestionInfo.district + suggestionInfo.key);
+                    }
+                    sugAdapter.notifyDataSetChanged();
+
+
+                    MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(allSuggestions.get(0).getPt(), 18f);
+                    mBaiduMap.animateMapStatus(msu);
+                    // 发起反地理编码请求(经纬度->地址信息)
+                    ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
+                    // 设置反地理编码位置坐标
+                    reverseGeoCodeOption.location(allSuggestions.get(0).getPt());
+                    geoCoder.reverseGeoCode(reverseGeoCodeOption);
                 }
-                sugAdapter.notifyDataSetChanged();
-
-
-                MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(allSuggestions.get(0).getPt(), 18f);
-                mBaiduMap.animateMapStatus(msu);
-                // 发起反地理编码请求(经纬度->地址信息)
-                ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
-                // 设置反地理编码位置坐标
-                reverseGeoCodeOption.location(allSuggestions.get(0).getPt());
-                geoCoder.reverseGeoCode(reverseGeoCodeOption);
             }
         });
 
@@ -429,6 +434,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 // 发起请求
                 String cityCode = mTvSelectedCity.getText().toString();
                 String etJiedao = etJiedaoName.getText().toString();
+                if (etJiedao.isEmpty()) etJiedao = cityCode;
 //                mPoiSearch.searchInCity((new PoiCitySearchOption())
 //                        .city(cityCode)
 //                        .keyword(etJiedao));
@@ -446,16 +452,23 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
 
     @Override
     public void onGetCitySuccess(CityListBean cityListBean) {
-        String city = SceneHelper.getCity(getApplicationContext());
-        if (!city.equals("全国")) {
-            mTvSelectedCity.setText(city);
+        String citYname = mSharedPreferences.getString(CITY_NAME, "");
+        LogUtil.e("ChangeAddress", "citYname:" + citYname);
+        if (!citYname.isEmpty()) {
+            mTvSelectedCity.setText(citYname);
         }
 
         spinnerListCity = new ArrayList<>();
         for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
             CityListBean.DataBean.ListBean listBean = iterator.next();
             spinnerListCity.add(listBean.getRegionName());
-            if (city.equals(listBean.getCode())) mCitycode = listBean.getRegionName();
+            if (!citYname.isEmpty()) {
+                if (citYname.equals(listBean.getRegionName())){
+                    mCitycode = listBean.getCode();
+                    LogUtil.e("ChangeAddress", "citYname1:" + citYname);
+                }
+            }
+
         }
         mSpinnerPopWindowCity = new SpinnerPopWindow<>(getApplication(), spinnerListCity, new AdapterView.OnItemClickListener() {
             @Override
@@ -464,8 +477,8 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 mTvSelectedCity.setText(spinnerListCity.get(position));
                 for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
                     CityListBean.DataBean.ListBean listBean = iterator.next();
-                    if (spinnerListCity.get(position).equals(listBean.getRegionName())){
-                        mCitycode = listBean.getRegionName();
+                    if (spinnerListCity.get(position).equals(listBean.getRegionName())) {
+                        mCitycode = listBean.getCode();
                     }
                 }
             }

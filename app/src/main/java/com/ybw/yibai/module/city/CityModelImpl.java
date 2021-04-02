@@ -282,4 +282,41 @@ public class CityModelImpl implements CityContract.CityModel {
                 .subscribeOn(Schedulers.io())
                 .subscribe(observer);
     }
+
+    @Override
+    public void setEditUser(double latitude, double longitude, CityContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<EditUserInfo> observable = mApiService.editUserProductInfo(timeStamp,
+                OtherUtil.getSign(timeStamp, EDIT_USER_INFO_METHOD),
+                YiBaiApplication.getUid(), (float) latitude, (float) longitude);
+        Observer<EditUserInfo> observer = new Observer<EditUserInfo>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(EditUserInfo editUserInfo) {
+                if (editUserInfo.getCode() == 200) {
+                    callBack.onSetEditUserSuccess(editUserInfo);
+                } else {
+                    callBack.onRequestFailure(new Throwable(editUserInfo.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
 }

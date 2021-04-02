@@ -427,4 +427,17 @@ public class Preferences {
      * 选定的市场信息name
      */
     public static final String MARKET_NAME = "marketName";
+
+    /**
+     * 定位地址
+     */
+    public static final String POSITION_ADDRESS = "positionAddress";
+    /**
+     * 经度
+     */
+    public static final String LOCATION_LNG = "locationLng";
+    /**
+     * 纬度
+     */
+    public static final String LOCATION_LAT = "locationLat";
 }

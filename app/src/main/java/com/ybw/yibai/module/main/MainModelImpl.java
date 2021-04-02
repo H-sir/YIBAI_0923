@@ -74,10 +74,13 @@ import static com.ybw.yibai.common.constants.Preferences.INVITE_BG;
 import static com.ybw.yibai.common.constants.Preferences.INVITE_RULE_BG;
 import static com.ybw.yibai.common.constants.Preferences.INVITE_URL;
 import static com.ybw.yibai.common.constants.Preferences.IS_BIND_WX;
+import static com.ybw.yibai.common.constants.Preferences.LOCATION_LAT;
+import static com.ybw.yibai.common.constants.Preferences.LOCATION_LNG;
 import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
 import static com.ybw.yibai.common.constants.Preferences.MARKET_NAME;
 import static com.ybw.yibai.common.constants.Preferences.MY_WALLET_URL;
 import static com.ybw.yibai.common.constants.Preferences.NICK_NAME;
+import static com.ybw.yibai.common.constants.Preferences.POSITION_ADDRESS;
 import static com.ybw.yibai.common.constants.Preferences.RECORD_URL;
 import static com.ybw.yibai.common.constants.Preferences.ROLE_NAME;
 import static com.ybw.yibai.common.constants.Preferences.TAKE_CASE_URL;
@@ -442,6 +445,19 @@ public class MainModelImpl implements MainModel {
                 edit.putString(MARKET_NAME, market.getName());
             }
         }
+        DataBean.LocationData location = data.getLocation();
+        if (location != null) {
+            if (!TextUtils.isEmpty(location.getAddress())) {
+                edit.putString(POSITION_ADDRESS, location.getAddress());
+            }
+            if (!TextUtils.isEmpty(location.getAddress())) {
+                edit.putString(LOCATION_LNG, String.valueOf(location.getLat()));
+            }
+            if (!TextUtils.isEmpty(location.getAddress())) {
+                edit.putString(LOCATION_LAT, String.valueOf(location.getLng()));
+            }
+        }
+
         edit.apply();
     }
 

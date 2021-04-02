@@ -61,8 +61,11 @@ import butterknife.OnClick;
 
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Preferences.COM_OPEN;
+import static com.ybw.yibai.common.constants.Preferences.LOCATION_LAT;
+import static com.ybw.yibai.common.constants.Preferences.LOCATION_LNG;
 import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
 import static com.ybw.yibai.common.constants.Preferences.MARKET_NAME;
+import static com.ybw.yibai.common.constants.Preferences.POSITION_ADDRESS;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
 /**
@@ -134,34 +137,31 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
     @Override
     protected void initData() {
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
-        String cityName = mSharedPreferences.getString(COM_OPEN, "1");
-        if (cityName.equals("1")) {
-            productSettingName.setText("展示所有产品");
-        } else {
-            productSettingName.setText("仅展示有供货的产品");
-        }
-
         mWaitDialog = new WaitDialog(this);
     }
 
     @Override
     protected void initEvent() {
         mCityPresenter = new CityPresenterImpl(this);
-        String city = SceneHelper.getCity(getApplicationContext());
-        LogUtil.e("ChangeAddress", "city:" + city);
-        if (city.equals("全国")) {
-            mCityPresenter.applyPermissions(permissions);
+        String cityName = mSharedPreferences.getString(COM_OPEN, "1");
+        String positionAddress = mSharedPreferences.getString(POSITION_ADDRESS, "");
+        String locationLng = mSharedPreferences.getString(LOCATION_LNG, "");
+        String locationLat = mSharedPreferences.getString(LOCATION_LAT, "");
+        if (cityName.equals("1")) {
+            productSettingName.setText("展示所有产品");
         } else {
-            cityCurrent.setText(city);
-            String latitude = SceneHelper.getLatitude(getApplicationContext());
-            String longitude = SceneHelper.getLongitude(getApplicationContext());
-            if (latitude.equals("") || longitude.equals("")) {
-                LogUtil.e("ChangeAddress", "latitude:" + true);
-                mCityPresenter.applyPermissions(permissions);
+            productSettingName.setText("仅展示有供货的产品");
+        }
+        if (positionAddress != null && !positionAddress.isEmpty()) {
+            cityCurrent.setText(positionAddress);
+            if (!locationLng.isEmpty() && !locationLat.isEmpty()) {
+                LogUtil.e("ChangeAddress", "location:" + locationLng + locationLat);
+                mCityPresenter.getMarketList(Double.valueOf(locationLng), Double.valueOf(locationLat));
             } else {
-                LogUtil.e("ChangeAddress", "latitude:" + false);
-                mCityPresenter.getMarketList(Double.valueOf(latitude), Double.valueOf(longitude));
+                mCityPresenter.applyPermissions(permissions);
             }
+        }else {
+            mCityPresenter.applyPermissions(permissions);
         }
     }
 
@@ -187,7 +187,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
      */
     @Override
     public void onGetMarketListSuccess(MarketListBean marketListBean) {
-        if (marketListBean.getData().getList().size() > 0) {
+        if (marketListBean.getData().getList() != null && marketListBean.getData().getList().size() > 0) {
             String marketId = mSharedPreferences.getString(MARKET_ID, "0");
             for (Iterator<MarketListBean.DataBean.ListBean> iterator = marketListBean.getData().getList().iterator(); iterator.hasNext(); ) {
                 MarketListBean.DataBean.ListBean bean = iterator.next();
@@ -251,6 +251,14 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
         edit.putString(MARKET_ID, String.valueOf(marketId));
         edit.apply();
         onGetMarketListSuccess(marketListBean);
+    }
+
+    @Override
+    public void onSetEditUserSuccess(EditUserInfo editUserInfo) {
+        SharedPreferences.Editor edit = mSharedPreferences.edit();
+        edit.putString(LOCATION_LAT, editUserInfo.getData().getLat());
+        edit.putString(LOCATION_LNG, editUserInfo.getData().getLng());
+        edit.apply();
     }
 
     /**
@@ -453,7 +461,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                 double longitude = bundle.getDouble("longitude");
                 MessageUtil.showMessage(name);
 
-                LogUtil.e("ChangeAddress", "mCitycode:" + mCitycode);
+                mCityPresenter.setEditUser(latitude,longitude);
                 mCityPresenter.setUserPosition(mCitycode);
                 mCityPresenter.getMarketList(latitude, longitude);
                 cityCurrent.setText(name);

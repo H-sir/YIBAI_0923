@@ -185,6 +185,11 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
     }
 
     @Override
+    public void onSetEditUserSuccess(EditUserInfo editUserInfo) {
+
+    }
+
+    @Override
     public void onBindMarketSuccess(MarketListBean marketListBean, int marketId) {
 
     }

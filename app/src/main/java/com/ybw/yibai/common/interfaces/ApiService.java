@@ -1763,6 +1763,24 @@ public interface ApiService {
                                                  @Part("uid") int uid,
                                                  @Part("com_open") int com_open);
 
+    /**
+     * 修改用户基础信息
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @param lng  经度(经纬度两个参数必须同时传,只传一个不生效)
+     * @param lat  纬度
+     * @return 修改用户基础信息时服务器端返回的数据
+     */
+    @Multipart
+    @POST(HttpUrls.EDIT_USER_INFO_URL)
+    Observable<EditUserInfo> editUserProductInfo(@Header("timestamp") String timestamp,
+                                                 @Header("sign") String sign,
+                                                 @Part("uid") int uid,
+                                                 @Part("lng") float lng,
+                                                 @Part("lat") float lat);
+
 
     /**
      * 修改用户基础信息

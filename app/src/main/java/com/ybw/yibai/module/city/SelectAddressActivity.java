@@ -160,7 +160,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
             } else {
                 mCityPresenter.applyPermissions(permissions);
             }
-        }else {
+        } else {
             mCityPresenter.applyPermissions(permissions);
         }
     }
@@ -234,8 +234,10 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                 }
             };
             cityListView.setAdapter(mNestFullListViewAdapter);
+            cityListView.setVisibility(View.VISIBLE);
             noCityListView.setVisibility(View.GONE);
         } else {
+            cityListView.setVisibility(View.GONE);
             noCityListView.setVisibility(View.VISIBLE);
         }
     }
@@ -461,7 +463,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
                 double longitude = bundle.getDouble("longitude");
                 MessageUtil.showMessage(name);
 
-                mCityPresenter.setEditUser(latitude,longitude);
+                mCityPresenter.setEditUser(latitude, longitude);
                 mCityPresenter.setUserPosition(mCitycode);
                 mCityPresenter.getMarketList(latitude, longitude);
                 cityCurrent.setText(name);

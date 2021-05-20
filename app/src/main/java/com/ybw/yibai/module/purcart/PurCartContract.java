@@ -29,6 +29,8 @@ public interface PurCartContract {
         void checkIfGpsOpenResult(boolean gpsOpenResult);
 
         void onDeleteSuccess();
+
+        void onDelCartGateSuccess();
     }
 
     interface PurCartPresenter extends BasePresenter<PurCartView> {
@@ -58,6 +60,8 @@ public interface PurCartContract {
         void checkIfGpsOpen();
 
         void displayOpenGpsDialog(LinearLayout rootLayout);
+
+        void onDelCart(int cartId);
     }
 
     interface PurCartModel {
@@ -72,6 +76,8 @@ public interface PurCartContract {
         void updateCartGateCheck(int cartId, int check, CallBack callBack);
 
         void upAllCart(String cartIds, int type, int isCheck, CallBack callBack);
+
+        void delCart(int cartId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -83,5 +89,7 @@ public interface PurCartContract {
         void onUpAllCartSuccess(int isCheck);
 
         void onDeleteSuccess();
+
+        void onDelCartGateSuccess();
     }
 }

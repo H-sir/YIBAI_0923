@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -116,6 +117,7 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
 
         View itemView = convertView.findViewById(R.id.itemView);
         View itemTitleView = convertView.findViewById(R.id.itemTitleView);
+        FrameLayout purcartComSelectLayout = convertView.findViewById(R.id.purcartComSelectLayout);    //是否选择
         ImageView purcartComSelect = convertView.findViewById(R.id.purcartComSelect);    //是否选择
         ImageView purcartComImage = convertView.findViewById(R.id.purcartComImage);      //图片
         TextView purcartComName = convertView.findViewById(R.id.purcartComName);        //名称
@@ -146,7 +148,7 @@ public class PurCartComExtendableListViewAdapter extends BaseExpandableListAdapt
         titleName.setText(first.getGateName());
         titleTime.setText("");
 
-        purcartComSelect.setOnClickListener(view -> {
+        purcartComSelectLayout.setOnClickListener(view -> {
             if (onSelectItemClickListener != null)
                 onSelectItemClickListener.onItemSelectNum(position, purcartComSelect, !isSelect);
         });

@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ybw.yibai.common.constants.HttpUrls.DEL_CARTGATE_URL;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UP_ALL_CART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UP_CARTGATE_METHOD;
@@ -88,6 +89,43 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
             public void onNext(BaseBean baseBean) {
                 if (baseBean.getCode() == 200) {
                     callBack.onUpdateCartGateSuccess(num);
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void delCart(int cartId,PurCartContract.CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.delCartGate(timeStamp,
+                OtherUtil.getSign(timeStamp, DEL_CARTGATE_URL),
+                YiBaiApplication.getUid(), cartId);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onDelCartGateSuccess();
                 } else {
                     callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }

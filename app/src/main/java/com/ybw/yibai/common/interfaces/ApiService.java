@@ -892,6 +892,20 @@ public interface ApiService {
      * @param uid       用户的ID
      */
     @Multipart
+    @POST(HttpUrls.DEL_CARTGATE_URL)
+    Observable<BaseBean> delCartGate(@Header("timestamp") String timestamp,
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("cart_id") int cartId);
+
+    /**
+     * 添加商品到进货列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     */
+    @Multipart
     @POST(HttpUrls.UP_CARTGATE_URL)
     Observable<BaseBean> updateCartGateCheck(@Header("timestamp") String timestamp,
                                              @Header("sign") String sign,

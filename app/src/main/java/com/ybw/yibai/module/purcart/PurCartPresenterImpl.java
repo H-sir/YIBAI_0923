@@ -70,6 +70,16 @@ public class PurCartPresenterImpl extends BasePresenterImpl<PurCartContract.PurC
     }
 
     @Override
+    public void onDelCart(int cartId) {
+        mPurCartModel.delCart(cartId, this);
+    }
+
+    @Override
+    public void onDelCartGateSuccess() {
+        mPurCartView.onDelCartGateSuccess();
+    }
+
+    @Override
     public void updateCartGateCheck(int cartId, int check) {
         mPurCartModel.updateCartGateCheck(cartId, check, this);
     }
@@ -81,7 +91,7 @@ public class PurCartPresenterImpl extends BasePresenterImpl<PurCartContract.PurC
 
     @Override
     public void upAllCart(String cartIds, int type, int isCheck) {
-        mPurCartModel.upAllCart(cartIds,type,isCheck,this);
+        mPurCartModel.upAllCart(cartIds, type, isCheck, this);
     }
 
     @Override

@@ -42,6 +42,8 @@ import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.ImageDispose;
 import com.ybw.yibai.common.utils.LocationUtil;
+import com.ybw.yibai.common.utils.MessageUtil;
+import com.ybw.yibai.common.utils.PopupWindowUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.nestlistview.NestFullListViewAdapter;
 import com.ybw.yibai.module.details.ProductDetailsActivity;
@@ -702,8 +704,27 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         PurCartHeadBean purCartHeadBean = mPurCartHeadBean.get(position);
         int num = purCartHeadBean.getNum() - 1;
         int cartId = purCartHeadBean.getCartId();
-        if (mPurCartPresenter != null)
-            mPurCartPresenter.updateCartGate(cartId, num);
+        if (mPurCartPresenter != null) {
+            if (num >= 0) {
+                PopupWindowUtil.createDefaultDailog(getActivity(), rootLayout, "数量为0，【是否删除】", new PopupWindowUtil.CreateDefaultDialogListener() {
+                    @Override
+                    public void onCreateDefaultDialog(Boolean isCancel) {
+                        if (isCancel) {
+                            mPurCartPresenter.onDelCart(cartId);
+                        } else {
+
+                        }
+                    }
+                });
+            } else {
+                mPurCartPresenter.updateCartGate(cartId, num);
+            }
+        }
+    }
+
+    @Override
+    public void onDelCartGateSuccess() {
+        MessageUtil.showMessage("删除完成");
     }
 
     @Override

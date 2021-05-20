@@ -2,8 +2,6 @@ package com.ybw.yibai.common.utils;
 
 import android.content.Context;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
-
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -60,7 +58,6 @@ public class LocationUtil {
      *
      * @return 定位SDK参数
      */
-    @NonNull
     private LocationClientOption configurationLocationSdk() {
         LocationClientOption option = new LocationClientOption();
         // 是否需要地址信息

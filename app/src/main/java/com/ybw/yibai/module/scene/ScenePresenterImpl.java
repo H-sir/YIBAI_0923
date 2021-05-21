@@ -115,6 +115,10 @@ public class ScenePresenterImpl extends BasePresenterImpl<SceneView> implements 
         mSceneModel = new SceneModelImpl();
 
         SystemParameter systemParameter = YiBaiApplication.getSystemParameter();
+        if (systemParameter == null) {
+            return;
+        }
+
         DataBean data = systemParameter.getData();
         if (null == data) {
             return;

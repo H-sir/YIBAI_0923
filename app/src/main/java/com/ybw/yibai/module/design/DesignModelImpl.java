@@ -130,19 +130,21 @@ public class DesignModelImpl implements DesignContract.DesignModel {
     public void getEditSceneInfo(DesignContract.CallBack callBack) {
         try {
             DbManager dbManager = YiBaiApplication.getDbManager();
-            // 查找当前正在编辑的这一个场景
-            List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
-                    .where("editScene", "=", true)
-                    .findAll();
+            if (dbManager != null) {
+                // 查找当前正在编辑的这一个场景
+                List<SceneInfo> defaultSceneInfoList = dbManager.selector(SceneInfo.class)
+                        .where("editScene", "=", true)
+                        .findAll();
 
-            callBack.onFindEditSceneInfo(defaultSceneInfoList);
+                callBack.onFindEditSceneInfo(defaultSceneInfoList);
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void updateSceneInfo(DesignList.DataBean.ListBean.SchemelistBean schemelistBean,DesignContract.CallBack callBack) {
+    public void updateSceneInfo(DesignList.DataBean.ListBean.SchemelistBean schemelistBean, DesignContract.CallBack callBack) {
         try {
             DbManager dbManager = YiBaiApplication.getDbManager();
             // 查找当前正在编辑的这一个场景
@@ -152,11 +154,11 @@ public class DesignModelImpl implements DesignContract.DesignModel {
                 SceneInfo sceneInfo = iterator.next();
                 if (sceneInfo.getScheme_id().equals(schemelistBean.getSchemeId())) {
                     sceneInfo.setEditScene(true);
-                }else {
+                } else {
                     sceneInfo.setEditScene(false);
                 }
             }
-            dbManager.update(defaultSceneInfoList,"editScene");
+            dbManager.update(defaultSceneInfoList, "editScene");
             callBack.onUpdateSceneInfo();
         } catch (DbException e) {
             e.printStackTrace();

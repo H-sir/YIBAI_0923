@@ -953,7 +953,7 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
      */
     @Override
     public void updateSimulationData(SimulationData simulationData) {
-        if (null == simulationData) {
+        if (null == simulationData || mSceneEditModel == null) {
             return;
         }
         mSceneEditModel.updateSimulationData(simulationData, this);

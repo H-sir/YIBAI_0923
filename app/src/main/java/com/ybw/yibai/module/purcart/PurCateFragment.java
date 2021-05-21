@@ -604,7 +604,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
             }
             if (cartIds.length() > 2) {
                 cartIds.substring(0, cartIds.length() - 2);
-                mPurCartPresenter.upAllCart(cartIds, 1, 0);
+                if (mPurCartPresenter != null)
+                    mPurCartPresenter.upAllCart(cartIds, 1, 0);
             }
         } else {
             String cartIds = "";
@@ -620,7 +621,7 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     cartIds = cartIds + comlistBean.getCartId() + ",";
                 }
             }
-            if (!cartIds.isEmpty())
+            if (!cartIds.isEmpty() && mPurCartPresenter != null)
                 mPurCartPresenter.upAllCart(cartIds, 1, 1);
         }
     }
@@ -705,17 +706,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
         int num = purCartHeadBean.getNum() - 1;
         int cartId = purCartHeadBean.getCartId();
         if (mPurCartPresenter != null) {
-            if (num >= 0) {
-                PopupWindowUtil.createDefaultDailog(getActivity(), rootLayout, "数量为0，【是否删除】", new PopupWindowUtil.CreateDefaultDialogListener() {
-                    @Override
-                    public void onCreateDefaultDialog(Boolean isCancel) {
-                        if (isCancel) {
-                            mPurCartPresenter.onDelCart(cartId);
-                        } else {
-
-                        }
-                    }
-                });
+            if (num <= 0) {
+                mPurCartPresenter.onDelCart(cartId);
             } else {
                 mPurCartPresenter.updateCartGate(cartId, num);
             }
@@ -724,7 +716,9 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
 
     @Override
     public void onDelCartGateSuccess() {
-        MessageUtil.showMessage("删除完成");
+        // 获取用户的进货数据
+        if (mPurCartPresenter != null)
+            mPurCartPresenter.getPurCartData();
     }
 
     @Override

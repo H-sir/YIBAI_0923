@@ -1635,27 +1635,27 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
     @Override
     public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
         BaseSticker currentSticker = mStickerView.getCurrentSticker();
+        StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
         if (null != currentSticker) {
             currentSticker.setHabit(true);
-        }
-        StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
-        if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
-                && skuDetailsBean.getData().getList().size() > 0) {
-            SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
-            if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
-                currentSticker.setHabitUrl(listBean.getHabit_url());
-                stickerViewSelected.setSelected(true);
+            if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
+                    && skuDetailsBean.getData().getList().size() > 0) {
+                SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
+                if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
+                    currentSticker.setHabitUrl(listBean.getHabit_url());
+                    stickerViewSelected.setSelected(true);
+                } else {
+                    stickerViewSelected.setSelected(true);
+                    currentSticker.setHabitUrl("");
+                }
             } else {
-                stickerViewSelected.setSelected(true);
+                stickerViewSelected.setSelected(false);
                 currentSticker.setHabitUrl("");
             }
+            stickerViewSelected.setBaseSticker(currentSticker);
         } else {
             stickerViewSelected.setSelected(false);
-            currentSticker.setHabitUrl("");
         }
-
-        stickerViewSelected.setBaseSticker(currentSticker);
-
         /**
          * 发送数据到{@link SceneActivity#getHabitTextViewData(StickerViewSelected)}
          * 使其跳转到对应的Fragment
@@ -2733,7 +2733,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Override
     public void onAddSimulationDataResult(boolean result) {
-        mSceneEditPresenter.getSimulationData(sceneId);
+        if (mSceneEditPresenter != null)
+            mSceneEditPresenter.getSimulationData(sceneId);
     }
 
     /**

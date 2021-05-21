@@ -1273,7 +1273,8 @@ public class SceneActivity extends BaseActivity implements SceneView,
      */
     @Override
     public void addSceneInfoResult(boolean result) {
-        mScenePresenter.findUserSceneListInfo();
+        if (mScenePresenter != null)
+            mScenePresenter.findUserSceneListInfo();
     }
 
     /**

@@ -17,8 +17,8 @@ android {
         applicationId "com.ybw.yibai"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 26
-        versionName "3.1.6"
+        versionCode 27
+        versionName "3.1.7"
         flavorDimensions "default"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -77,6 +77,7 @@ android {
         //noinspection DataBindingWithoutKapt
         enabled = true
     }
+
 }
 
 dependencies {
@@ -106,8 +107,13 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     // 友盟统计SDK
-    implementation 'com.umeng.umsdk:common:2.0.0'
-    implementation 'com.umeng.umsdk:analytics:8.0.0'
+
+    //    implementation 'com.umeng.umsdk:common:2.0.0'
+
+    //    implementation 'com.umeng.umsdk:analytics:8.0.0'
+    implementation 'com.umeng.umsdk:common:9.3.8'
+
+    //    implementation 'com.umeng.analytics:analytics:6.1.4'
 
     // 图片裁剪框架
     implementation 'com.github.yalantis:ucrop:2.2.3'
@@ -182,4 +188,6 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.dyhdyh.loadingbar:loadingbar:1.4.4'
     implementation project(':MyLibrary')
+    compile project(':umeng-asms-armeabi-v1.2.2')
+    compile project(':citypicker')
 }

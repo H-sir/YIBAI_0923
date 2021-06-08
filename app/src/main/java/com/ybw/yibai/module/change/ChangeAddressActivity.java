@@ -3,10 +3,12 @@ package com.ybw.yibai.module.change;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,23 +16,21 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.SearchResult;
@@ -40,7 +40,6 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
-import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
 import com.baidu.mapapi.search.poi.PoiDetailSearchResult;
 import com.baidu.mapapi.search.poi.PoiIndoorResult;
@@ -59,19 +58,21 @@ import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.spinner.SpinnerPopWindow;
-import com.ybw.yibai.module.city.CityContract;
-import com.ybw.yibai.module.city.CityPresenterImpl;
+import com.ybw.yibai.module.main.MainActivity;
+import com.zaaach.citypicker.CityPicker;
+import com.zaaach.citypicker.adapter.OnPickListener;
+import com.zaaach.citypicker.model.City;
+import com.zaaach.citypicker.model.LocateState;
+import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.ybw.yibai.common.constants.Preferences.CITY_NAME;
-import static com.ybw.yibai.common.constants.Preferences.MARKET_ID;
 import static com.ybw.yibai.common.constants.Preferences.POSITION_ADDRESS;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 
@@ -486,11 +487,46 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
         mTvSelectedCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mSpinnerPopWindowCity.setWidth(mTvSelectedCity.getWidth());
-                mSpinnerPopWindowCity.showAsDropDown(mTvSelectedCity);
+                CityPicker.from(ChangeAddressActivity.this)
+                        .enableAnimation(true)
+                        .setAnimationStyle(R.style.DefaultCityPickerAnimation)
+                        .setLocatedCity(null)
+                        .setHotCities(null)
+                        .setOnPickListener(new OnPickListener() {
+                            @Override
+                            public void onPick(int position, City data) {
+//                                currentTV.setText(String.format("当前城市：%s，%s", data.getName(), data.getCode()));
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        String.format("点击的数据：%s，%s", data.getName(), data.getCode()),
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+
+                            @Override
+                            public void onCancel() {
+                                Toast.makeText(getApplicationContext(), "取消选择", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onLocate() {
+                                //开始定位，这里模拟一下定位
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CityPicker.from(ChangeAddressActivity.this).locateComplete(new LocatedCity("深圳", "广东", "101280601"), LocateState.SUCCESS);
+                                    }
+                                }, 3000);
+                            }
+                        })
+                        .show();
+//                mSpinnerPopWindowCity.setWidth(mTvSelectedCity.getWidth());
+//                mSpinnerPopWindowCity.showAsDropDown(mTvSelectedCity);
             }
         });
     }
+
+
 
     /**
      * 在请求网络数据之前显示Loading界面

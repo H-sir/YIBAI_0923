@@ -804,6 +804,7 @@ public interface ApiService {
                                              @Header("sign") String sign,
                                              @Query("uid") int uid,
                                              @Query("skuids") String skuids);
+
     /**
      * 场景中产品一键创建并导入
      *
@@ -885,18 +886,19 @@ public interface ApiService {
                                     @Part("num") int num);
 
     /**
-     * 添加商品到进货列表
+     * 删除商品到进货列表
      *
      * @param timestamp 时间搓
      * @param sign      签名
      * @param uid       用户的ID
      */
-    @Multipart
+    @FormUrlEncoded
     @POST(HttpUrls.DEL_CARTGATE_URL)
     Observable<BaseBean> delCartGate(@Header("timestamp") String timestamp,
-                                    @Header("sign") String sign,
-                                    @Part("uid") int uid,
-                                    @Part("cart_id") int cartId);
+                                     @Header("sign") String sign,
+                                     @Field("uid") int uid,
+                                     @Field("cart_id") int cartId,
+                                     @Field("checked") String checked);
 
     /**
      * 添加商品到进货列表
@@ -1069,6 +1071,7 @@ public interface ApiService {
                                           @Query("uid") int uid,
                                           @Query("cate_code") String cateCode,
                                           @Query("plantskuid") Integer plantSkuId,
+                                          @Query("potskuid") Integer potskuid,
                                           @Query("spectype") Integer specType,
                                           @Query("specid") String specid,
                                           @Query("attrid") String attrid,
@@ -1783,8 +1786,8 @@ public interface ApiService {
      * @param timestamp 时间搓
      * @param sign      签名
      * @param uid       用户的ID
-     * @param lng  经度(经纬度两个参数必须同时传,只传一个不生效)
-     * @param lat  纬度
+     * @param lng       经度(经纬度两个参数必须同时传,只传一个不生效)
+     * @param lat       纬度
      * @return 修改用户基础信息时服务器端返回的数据
      */
     @Multipart
@@ -1982,9 +1985,9 @@ public interface ApiService {
     @Multipart
     @POST(HttpUrls.BIND_MARKET_URL)
     Observable<BaseBean> bindMarket(@Header("timestamp") String timestamp,
-                                        @Header("sign") String sign,
-                                        @Part("uid") int uid,
-                                        @Part("market_id") int marketId);
+                                    @Header("sign") String sign,
+                                    @Part("uid") int uid,
+                                    @Part("market_id") int marketId);
 
     /**
      * 设置货源城市

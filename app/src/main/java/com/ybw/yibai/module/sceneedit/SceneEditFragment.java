@@ -1086,7 +1086,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                         viewPager.setCurrentItem(pos);
                     }
                 }
-                mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+                mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
 //                mSceneEditPresenter.getRecommend(POT, productSkuId, augmentedProductSkuId,
 //                        mSelectType,
 //                        potTypeId, plantParamMap);
@@ -1149,7 +1149,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             mParamAdapter.notifyDataSetChanged();
             mParamSonAdapter.notifyDataSetChanged();
 
-            mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+            mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
 //            mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
 //            mSceneEditPresenter.getNewRecommend(data.getFirst(),
 //                    productSkuId, augmentedProductSkuId,
@@ -1641,7 +1641,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (skuDetailsBean.getData() != null && skuDetailsBean.getData().getList() != null
                     && skuDetailsBean.getData().getList().size() > 0) {
                 SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
-                if (listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
+                if (listBean != null && listBean.getHabit_url() != null && !listBean.getHabit_url().isEmpty()) {
                     currentSticker.setHabitUrl(listBean.getHabit_url());
                     stickerViewSelected.setSelected(true);
                 } else {
@@ -3149,7 +3149,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                     mPlantRecyclerView.scrollToPosition(position);
                     mPlantAdapter.notifyDataSetChanged();
                     if (!isChangeFlag) {
-                        mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+                        mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
                         isChangeFlag = false;
                     }
                 }
@@ -3205,7 +3205,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //            mSceneEditPresenter.getRecommend(PLANT, productSkuId, augmentedProductSkuId,
 //                    mSelectType,
 //                    potTypeId, plantParamMap);
-            mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+            mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
         }
         lastDraggingViewPager = true;
     }
@@ -3395,7 +3395,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                                 viewPager.setCurrentItem(pos);
                             }
                         }
-                        mSceneEditPresenter.getNewRecommed(POT, productSkuId, -5, mSelectType, specidList, attridList, plantParamMap);
+                        mSceneEditPresenter.getNewRecommed(POT, productSkuId, augmentedProductSkuId, mSelectType, specidList, attridList, plantParamMap);
                     }
                 } else {
                     mSceneEditPresenter.getNewRecommedChangeStyle(productSkuId, augmentedProductSkuId);

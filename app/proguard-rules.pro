@@ -19,11 +19,17 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
--ignorewarnings -keep class * { public private *; }
+-dontwarn com.umeng.**
+-ignorewarnings
+-keep class * {
+public private *;
+}
+#-ignorewarnings -keep class * { public private *; }
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
 -verbose
 -libraryjars
 -keep class com.baidu.** {*;}
 -keep class mapsdkvi.com.** {*;}
+-keep class com.umeng.** {*;}
 -dontwarn com.baidu.**

@@ -467,6 +467,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 YiBaiApplication.getUid(),
                 cateCode,
                 plantSkuId,
+                potSkuId,
                 specType,
                 specid,
                 attrid,

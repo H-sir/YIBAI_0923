@@ -4,6 +4,8 @@ import com.ybw.yibai.base.YiBaiApplication;
 import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.PurCartBean;
 import com.ybw.yibai.common.interfaces.ApiService;
+import com.ybw.yibai.common.utils.AppUtil;
+import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
 import com.ybw.yibai.common.utils.RetrofitManagerUtil;
 import com.ybw.yibai.common.utils.TimeUtil;
@@ -16,6 +18,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.ybw.yibai.common.constants.HttpUrls.DEL_CARTGATE_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.DEL_CARTGATE_URL;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.UP_ALL_CART_METHOD;
@@ -114,8 +117,12 @@ public class PurCartModelImpl implements PurCartContract.PurCartModel {
     public void delCart(int cartId,PurCartContract.CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<BaseBean> observable = mApiService.delCartGate(timeStamp,
-                OtherUtil.getSign(timeStamp, DEL_CARTGATE_URL),
-                YiBaiApplication.getUid(), cartId);
+                OtherUtil.getSign(timeStamp, DEL_CARTGATE_METHOD),
+                YiBaiApplication.getUid(), cartId,"no");
+        LogUtil.d("requestHeader", "timeStamp:" + timeStamp);
+        LogUtil.d("requestHeader", "sign:" + OtherUtil.getSign(timeStamp, DEL_CARTGATE_URL));
+        LogUtil.d("requestHeader", "getUid:" + YiBaiApplication.getUid());
+        LogUtil.d("requestHeader", "cartId:" + cartId);
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {

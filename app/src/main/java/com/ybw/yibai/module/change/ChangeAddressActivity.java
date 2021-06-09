@@ -57,13 +57,13 @@ import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
+import com.ybw.yibai.common.widget.picker.CityPicker;
+import com.ybw.yibai.common.widget.picker.adapter.OnPickListener;
+import com.ybw.yibai.common.widget.picker.model.City;
+import com.ybw.yibai.common.widget.picker.model.LocateState;
+import com.ybw.yibai.common.widget.picker.model.LocatedCity;
 import com.ybw.yibai.common.widget.spinner.SpinnerPopWindow;
 import com.ybw.yibai.module.main.MainActivity;
-import com.zaaach.citypicker.CityPicker;
-import com.zaaach.citypicker.adapter.OnPickListener;
-import com.zaaach.citypicker.model.City;
-import com.zaaach.citypicker.model.LocateState;
-import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -86,13 +86,20 @@ import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 public class ChangeAddressActivity extends BaseActivity implements ChangeAddressContract.ChangeAddressView {
     private ChangeAddressActivity mChangeAddressActivity = null;
 
-    @BindView(R.id.ll_map) LinearLayout llMap;
-    @BindView(R.id.ll_search) LinearLayout mLlSearch;
-    @BindView(R.id.tv_selected_city) TextView mTvSelectedCity;
-    @BindView(R.id.et_jiedao_name) EditText etJiedaoName;
-    @BindView(R.id.mMap) MapView mMap;
-    @BindView(R.id.rv_result) ListView mLvResult;
-    @BindView(R.id.lv_search) ListView mLvSearch;
+    @BindView(R.id.ll_map)
+    LinearLayout llMap;
+    @BindView(R.id.ll_search)
+    LinearLayout mLlSearch;
+    @BindView(R.id.tv_selected_city)
+    TextView mTvSelectedCity;
+    @BindView(R.id.et_jiedao_name)
+    EditText etJiedaoName;
+    @BindView(R.id.mMap)
+    MapView mMap;
+    @BindView(R.id.rv_result)
+    ListView mLvResult;
+    @BindView(R.id.lv_search)
+    ListView mLvSearch;
 
 
     private BaiduMap mBaiduMap;
@@ -459,73 +466,74 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             mTvSelectedCity.setText(citYname);
         }
 
-        spinnerListCity = new ArrayList<>();
-        for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
-            CityListBean.DataBean.ListBean listBean = iterator.next();
-            spinnerListCity.add(listBean.getRegionName());
-            if (!citYname.isEmpty()) {
-                if (citYname.equals(listBean.getRegionName())){
-                    mCitycode = listBean.getCode();
-                    LogUtil.e("ChangeAddress", "citYname1:" + citYname);
-                }
-            }
-
-        }
-        mSpinnerPopWindowCity = new SpinnerPopWindow<>(getApplication(), spinnerListCity, new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                mSpinnerPopWindowCity.dismiss();
-                mTvSelectedCity.setText(spinnerListCity.get(position));
-                for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
-                    CityListBean.DataBean.ListBean listBean = iterator.next();
-                    if (spinnerListCity.get(position).equals(listBean.getRegionName())) {
+        if (cityListBean != null && cityListBean.getData() != null && cityListBean.getData().getList() != null) {
+            spinnerListCity = new ArrayList<>();
+            for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                CityListBean.DataBean.ListBean listBean = iterator.next();
+                spinnerListCity.add(listBean.getRegionName());
+                if (!citYname.isEmpty()) {
+                    if (citYname.equals(listBean.getRegionName())) {
                         mCitycode = listBean.getCode();
+                        LogUtil.e("ChangeAddress", "citYname1:" + citYname);
                     }
                 }
+
             }
-        });
-        mTvSelectedCity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CityPicker.from(ChangeAddressActivity.this)
-                        .enableAnimation(true)
-                        .setAnimationStyle(R.style.DefaultCityPickerAnimation)
-                        .setLocatedCity(null)
-                        .setHotCities(null)
-                        .setOnPickListener(new OnPickListener() {
-                            @Override
-                            public void onPick(int position, City data) {
+            mSpinnerPopWindowCity = new SpinnerPopWindow<>(getApplication(), spinnerListCity, new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    mSpinnerPopWindowCity.dismiss();
+                    mTvSelectedCity.setText(spinnerListCity.get(position));
+                    for (Iterator<CityListBean.DataBean.ListBean> iterator = cityListBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                        CityListBean.DataBean.ListBean listBean = iterator.next();
+                        if (spinnerListCity.get(position).equals(listBean.getRegionName())) {
+                            mCitycode = listBean.getCode();
+                        }
+                    }
+                }
+            });
+            mTvSelectedCity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    CityPicker.from(ChangeAddressActivity.this)
+                            .enableAnimation(true)
+                            .setAnimationStyle(R.style.DefaultCityPickerAnimation)
+                            .setLocatedCity(null)
+                            .setHotCities(null)
+                            .setOnPickListener(new OnPickListener() {
+                                @Override
+                                public void onPick(int position, City data) {
 //                                currentTV.setText(String.format("当前城市：%s，%s", data.getName(), data.getCode()));
-                                Toast.makeText(
-                                        getApplicationContext(),
-                                        String.format("点击的数据：%s，%s", data.getName(), data.getCode()),
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                            }
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            String.format("点击的数据：%s，%s", data.getName(), data.getCode()),
+                                            Toast.LENGTH_SHORT)
+                                            .show();
+                                }
 
-                            @Override
-                            public void onCancel() {
-                                Toast.makeText(getApplicationContext(), "取消选择", Toast.LENGTH_SHORT).show();
-                            }
+                                @Override
+                                public void onCancel() {
+                                    Toast.makeText(getApplicationContext(), "取消选择", Toast.LENGTH_SHORT).show();
+                                }
 
-                            @Override
-                            public void onLocate() {
-                                //开始定位，这里模拟一下定位
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CityPicker.from(ChangeAddressActivity.this).locateComplete(new LocatedCity("深圳", "广东", "101280601"), LocateState.SUCCESS);
-                                    }
-                                }, 3000);
-                            }
-                        })
-                        .show();
+                                @Override
+                                public void onLocate() {
+                                    //开始定位，这里模拟一下定位
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CityPicker.from(ChangeAddressActivity.this).locateComplete(new LocatedCity("深圳", "广东", "101280601"), LocateState.SUCCESS);
+                                        }
+                                    }, 3000);
+                                }
+                            })
+                            .show();
 //                mSpinnerPopWindowCity.setWidth(mTvSelectedCity.getWidth());
 //                mSpinnerPopWindowCity.showAsDropDown(mTvSelectedCity);
-            }
-        });
+                }
+            });
+        }
     }
-
 
 
     /**

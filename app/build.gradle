@@ -189,5 +189,4 @@ dependencies {
     implementation 'com.dyhdyh.loadingbar:loadingbar:1.4.4'
     implementation project(':MyLibrary')
     compile project(':umeng-asms-armeabi-v1.2.2')
-    compile project(':citypicker')
 }

@@ -85,6 +85,11 @@ public class RetrofitManagerUtil {
                         // 有网络时只从网络获取
                         .cacheControl(CacheControl.FORCE_NETWORK)
                         .build();
+                LogUtil.d("requestHeader", "did:" + AppUtil.getDeviceId(YiBaiApplication.getContext()));
+                LogUtil.d("requestHeader", "token:" + token);
+                LogUtil.d("requestHeader", "version:" + String.valueOf(AppUtil.getVersionCode(YiBaiApplication.getContext())));
+                LogUtil.d("requestHeader", "mobile_brand:" + AppUtil.getPhoneBrand());
+                LogUtil.d("requestHeader", "mobile_model:" + AppUtil.getPhoneModel());
             }
 
             Response response = chain.proceed(request);

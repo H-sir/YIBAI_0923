@@ -278,7 +278,7 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                 City cityBean = new City();
                 cityBean.setName(listBean.getName());
                 cityBean.setCode(listBean.getCode());
-                cityBean.setPinyi(listBean.getInitials());
+                cityBean.setPinyi(PingYinUtil.getPingYin(listBean.getName()));
                 list.add(cityBean);
             }
         }

@@ -461,10 +461,4 @@
     <string name="exist_scene_text">当前有正在编辑的设计，继续创建将完成当前编辑，并清除场景缓存。</string>
     <string name="create_scene_text" tools:ignore="ExtraTranslation">您当前有一个未完成的设计</string>
     <string name="design_two_message">当前设计不支持二次编辑，仅支持编辑正在编辑的设计</string>
-
-    <string name="cp_search_hint_text">城市中文名或拼音</string>
-    <string name="cp_cancel">取消</string>
-    <string name="cp_no_result">没有找到，换个词试试~</string>
-    <string name="cp_locate_failed">定位失败</string>
-    <string name="cp_locating">正在定位…</string>
 </resources>

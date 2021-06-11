@@ -115,6 +115,9 @@
             android:name=".module.change.ChangeAddressActivity"
             android:launchMode="singleTask" />
         <activity
+            android:name=".module.citypicker.CityPickerDialogActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".module.market.MarketActivity"
             android:launchMode="singleTask" />
         <activity

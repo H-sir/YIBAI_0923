@@ -173,7 +173,7 @@ public class CityActivity extends BaseActivity implements CityContract.CityView,
      */
     @Override
     public void onGetCitySuccess(CityListBean cityListBean) {
-        hotcityList.addAll(cityListBean.getData().getList());
+//        hotcityList.addAll(cityListBean.getData().getList());
         mCityListAdapter.notifyDataSetChanged();
         mCityPresenter.applyPermissions(permissions);
     }

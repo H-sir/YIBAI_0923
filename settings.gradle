@@ -1,1 +1,1 @@
-include ':app', ':MyLibrary'
+include ':app', ':MyLibrary', ':umeng-asms-armeabi-v1.2.2'

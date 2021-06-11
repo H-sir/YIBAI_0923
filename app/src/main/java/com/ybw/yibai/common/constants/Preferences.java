@@ -139,6 +139,11 @@ public class Preferences {
     public static final String DESIGN_NUMBER = "designNumber";
 
     /**
+     * 定位城市
+     */
+    public static final String LOCATED_CITY = "located_city";
+
+    /**
      * 邀请记录地址
      */
     public static final String RECORD_URL = "recordUrl";

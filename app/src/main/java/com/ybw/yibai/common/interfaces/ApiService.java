@@ -13,6 +13,7 @@ import com.ybw.yibai.common.bean.CategorySimilarSKU;
 import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.CityAreaList;
 import com.ybw.yibai.common.bean.CityListBean;
+import com.ybw.yibai.common.bean.CityListHotBean;
 import com.ybw.yibai.common.bean.CreateCustomers;
 import com.ybw.yibai.common.bean.CreateQuotationLocation;
 import com.ybw.yibai.common.bean.CreateQuotationOrder;
@@ -1953,6 +1954,32 @@ public interface ApiService {
     Observable<CityListBean> getCity(@Header("timestamp") String timestamp,
                                      @Header("sign") String sign,
                                      @Query("uid") int uid);
+
+    /**
+     * 获取城市列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return
+     */
+    @GET(HttpUrls.GET_CITY_URL)
+    Observable<CityListBean> getCity(@Header("timestamp") String timestamp,
+                                     @Header("sign") String sign,
+                                     @Query("uid") int uid,
+                                     @Query("type") int type);  /**
+     * 获取城市列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return
+     */
+    @GET(HttpUrls.GET_CITY_URL)
+    Observable<CityListHotBean> getHotCity(@Header("timestamp") String timestamp,
+                                           @Header("sign") String sign,
+                                           @Query("uid") int uid,
+                                           @Query("type") int type);
 
     /**
      * 经纬度获取城市地区信息

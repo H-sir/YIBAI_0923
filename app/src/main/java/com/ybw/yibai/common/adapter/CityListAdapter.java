@@ -55,7 +55,7 @@ public class CityListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         MyViewHolder myViewHolder = (MyViewHolder) viewHolder;
 
         CityListBean.DataBean.ListBean listBean = dataBeanList.get(position);
-        myViewHolder.mCityTextView.setText(listBean.getRegionName());
+        myViewHolder.mCityTextView.setText(listBean.getName());
     }
 
     private class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

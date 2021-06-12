@@ -228,25 +228,17 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
         PopupWindow mPopupWindow = new PopupWindow(view, RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         CheckBox checkboxAll = view.findViewById(R.id.checkboxAll);
+        TextView checkboxAllText = view.findViewById(R.id.checkboxAllText);
         CheckBox checkboxOne = view.findViewById(R.id.checkboxOne);
-        if (cityName.equals("1")) {
+        TextView checkboxOneText = view.findViewById(R.id.checkboxOneText);
+        if (cityName.equals("2")) {
             checkboxAll.setChecked(true);
             checkboxOne.setChecked(false);
         } else {
             checkboxAll.setChecked(false);
             checkboxOne.setChecked(true);
         }
-
-        checkboxAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mPopupWindow.isShowing()) {
-                    mPopupWindow.dismiss();
-                }
-                onSetProduct(1);
-            }
-        });
-        checkboxOne.setOnClickListener(new View.OnClickListener() {
+        checkboxAllText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (mPopupWindow.isShowing()) {
@@ -255,7 +247,33 @@ public class CityPresenterImpl extends BasePresenterImpl<CityContract.CityView> 
                 onSetProduct(2);
             }
         });
-
+        checkboxAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+                onSetProduct(2);
+            }
+        });
+        checkboxOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+                onSetProduct(1);
+            }
+        });
+        checkboxOneText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mPopupWindow.isShowing()) {
+                    mPopupWindow.dismiss();
+                }
+                onSetProduct(1);
+            }
+        });
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));

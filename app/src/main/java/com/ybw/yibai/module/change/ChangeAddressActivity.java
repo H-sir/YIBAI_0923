@@ -410,6 +410,14 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             mSuggestionInfos.clear();
             sugAdapter.clear();
             sugAdapter.notifyDataSetChanged();
+        } else if (requestCode == REQUEST_CODE) {
+            if (resultCode == ChangeAddressActivity.RESULT_CODE) {
+                Bundle bundle = data.getExtras();
+                String name = bundle.getString("name");
+                String code = bundle.getString("code");
+                MessageUtil.showMessage(name);
+                mTvSelectedCity.setText(name);
+            }
         }
     }
 

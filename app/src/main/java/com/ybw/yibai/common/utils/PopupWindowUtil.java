@@ -168,40 +168,40 @@ public class PopupWindowUtil {
      * 创建设计的弹窗
      */
     public static void createDefaultDailog(Activity activity, View rootLayout, String message, CreateDefaultDialogListener createDefaultDialogListener) {
-        View view = View.inflate(activity, R.layout.popup_window_create_default_layout, null);
-        PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-        TextView defaultMessage = view.findViewById(R.id.defaultMessage);
-        TextView defaultCancel = view.findViewById(R.id.defaultCancel);
-        TextView defaultContinue = view.findViewById(R.id.defaultContinue);
-        defaultMessage.setText(message);
-
-        defaultCancel.setOnClickListener(v -> {
-            createDefaultDialogListener.onCreateDefaultDialog(true);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-
-        });
-        defaultContinue.setOnClickListener(v -> {
-            createDefaultDialogListener.onCreateDefaultDialog(false);
-            if (mPopupWindow.isShowing()) {
-                mPopupWindow.dismiss();
-            }
-        });
-
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-
-        // 设置一个动画效果
-        mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
-
-        // 在弹出PopupWindow设置屏幕透明度
-        OtherUtil.setBackgroundAlpha(activity, 0.6f);
-        // 添加PopupWindow窗口关闭事件
-        mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
-        mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
+//        View view = View.inflate(activity, R.layout.popup_window_create_default_layout, null);
+//        PopupWindow mPopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//
+//        TextView defaultMessage = view.findViewById(R.id.defaultMessage);
+//        TextView defaultCancel = view.findViewById(R.id.defaultCancel);
+//        TextView defaultContinue = view.findViewById(R.id.defaultContinue);
+//        defaultMessage.setText(message);
+//
+//        defaultCancel.setOnClickListener(v -> {
+//            createDefaultDialogListener.onCreateDefaultDialog(true);
+//            if (mPopupWindow.isShowing()) {
+//                mPopupWindow.dismiss();
+//            }
+//
+//        });
+//        defaultContinue.setOnClickListener(v -> {
+//            createDefaultDialogListener.onCreateDefaultDialog(false);
+//            if (mPopupWindow.isShowing()) {
+//                mPopupWindow.dismiss();
+//            }
+//        });
+//
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//
+//        // 设置一个动画效果
+//        mPopupWindow.setAnimationStyle(R.style.PopupWindow_Anim);
+//
+//        // 在弹出PopupWindow设置屏幕透明度
+//        OtherUtil.setBackgroundAlpha(activity, 0.6f);
+//        // 添加PopupWindow窗口关闭事件
+//        mPopupWindow.setOnDismissListener(OtherUtil.popupDismissListener(activity, 1f));
+//        mPopupWindow.showAtLocation(rootLayout, Gravity.CENTER, 0, 0);
     }
 
     private CreateDefaultDialogListener createDefaultDialogListener;

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#B3000000"
+    android:background="#CC000000"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -13,6 +13,7 @@
         android:background="@color/white">
 
         <ImageView
+            android:id="@+id/city_picker_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -37,19 +38,40 @@
         android:layout_below="@id/title"
         android:background="@color/white">
 
-        <EditText
-            android:id="@+id/sh"
-            android:layout_width="fill_parent"
-            android:layout_height="55dp"
-            android:layout_margin="10dip"
-            android:background="@drawable/cityhot_edittext_bg"
-            android:drawableLeft="@mipmap/wb_search_icon"
-            android:drawablePadding="5dp"
-            android:hint="输入城市名或拼音"
-            android:padding="10dip"
-            android:textColor="#515151"
-            android:textSize="16dp"></EditText>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_edit_text_discount_amount"
+                android:layout_margin="10dip"
+            android:orientation="horizontal">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@mipmap/wb_search_icon" />
+
+            <EditText
+                android:id="@+id/sh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textCursorDrawable="@null"
+                android:background="@null"
+                android:hint="输入城市名或拼音"
+                android:padding="10dp"
+                android:textColor="#515151"
+                android:textSize="16dp" />
+
+            <ImageView
+                android:id="@+id/city_picker_colse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="10dp"
+                android:src="@mipmap/close" />
+        </LinearLayout>
     </FrameLayout>
 
     <ListView
@@ -82,8 +104,9 @@
     <TextView
         android:id="@+id/tv_noresult"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/sh_view"
+        android:background="@color/white"
         android:gravity="center"
         android:padding="10dp"
         android:text="抱歉,暂时没有找到相关城市"
@@ -95,10 +118,10 @@
         android:id="@+id/MyLetterListView01"
         android:layout_width="25dip"
         android:layout_height="fill_parent"
-        android:layout_below="@id/sh_view"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="7dp"
+        android:layout_below="@id/sh_view"
         android:layout_marginRight="2dp"
+        android:layout_marginTop="7dp"
         android:background="@color/white" />
 
 </RelativeLayout>

@@ -65,6 +65,7 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
     private WaitDialog mWaitDialog;
     private CityPickerContract.CityPickerPresenter mCityPickerPresenter = null;
 
+    private ImageView cityPickerBack;
     private BaseAdapter adapter;
     private ResultListAdapter resultListAdapter;
     private ListView personList;
@@ -80,12 +81,14 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
     private ArrayList<City> city_hot;   //热门城市
     private ArrayList<City> city_result;//搜索
     private EditText sh;
+    private ImageView cityPickerColse;
     private TextView tv_noresult;
 
     private LocationClient mLocationClient;
     private MyLocationListener mMyLocationListener;
 
     private String currentCity; // 用于保存定位到的城市
+    private String currentCityCode; // 用于保存定位到的城市
     private int locateProcess = 1; // 记录当前定位的状态 正在定位-定位成功-定位失败
     private boolean isNeedFresh;
 
@@ -113,6 +116,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
             return;
         }
 
+        cityPickerColse = findViewById(R.id.city_picker_colse);
+        cityPickerBack = findViewById(R.id.city_picker_back);
         personList = (ListView) findViewById(R.id.list_view);
         allCity_lists = new ArrayList<City>();
         city_hot = new ArrayList<City>();
@@ -154,6 +159,18 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
         });
         initOverlay();
 
+        cityPickerBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        cityPickerColse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sh.setText("");
+            }
+        });
     }
 
     @Override
@@ -410,8 +427,6 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
             return "定位";
         } else if (str.equals("2")) {
             return "热门";
-        } else if (str.equals("3")) {
-            return "全部";
         } else {
             return "#";
         }
@@ -484,7 +499,17 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                     @Override
                     public void onClick(View v) {
                         if (locateProcess == 2) {
-                            finish();
+                            for (Iterator<City> iterator = allCity_lists.iterator(); iterator.hasNext(); ) {
+                                City next = iterator.next();
+                                if (next.getName().equals(currentCity)) {
+                                    Intent intent = new Intent();
+                                    intent.putExtra("name", next.getName());
+                                    intent.putExtra("code", next.getCode());
+                                    setResult(RESULT_CODE, intent);
+                                    finish();
+                                    break;
+                                }
+                            }
 //                            Toast.makeText(context, city.getText().toString(), Toast.LENGTH_SHORT).show();
                         } else if (locateProcess == 3) {
                             locateProcess = 1;

@@ -4,62 +4,62 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     buildToolsVersion "28.0.3"
-//
-//    signingConfigs {
-//        release {
-//            keyAlias KEY_ALIAS
-//            keyPassword KEY_PASSWORD
-//            storeFile file(STORE_FILE)
-//            storePassword STORE_PASSWORD
-//        }
-//    }
+
+    signingConfigs {
+        release {
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+            storeFile file(STORE_FILE)
+            storePassword STORE_PASSWORD
+        }
+    }
     defaultConfig {
         applicationId "com.ybw.yibai"
         minSdkVersion 17
         targetSdkVersion 28
-        versionCode 27
-        versionName "3.1.7"
+        versionCode 28
+        versionName "3.1.8"
         flavorDimensions "default"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
-//    buildTypes {
-//        debug {
-//            // 显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "true"
-//            // 是否启用混淆器
-//            minifyEnabled false
-//            // 是否启用zipAlign压缩
-//            zipAlignEnabled true
-//            // 移除无用的resource文件
-//            shrinkResources false
-//            // 签名
-//            signingConfig signingConfigs.release
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
-//        release {
-//            // 不显示Log
-//            buildConfigField "boolean", "LOG_DEBUG", "false"
-//            // 是否启用混淆器
-//            minifyEnabled false
-//            // 是否启用zipAlign压缩
-//            zipAlignEnabled true
-//            // 移除无用的resource文件
-//            shrinkResources false
-//            // 签名
-//            signingConfig signingConfigs.release
-//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//        }
-//    }
+    buildTypes {
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            // 是否启用混淆器
+            minifyEnabled false
+            // 是否启用zipAlign压缩
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+            // 签名
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            // 不显示Log
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            // 是否启用混淆器
+            minifyEnabled false
+            // 是否启用zipAlign压缩
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources false
+            // 签名
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 
-//    productFlavors {
-//        yingyongbao {
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yingyongbao"]
-//        }
-//        yibaiofficialsite {
-//            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yibaiofficialsite"]
-//        }
-//    }
+    productFlavors {
+        yingyongbao {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yingyongbao"]
+        }
+        yibaiofficialsite {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yibaiofficialsite"]
+        }
+    }
 
     sourceSets {
         main {
@@ -188,6 +188,6 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.dyhdyh.loadingbar:loadingbar:1.4.4'
     implementation project(':MyLibrary')
-    compile project(':umeng-asms-armeabi-v1.2.2')
-    compile files('libs/pinyin4j-2.5.0.jar')
+    implementation project(':umeng-asms-armeabi-v1.2.2')
+    implementation 'com.github.promeg:tinypinyin:2.0.1'
 }

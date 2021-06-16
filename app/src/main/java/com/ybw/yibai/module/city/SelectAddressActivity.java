@@ -148,9 +148,9 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
         String locationLng = mSharedPreferences.getString(LOCATION_LNG, "");
         String locationLat = mSharedPreferences.getString(LOCATION_LAT, "");
         if (cityName.equals("1")) {
-            productSettingName.setText("展示所有产品");
-        } else {
             productSettingName.setText("仅展示有供货的产品");
+        } else {
+            productSettingName.setText("展示所有产品");
         }
         if (positionAddress != null && !positionAddress.isEmpty()) {
             cityCurrent.setText(positionAddress);
@@ -444,9 +444,9 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
         mSharedPreferences = getSharedPreferences(USER_INFO, MODE_PRIVATE);
         String cityName = mSharedPreferences.getString(COM_OPEN, "1");
         if (cityName.equals("1")) {
-            productSettingName.setText("展示所有产品");
-        } else {
             productSettingName.setText("仅展示有供货的产品");
+        } else {
+            productSettingName.setText("展示所有产品");
         }
     }
 

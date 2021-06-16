@@ -1953,9 +1953,8 @@ public interface ApiService {
     @GET(HttpUrls.GET_CITY_URL)
     Observable<CityListBean> getCity(@Header("timestamp") String timestamp,
                                      @Header("sign") String sign,
-                                     @Query("uid") int uid);
-
-    /**
+                                     @Query("uid") int uid,
+                                     @Query("type") int type);   /**
      * 获取城市列表
      *
      * @param timestamp 时间搓
@@ -1966,8 +1965,9 @@ public interface ApiService {
     @GET(HttpUrls.GET_CITY_URL)
     Observable<CityListBean> getCity(@Header("timestamp") String timestamp,
                                      @Header("sign") String sign,
-                                     @Query("uid") int uid,
-                                     @Query("type") int type);  /**
+                                     @Query("uid") int uid);
+
+    /**
      * 获取城市列表
      *
      * @param timestamp 时间搓

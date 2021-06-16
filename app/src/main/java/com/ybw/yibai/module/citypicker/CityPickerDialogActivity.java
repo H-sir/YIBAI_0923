@@ -2,6 +2,7 @@ package com.ybw.yibai.module.citypicker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +55,7 @@ import java.util.regex.Pattern;
 
 import static com.ybw.yibai.R.layout.city_picker_list_item;
 import static com.ybw.yibai.common.constants.Preferences.LOCATED_CITY;
+import static com.ybw.yibai.module.change.ChangeAddressActivity.RESULT_CODE;
 
 public class CityPickerDialogActivity extends BaseActivity implements CityPickerContract.CityPickerView, AbsListView.OnScrollListener, TextWatcher {
 
@@ -120,8 +122,7 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
         tv_noresult = (TextView) findViewById(R.id.tv_noresult);
         sh.addTextChangedListener(this);
         letterListView = (MyLetterListView) findViewById(R.id.MyLetterListView01);
-        letterListView
-                .setOnTouchingLetterChangedListener(new LetterListViewListener());
+        letterListView.setOnTouchingLetterChangedListener(new LetterListViewListener());
         alphaIndexer = new HashMap<String, Integer>();
         handler = new Handler();
         overlayThread = new OverlayThread();
@@ -132,7 +133,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
                 if (position >= 4) {
-                    Toast.makeText(getApplicationContext(), allCity_lists.get(position).getName(), Toast.LENGTH_SHORT).show();
+                    onBack(allCity_lists.get(position));
+//                    Toast.makeText(getApplicationContext(), allCity_lists.get(position).getName(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -144,11 +146,10 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
         resultList.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Toast.makeText(getApplicationContext(),
-                        city_result.get(position).getName(), Toast.LENGTH_SHORT)
-                        .show();
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Toast.makeText(getApplicationContext(), city_result.get(position).getName(), Toast.LENGTH_SHORT)
+//                        .show();
+                onBack(city_result.get(position));
             }
         });
         initOverlay();
@@ -195,7 +196,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
     private void getResultCityList(String s) {
         for (Iterator<City> iterator = allCity_lists.iterator(); iterator.hasNext(); ) {
             City next = iterator.next();
-            if (PingYinUtil.getPingYin(next.getName()).startsWith(s)) {
+            if (PingYinUtil.getPingYin(next.getName()).startsWith(s) ||
+                    next.getName().startsWith(s)) {
                 city_result.add(next);
             }
         }
@@ -261,14 +263,12 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
 
     @Override
     public void onGetCitySuccess(int type, CityListBean cityListBean) {
-        City city = new City("定位", "", "0"); // 当前定位城市
-        allCity_lists.add(city);
-        city = new City("最近", "", "1"); // 最近访问的城市
-        allCity_lists.add(city);
-        city = new City("热门", "", "2"); // 热门城市
-        allCity_lists.add(city);
-        city = new City("全部", "", "3"); // 全部城市
-        allCity_lists.add(city);
+//        City city = new City("定位", "", "0"); // 当前定位城市
+//        allCity_lists.add(city);
+////        city = new City("热门", "", "2"); // 热门城市
+////        allCity_lists.add(city);
+//        city = new City("全部", "", "3"); // 全部城市
+//        allCity_lists.add(city);
 
         ArrayList<City> list = new ArrayList<>();
         for (Iterator<CityListBean.DataBean> iterator = cityListBean.getData().iterator(); iterator.hasNext(); ) {
@@ -484,7 +484,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                     @Override
                     public void onClick(View v) {
                         if (locateProcess == 2) {
-                            Toast.makeText(context, city.getText().toString(), Toast.LENGTH_SHORT).show();
+                            finish();
+//                            Toast.makeText(context, city.getText().toString(), Toast.LENGTH_SHORT).show();
                         } else if (locateProcess == 3) {
                             locateProcess = 1;
                             personList.setAdapter(adapter);
@@ -514,6 +515,10 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                     city.setText("重新选择");
                     pbLocate.setVisibility(View.GONE);
                 }
+            } else if (viewType == 1) {
+                convertView = inflater.inflate(R.layout.city_picker_total_item, null);
+                TextView locateHint = convertView.findViewById(R.id.locateHint);
+                locateHint.setVisibility(View.GONE);
             } else if (viewType == 2) {
                 convertView = inflater.inflate(R.layout.city_picker_recent_city, null);
                 GridView hotCity = (GridView) convertView.findViewById(R.id.recent_city);
@@ -522,7 +527,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view,
                                             int position, long id) {
-                        Toast.makeText(context, city_hot.get(position).getName(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(context, city_hot.get(position).getName(), Toast.LENGTH_SHORT).show();
+                        onBack(city_hot.get(position));
                     }
                 });
                 hotCity.setAdapter(new HotCityAdapter(context, this.hotList));
@@ -534,10 +540,8 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
                 if (convertView == null) {
                     convertView = inflater.inflate(R.layout.city_picker_list_item_layout, null);
                     holder = new ViewHolder();
-                    holder.alpha = (TextView) convertView
-                            .findViewById(R.id.alpha);
-                    holder.name = (TextView) convertView
-                            .findViewById(R.id.name);
+                    holder.alpha = (TextView) convertView.findViewById(R.id.alpha);
+                    holder.name = (TextView) convertView.findViewById(R.id.name);
                     convertView.setTag(holder);
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -648,5 +652,14 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
         // 当gps可用，而且获取了定位结果时，不再发起网络请求，直接返回给用户坐标。这个选项适合希望得到准确坐标位置的用户。如果gps不可用，再发起网络请求，进行定位。
         option.setPriority(LocationClientOption.GpsFirst);
         mLocationClient.setLocOption(option);
+    }
+
+
+    private void onBack(City city) {
+        Intent intent = new Intent();
+        intent.putExtra("name", city.getName());
+        intent.putExtra("code", city.getCode());
+        setResult(RESULT_CODE, intent);
+        finish();
     }
 }

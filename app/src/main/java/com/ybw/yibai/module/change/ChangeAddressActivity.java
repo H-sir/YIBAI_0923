@@ -10,12 +10,15 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -88,7 +91,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
     private ChangeAddressActivity mChangeAddressActivity = null;
 
     @BindView(R.id.ll_map)
-    LinearLayout llMap;
+    FrameLayout llMap;
     @BindView(R.id.ll_search)
     LinearLayout mLlSearch;
     @BindView(R.id.tv_selected_city)
@@ -99,6 +102,10 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
     MapView mMap;
     @BindView(R.id.rv_result)
     ListView mLvResult;
+    @BindView(R.id.rv_result_button)
+    ListView mLvResultButton;
+    @BindView(R.id.rv_layout)
+    LinearLayout rvLayout;
     @BindView(R.id.lv_search)
     ListView mLvSearch;
 
@@ -236,6 +243,27 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             }
         });
 
+        mLvResultButton.setAdapter(mPoiAdapter);
+        mLvResultButton.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                PoiInfo poiInfo = mPoiInfoList.get(position);
+                SharedPreferences.Editor edit = mSharedPreferences.edit();
+                edit.putString(CITY_NAME, poiInfo.getCity());
+                edit.putString(POSITION_ADDRESS, poiInfo.name);
+                edit.apply();
+                SceneHelper.saveCity(getApplicationContext(), poiInfo.getCity());
+                SceneHelper.saveLatLng(getApplicationContext(), String.valueOf(poiInfo.getLocation().latitude), String.valueOf(poiInfo.getLocation().longitude));
+                Intent intent = new Intent();
+                intent.putExtra("name", poiInfo.name);
+                intent.putExtra("citycode", mCitycode);
+                intent.putExtra("latitude", poiInfo.getLocation().latitude);
+                intent.putExtra("longitude", poiInfo.getLocation().longitude);
+                setResult(RESULT_CODE, intent);
+                finish();
+            }
+        });
+
         // 初始化搜索模块，注册搜索事件监听
         mSuggestionSearch = SuggestionSearch.newInstance();
         mSuggestionSearch.setOnGetSuggestionResultListener(new OnGetSuggestionResultListener() {
@@ -354,28 +382,31 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             }
         });
 
-//        etJiedaoName.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                if (charSequence.toString().isEmpty()) {
-//                    return;
-//                }
-//                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
-//                        .citylimit(true)
-//                        .keyword(charSequence.toString())
-//                        .city(mSelectCity));
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
+        etJiedaoName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().isEmpty()) {
+                    rvLayout.setVisibility(View.GONE);
+                    return;
+                }
+                String cityCode = mTvSelectedCity.getText().toString();
+                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+                        .citylimit(true)
+                        .keyword(charSequence.toString())
+                        .city(cityCode));
+                rvLayout.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override

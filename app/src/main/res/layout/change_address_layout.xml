@@ -80,16 +80,16 @@
             android:id="@+id/serch_selected_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginLeft="10dp"
-            android:text="搜索"
-            android:textColor="@color/white"
+            android:background="@drawable/background_button"
             android:gravity="center"
             android:paddingLeft="20dp"
-            android:paddingRight="20dp"
             android:paddingTop="7dp"
-            android:layout_gravity="center"
+            android:paddingRight="20dp"
             android:paddingBottom="7dp"
-            android:background="@drawable/background_button"
+            android:text="搜索"
+            android:textColor="@color/white"
             android:textSize="14sp" />
 
         <View
@@ -97,41 +97,76 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/ll_map"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:fitsSystemWindows="true">
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-            <com.baidu.mapapi.map.MapView
-                android:id="@+id/mMap"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:src="@mipmap/icon_loc"/>
-        </FrameLayout>
+                android:layout_height="0dp"
+                android:layout_weight="3">
 
-        <ListView
-            android:id="@+id/rv_result"
+                <com.baidu.mapapi.map.MapView
+                    android:id="@+id/mMap"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@mipmap/icon_loc" />
+            </FrameLayout>
+
+            <ListView
+                android:id="@+id/rv_result_button"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:cacheColorHint="#00000000"
+                android:descendantFocusability="beforeDescendants"
+                android:fastScrollEnabled="true"
+                android:scrollbars="none" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/rv_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="1dp"
-            android:layout_weight="1"
-            android:background="#ffffff"
-            android:cacheColorHint="#00000000"
-            android:descendantFocusability="beforeDescendants"
-            android:fastScrollEnabled="true"
-            android:scrollbars="none" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/rv_result"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="2"
+                android:background="#ffffff"
+                android:cacheColorHint="#00000000"
+                android:descendantFocusability="beforeDescendants"
+                android:fastScrollEnabled="true"
+                android:scrollbars="none" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="1dp"
+                android:layout_weight="1"
+                android:background="#00000000" />
+        </LinearLayout>
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/ll_search"

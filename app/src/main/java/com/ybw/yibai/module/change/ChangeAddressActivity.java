@@ -105,9 +105,11 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
     @BindView(R.id.rv_result_button)
     ListView mLvResultButton;
     @BindView(R.id.rv_layout)
-    LinearLayout rvLayout;
+    FrameLayout rvLayout;
     @BindView(R.id.lv_search)
     ListView mLvSearch;
+    @BindView(R.id.rv_result_text)
+    TextView mRvResultText;
 
 
     private BaiduMap mBaiduMap;
@@ -217,6 +219,11 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 List<PoiInfo> poiList = reverseGeoCodeResult.getPoiList();
                 mPoiInfoList.clear();
                 mPoiInfoList.addAll(poiList);//只读
+                if (mPoiInfoList.size() > 0) {
+                    mRvResultText.setVisibility(View.GONE);
+                } else {
+                    mRvResultText.setVisibility(View.VISIBLE);
+                }
                 mPoiAdapter.notifyDataSetChanged();
             }
         });
@@ -304,6 +311,11 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 if (poiResult.getAllPoi().size() > 0) {
                     mPoiInfoList.clear();
                     mPoiInfoList.addAll(poiResult.getAllPoi());//只读
+                    if (mPoiInfoList.size() > 0) {
+                        mRvResultText.setVisibility(View.GONE);
+                    } else {
+                        mRvResultText.setVisibility(View.VISIBLE);
+                    }
                     mPoiAdapter.notifyDataSetChanged();
                 }
             }
@@ -391,6 +403,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().isEmpty()) {
+                    mLvResultButton.setVisibility(View.VISIBLE);
                     rvLayout.setVisibility(View.GONE);
                     return;
                 }
@@ -400,6 +413,7 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                         .keyword(charSequence.toString())
                         .city(cityCode));
                 rvLayout.setVisibility(View.VISIBLE);
+                mLvResultButton.setVisibility(View.GONE);
             }
 
             @Override
@@ -448,6 +462,10 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                 String code = bundle.getString("code");
                 MessageUtil.showMessage(name);
                 mTvSelectedCity.setText(name);
+                mSuggestionSearch.requestSuggestion(new SuggestionSearchOption()
+                        .citylimit(true)
+                        .keyword(name)
+                        .city(name));
             }
         }
     }

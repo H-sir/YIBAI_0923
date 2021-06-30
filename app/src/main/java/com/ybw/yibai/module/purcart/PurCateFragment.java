@@ -564,7 +564,8 @@ public class PurCateFragment extends BaseFragment implements PurCartContract.Pur
                     }
                     if (cartIds.length() > 2)
                         cartIds.substring(0, cartIds.length() - 2);
-                    mPurCartPresenter.upAllCart(cartIds, 2, 3);
+                    if (mPurCartPresenter != null)
+                        mPurCartPresenter.upAllCart(cartIds, 2, 3);
 
                 } else {
                     String appId = "wx08cd98ecf42af1d7"; // 填应用AppId

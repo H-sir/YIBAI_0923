@@ -286,21 +286,22 @@ public class CityPickerDialogActivity extends BaseActivity implements CityPicker
 ////        allCity_lists.add(city);
 //        city = new City("全部", "", "3"); // 全部城市
 //        allCity_lists.add(city);
-
-        ArrayList<City> list = new ArrayList<>();
-        for (Iterator<CityListBean.DataBean> iterator = cityListBean.getData().iterator(); iterator.hasNext(); ) {
-            CityListBean.DataBean dataBean = iterator.next();
-            for (Iterator<CityListBean.DataBean.ListBean> cityIterator = dataBean.getList().iterator(); cityIterator.hasNext(); ) {
-                CityListBean.DataBean.ListBean listBean = cityIterator.next();
-                City cityBean = new City();
-                cityBean.setName(listBean.getName());
-                cityBean.setCode(listBean.getCode());
-                cityBean.setPinyi(PingYinUtil.getPingYin(listBean.getName()));
-                list.add(cityBean);
+        if (cityListBean != null && cityListBean.getData() != null) {
+            ArrayList<City> list = new ArrayList<>();
+            for (Iterator<CityListBean.DataBean> iterator = cityListBean.getData().iterator(); iterator.hasNext(); ) {
+                CityListBean.DataBean dataBean = iterator.next();
+                for (Iterator<CityListBean.DataBean.ListBean> cityIterator = dataBean.getList().iterator(); cityIterator.hasNext(); ) {
+                    CityListBean.DataBean.ListBean listBean = cityIterator.next();
+                    City cityBean = new City();
+                    cityBean.setName(listBean.getName());
+                    cityBean.setCode(listBean.getCode());
+                    cityBean.setPinyi(PingYinUtil.getPingYin(listBean.getName()));
+                    list.add(cityBean);
+                }
             }
+            city_lists = getCityList(list);
+            allCity_lists.addAll(city_lists);
         }
-        city_lists = getCityList(list);
-        allCity_lists.addAll(city_lists);
         mCityPickerPresenter.getCity(1);
     }
 

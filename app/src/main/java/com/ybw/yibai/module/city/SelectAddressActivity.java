@@ -152,6 +152,7 @@ public class SelectAddressActivity extends BaseActivity implements CityContract.
         } else {
             productSettingName.setText("展示所有产品");
         }
+        mCityPresenter.applyPermissions(permissions);
         if (positionAddress != null && !positionAddress.isEmpty()) {
             cityCurrent.setText(positionAddress);
             if (!locationLng.isEmpty() && !locationLat.isEmpty()) {

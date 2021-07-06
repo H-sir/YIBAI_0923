@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.change;
 
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
@@ -22,6 +23,10 @@ public interface ChangeAddressContract {
     interface ChangeAddressView extends BaseView {
 
         void onGetCitySuccess(CityListBean cityListBean);
+
+        void applyPermissionsResults(boolean b);
+
+        void checkIfGpsOpenResult(boolean gpsOpenResult);
     }
 
     interface ChangeAddressPresenter extends BasePresenter<ChangeAddressView> {
@@ -30,6 +35,12 @@ public interface ChangeAddressContract {
          * 获取城市列表
          */
         void getCity();
+
+        void applyPermissions(String[] permissions);
+
+        void checkIfGpsOpen();
+
+        void displayOpenGpsDialog(View rootView);
     }
 
     interface ChangeAddressModel {

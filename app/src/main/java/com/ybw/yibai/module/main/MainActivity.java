@@ -208,8 +208,8 @@ public class MainActivity extends BaseActivity implements MainView,
     protected void initData() {
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int widthPixels= dm.widthPixels;
-        int heightPixels= dm.heightPixels;
+        int widthPixels = dm.widthPixels;
+        int heightPixels = dm.heightPixels;
         float density = dm.density;
         int screenWidth = (int) (widthPixels * density);
         int screenHeight = (int) (heightPixels * density);
@@ -510,7 +510,7 @@ public class MainActivity extends BaseActivity implements MainView,
         } else if (3 == index) {
             // 显示"报价"界面
             mQuotationRadioButton.setChecked(true);
-        }else if(4 == index){
+        } else if (4 == index) {
             mQuotationRadioButton.setChecked(true);
             mQuotationPurchaseFragment.mViewPager.setCurrentItem(1);
             mQuotationPurchaseFragment.onPageSelected(1);

@@ -250,6 +250,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
+            android:exported="false"
             android:process=":remote" />
 
         <meta-data

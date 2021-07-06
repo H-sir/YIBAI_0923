@@ -1,5 +1,6 @@
 package com.ybw.yibai.module.change;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -61,12 +63,15 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.helper.SceneHelper;
 import com.ybw.yibai.common.utils.CnSpellUtils;
 import com.ybw.yibai.common.utils.ExceptionUtil;
+import com.ybw.yibai.common.utils.LocationUtil;
 import com.ybw.yibai.common.utils.LogUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.spinner.SpinnerPopWindow;
 import com.ybw.yibai.module.citypicker.CityPickerDialogActivity;
 import com.ybw.yibai.module.main.MainActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -92,6 +97,8 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
 
     @BindView(R.id.ll_map)
     FrameLayout llMap;
+    @BindView(R.id.rootLayout)
+    LinearLayout rootLayout;
     @BindView(R.id.ll_search)
     LinearLayout mLlSearch;
     @BindView(R.id.tv_selected_city)
@@ -131,6 +138,18 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
     private ChangeAddressContract.ChangeAddressPresenter mChangeAddressPresenter = null;
 
     private List<String> spinnerListCity;
+    /**
+     * 要申请的权限(允许一个程序访问CellID或WiFi热点来获取粗略的位置
+     * 允许应用程序访问精确位置(如GPS))
+     */
+    private String[] permissions = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    /**
+     * 百度定位工具类
+     */
+    private LocationUtil mLocationInstance;
 
     /**
      * 自定义等待Dialog
@@ -159,8 +178,65 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
     @Override
     protected void initEvent() {
         mChangeAddressPresenter = new ChangeAddressPresenterImpl(this);
+        mChangeAddressPresenter.applyPermissions(permissions);
 //        mChangeAddressPresenter.getCity();
     }
+
+    /**
+     * 申请权限的结果
+     *
+     * @param b true 已经获取全部权限,false 没有获取全部权限
+     */
+    @Override
+    public void applyPermissionsResults(boolean b) {
+        if (b) {
+            mChangeAddressPresenter.checkIfGpsOpen();
+        }
+    }
+
+    /**
+     * 检查手机是否打开GPS功能的结果
+     *
+     * @param result true 已经打开GPS功能,false 没有打开GPS功能
+     */
+    @Override
+    public void checkIfGpsOpenResult(boolean result) {
+        if (result) {
+            startPositioning();
+        } else {
+            mChangeAddressPresenter.displayOpenGpsDialog(rootLayout);
+        }
+    }
+
+    /**
+     * 开始定位
+     */
+    private void startPositioning() {
+        if (null != mLocationInstance) {
+            mLocationInstance.stopPositioning();
+        }
+        mLocationInstance = LocationUtil.getInstance();
+        mLocationInstance.startPositioning(mListener);
+    }
+
+
+    /**
+     * 百度定位侦听器
+     */
+    private BDAbstractLocationListener mListener = new BDAbstractLocationListener() {
+        @Override
+        public void onReceiveLocation(BDLocation bdLocation) {
+            //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
+            //以下只列举部分获取经纬度相关（常用）的结果信息
+            //更多结果信息获取说明，请参照类参考中BDLocation类中的说明
+//            initMap();
+            // 获取城市
+            String city = bdLocation.getCity();
+            if (TextUtils.isEmpty(city)) {
+                return;
+            }
+        }
+    };
 
     @Override
     public void onNetworkStateChange(NetworkType networkType) {
@@ -217,14 +293,16 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
             @Override
             public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
                 List<PoiInfo> poiList = reverseGeoCodeResult.getPoiList();
-                mPoiInfoList.clear();
-                mPoiInfoList.addAll(poiList);//只读
-                if (mPoiInfoList.size() > 0) {
-                    mRvResultText.setVisibility(View.GONE);
-                } else {
-                    mRvResultText.setVisibility(View.VISIBLE);
+                if (mPoiInfoList != null && poiList != null) {
+                    mPoiInfoList.clear();
+                    mPoiInfoList.addAll(poiList);//只读
+                    if (mPoiInfoList.size() > 0) {
+                        mRvResultText.setVisibility(View.GONE);
+                    } else {
+                        mRvResultText.setVisibility(View.VISIBLE);
+                    }
+                    mPoiAdapter.notifyDataSetChanged();
                 }
-                mPoiAdapter.notifyDataSetChanged();
             }
         });
 
@@ -287,14 +365,19 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
                     }
                     sugAdapter.notifyDataSetChanged();
 
-
-                    MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(allSuggestions.get(0).getPt(), 18f);
-                    mBaiduMap.animateMapStatus(msu);
-                    // 发起反地理编码请求(经纬度->地址信息)
-                    ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
-                    // 设置反地理编码位置坐标
-                    reverseGeoCodeOption.location(allSuggestions.get(0).getPt());
-                    geoCoder.reverseGeoCode(reverseGeoCodeOption);
+                    try {
+                        MapStatusUpdate msu = MapStatusUpdateFactory.newLatLngZoom(allSuggestions.get(0).getPt(), 18f);
+                        if (msu != null) {
+                            mBaiduMap.animateMapStatus(msu);
+                            // 发起反地理编码请求(经纬度->地址信息)
+                            ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
+                            // 设置反地理编码位置坐标
+                            reverseGeoCodeOption.location(allSuggestions.get(0).getPt());
+                            geoCoder.reverseGeoCode(reverseGeoCodeOption);
+                        }
+                    } catch (Exception e) {
+                        LogUtil.e("ChangeAddressActivity", e.toString());
+                    }
                 }
             }
         });
@@ -444,6 +527,18 @@ public class ChangeAddressActivity extends BaseActivity implements ChangeAddress
         geoCoder.destroy();
         mPoiSearch.destroy();
         mSuggestionSearch.destroy();
+
+        if (null != mChangeAddressPresenter) {
+            if (EventBus.getDefault().isRegistered(this)) {
+                // 解除注册
+                EventBus.getDefault().unregister(this);
+            }
+            if (null != mLocationInstance) {
+                mLocationInstance.stopPositioning();
+            }
+            mChangeAddressPresenter.onDetachView();
+            mChangeAddressPresenter = null;
+        }
     }
 
     @Override

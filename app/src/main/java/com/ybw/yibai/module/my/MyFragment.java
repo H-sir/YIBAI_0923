@@ -19,6 +19,7 @@ import com.ybw.yibai.common.bean.NetworkType;
 import com.ybw.yibai.common.bean.UserInfo;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.module.browser.BrowserActivity;
+import com.ybw.yibai.module.collection.CollectionLayoutActivity;
 import com.ybw.yibai.module.customerlist.CustomerListActivity;
 import com.ybw.yibai.module.invitefriends.InviteFriendsActivity;
 import com.ybw.yibai.module.main.MainActivity;
@@ -126,6 +127,10 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
      * 已失效
      */
     private TextView mExpiredTextView;
+    /**
+     * 收藏
+     */
+    private TextView mCollectionLayout;
 
     /**
      * 全部报价
@@ -227,6 +232,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
 
         mToBeDecidedTextView = view.findViewById(R.id.toBeDecidedTextView);
         mDealDoneTextView = view.findViewById(R.id.dealDoneTextView);
+        mCollectionLayout = view.findViewById(R.id.collectionLayout);
         mExpiredTextView = view.findViewById(R.id.expiredTextView);
         mQuotationLayout = view.findViewById(R.id.quotationLayout);
         mQuotationSetTextView = view.findViewById(R.id.quotationSetTextView);
@@ -274,6 +280,7 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
         mPendingDeliveryTextView.setOnClickListener(this);
         mPendingReceiptTextView.setOnClickListener(this);
         mCompletedTextView.setOnClickListener(this);
+        mCollectionLayout.setOnClickListener(this);
 
         mBalanceLayout.setOnClickListener(this);
     }
@@ -384,6 +391,12 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
             startActivity(intent);
         }
 
+        // 收藏
+        if (id == R.id.collectionLayout) {
+            Intent intent = new Intent(mContext, CollectionLayoutActivity.class);
+            startActivity(intent);
+        }
+
         // 余额
         if (id == R.id.balanceLayout) {
             if (TextUtils.isEmpty(myWalletUrl)) {
@@ -394,6 +407,8 @@ public class MyFragment extends BaseFragment implements View.OnClickListener {
             intent.putExtra(URL, myWalletUrl);
             startActivity(intent);
         }
+
+
     }
 
     /**

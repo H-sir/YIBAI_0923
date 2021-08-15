@@ -35,6 +35,7 @@
             android:id="@+id/orderMaterialCardView"
             android:layout_width="match_parent"
             android:layout_height="224dp"
+            android:orientation="vertical"
             android:layout_below="@+id/activitiesImageView"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
@@ -45,11 +46,30 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/collectionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:drawableEnd="@mipmap/right_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shadow"
+            android:text="@string/collection_layout"
+            android:textColor="@color/main_text_color"
+            android:textSize="14sp"
+            android:layout_below="@+id/orderMaterialCardView"
+            android:textStyle="bold" />
+
         <LinearLayout
             android:id="@+id/purchaseOrderLayout"
             android:layout_width="match_parent"
             android:layout_height="142dp"
-            android:layout_below="@+id/orderMaterialCardView"
+            android:layout_below="@+id/collectionLayout"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@drawable/shadow">

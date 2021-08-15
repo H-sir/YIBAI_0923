@@ -108,6 +108,9 @@
             android:name=".module.city.CityActivity"
             android:launchMode="singleTask" />
         <activity
+            android:name=".module.collection.CollectionLayoutActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".module.city.SelectAddressActivity"
             android:launchMode="singleTask" />
 

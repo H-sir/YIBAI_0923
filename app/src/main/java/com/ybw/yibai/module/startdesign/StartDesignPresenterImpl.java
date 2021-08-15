@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.startdesign;
 
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import com.ybw.yibai.module.startdesign.StartDesignContract.StartDesignPresenter
 import com.ybw.yibai.module.startdesign.StartDesignContract.StartDesignView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -120,17 +122,38 @@ public class StartDesignPresenterImpl extends BasePresenterImpl<StartDesignView>
         Activity activity = (Activity) mStartDesignView;
         // 获得系统相册返回的数据
         if (resultCode == RESULT_OK && requestCode == REQUEST_OPEN_PHOTOS_CODE) {
-            Uri uri = data.getData();
-            if (null == uri) {
+            ClipData clipData = data.getClipData();
+            if (clipData == null) {
                 return;
             }
-            // 根据Uri获取图片的绝对路径
-            String path = ImageUtil.getRealPathFromUri(activity, uri);
-            if (!judeFileExists(path)) {
-                return;
+            List<File> fileList = new ArrayList<>();
+            for (int i = 0; i < clipData.getItemCount(); i++) {
+                Uri uri = clipData.getItemAt(i).getUri();
+                if (null == uri) {
+                    return;
+                }
+                // 根据Uri获取图片的绝对路径
+                String path = ImageUtil.getRealPathFromUri(activity, uri);
+                if (!judeFileExists(path)) {
+                    return;
+                }
+                File file = new File(path);
+                fileList.add(file);
             }
-            File file = new File(path);
-            mStartDesignView.returnsTheImageReturnedFromTheCameraOrAlbum(file);
+            if (fileList.size() > 0)
+                mStartDesignView.returnsTheImageReturnedFromTheCameraOrAlbum(fileList);
+
+//            Uri uri = data.getData();
+//            if (null == uri) {
+//                return;
+//            }
+//            // 根据Uri获取图片的绝对路径
+//            String path = ImageUtil.getRealPathFromUri(activity, uri);
+//            if (!judeFileExists(path)) {
+//                return;
+//            }
+//            File file = new File(path);
+//            mStartDesignView.returnsTheImageReturnedFromTheCameraOrAlbum(file);
         }
 
         // 获得系统相机返回的数据
@@ -213,7 +236,7 @@ public class StartDesignPresenterImpl extends BasePresenterImpl<StartDesignView>
         if (!TextUtils.isEmpty(oldSceneName)) {
             mEditText.setText(oldSceneName);
             mEditText.setSelection(oldSceneName.length());
-        }else {
+        } else {
             mEditText.setText("");
         }
     }

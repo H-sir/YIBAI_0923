@@ -31,6 +31,7 @@ import com.ybw.yibai.module.startdesign.StartDesignContract.StartDesignView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.ybw.yibai.common.constants.Preferences.CREATE_SCENE_DATA_LIST;
@@ -355,10 +356,39 @@ public class StartDesignActivity extends FragmentActivity implements View.OnClic
      */
     @Override
     public void returnsTheImageReturnedFromTheCameraOrAlbum(File file) {
+//        mNoDataLayout.setVisibility(View.GONE);
+//        mHaveDataLayout.setVisibility(View.VISIBLE);
+        mCreateSceneDataList.add(new CreateSceneData(file));
+//        mAdapter.notifyDataSetChanged();
+
+        Intent intent = new Intent(this, SceneActivity.class);
+        intent.putParcelableArrayListExtra(CREATE_SCENE_DATA_LIST, (ArrayList<? extends Parcelable>) mCreateSceneDataList);
+        intent.putExtra(DESIGN_CREATE, designCreate);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
+    }
+
+    /**
+     * 返回从相机或相册返回的图像
+     *
+     * @param file 图像文件
+     */
+    @Override
+    public void returnsTheImageReturnedFromTheCameraOrAlbum(List<File> fileList) {
         mNoDataLayout.setVisibility(View.GONE);
         mHaveDataLayout.setVisibility(View.VISIBLE);
-        mCreateSceneDataList.add(new CreateSceneData(file));
+        for (Iterator<File> iterator = fileList.iterator(); iterator.hasNext(); ) {
+            File file = iterator.next();
+            mCreateSceneDataList.add(new CreateSceneData(file));
+        }
         mAdapter.notifyDataSetChanged();
+//        Intent intent = new Intent(this, SceneActivity.class);
+//        intent.putParcelableArrayListExtra(CREATE_SCENE_DATA_LIST, (ArrayList<? extends Parcelable>) mCreateSceneDataList);
+//        intent.putExtra(DESIGN_CREATE, designCreate);
+//        startActivity(intent);
+//        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        finish();
     }
 
     @Override

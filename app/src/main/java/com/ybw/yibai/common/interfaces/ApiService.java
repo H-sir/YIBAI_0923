@@ -10,10 +10,12 @@ import com.ybw.yibai.common.bean.BindingWechat;
 import com.ybw.yibai.common.bean.Case;
 import com.ybw.yibai.common.bean.CaseClassify;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckCollectionBean;
 import com.ybw.yibai.common.bean.CheckShareBean;
 import com.ybw.yibai.common.bean.CityAreaList;
 import com.ybw.yibai.common.bean.CityListBean;
 import com.ybw.yibai.common.bean.CityListHotBean;
+import com.ybw.yibai.common.bean.CollectionListBean;
 import com.ybw.yibai.common.bean.CreateCustomers;
 import com.ybw.yibai.common.bean.CreateQuotationLocation;
 import com.ybw.yibai.common.bean.CreateQuotationOrder;
@@ -626,6 +628,75 @@ public interface ApiService {
                                                                @Query("uid") int uid);
 
     /**
+     * 获取收藏列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return 获取产品筛选参数时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_COLLECT_URL)
+    Observable<CollectionListBean> getCollection(@Header("timestamp") String timestamp,
+                                                 @Header("sign") String sign,
+                                                 @Query("uid") int uid,
+                                                 @Query("type") int type,
+                                                 @Query("page") int page,
+                                                 @Query("pagesiez") int pagesiez);
+
+    /**
+     * 判断是否已收藏
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return 获取产品筛选参数时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_CHECH_COLLECT_URL)
+    Observable<CheckCollectionBean> getCheckColect(@Header("timestamp") String timestamp,
+                                                   @Header("sign") String sign,
+                                                   @Query("uid") int uid,
+                                                   @Query("first_sku_id") int first_sku_id,
+                                                   @Query("second_sku_id") int second_sku_id);
+
+    /**
+     * 添加收藏
+     *
+     * @param timestamp   时间搓
+     * @param sign        签名
+     * @param uid         用户的ID
+     * @param firstSkuId  主skuid
+     * @param secondSkuId 附加产品skuid
+     * @param params      组合图片,单图表单提交formdata 模式   附加产品skuid存在时此为必填项
+     * @return 场景中产品一键创建并导入时服务器端返回的数据
+     */
+    @Multipart
+    @POST(HttpUrls.GET_ADD_COLLECT_URL)
+    Observable<BaseBean> addCollection(@Header("timestamp") String timestamp,
+                                       @Header("sign") String sign,
+                                       @Part("uid") int uid,
+                                       @Part("first_sku_id") int firstSkuId,
+                                       @Part("second_sku_id") int secondSkuId,
+                                       @PartMap Map<String, RequestBody> params);
+
+
+    /**
+     * 删除收藏列表
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return 获取产品筛选参数时服务器端返回的数据
+     */
+    @FormUrlEncoded
+    @POST(HttpUrls.DELETE_COLLECT_URL)
+    Observable<BaseBean> deleteCollection(@Header("timestamp") String timestamp,
+                                          @Header("sign") String sign,
+                                          @Field("uid") int uid,
+                                          @Field("collect_id") String collect_id,
+                                          @Query("apiver") String apiver,
+                                          @Query("check") String check);
+
+    /**
      * 获取产品筛选参数
      *
      * @param timestamp 时间搓
@@ -804,7 +875,9 @@ public interface ApiService {
     Observable<SkuDetailsBean> getSkuDetails(@Header("timestamp") String timestamp,
                                              @Header("sign") String sign,
                                              @Query("uid") int uid,
-                                             @Query("skuids") String skuids);
+                                             @Query("skuids") String skuids,
+                                             @Query("apiver") String apiver,
+                                             @Query("check") String check);
 
     /**
      * 场景中产品一键创建并导入
@@ -1954,7 +2027,9 @@ public interface ApiService {
     Observable<CityListBean> getCity(@Header("timestamp") String timestamp,
                                      @Header("sign") String sign,
                                      @Query("uid") int uid,
-                                     @Query("type") int type);   /**
+                                     @Query("type") int type);
+
+    /**
      * 获取城市列表
      *
      * @param timestamp 时间搓

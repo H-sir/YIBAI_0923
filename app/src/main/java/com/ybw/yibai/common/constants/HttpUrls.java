@@ -81,7 +81,22 @@ public class HttpUrls {
      * 获取产品筛选参数的方法
      */
     public static final String GET_PRODUCT_SCREENING_PARAM_METHOD = "mybw.productparam";
-
+    /**
+     * 获取收藏列表的方法
+     */
+    public static final String GET_COLLECT_METHOD = "mybw.getcollect";
+    /**
+     * 删除收藏列表的方法
+     */
+    public static final String DELETE_COLLECT_METHOD = "mybw.delcollect";
+    /**
+     * 判断是否已收藏
+     */
+    public static final String GET_CHECH_COLLECT_METHOD = "mybw.checkcollect";
+    /**
+     * 收藏
+     */
+    public static final String GET_ADD_COLLECT_METHOD = "mybw.addcollect";
     /**
      * 获取产品sku列表的方法
      */
@@ -504,7 +519,22 @@ public class HttpUrls {
      * 获取产品筛选参数的URL
      */
     public static final String GET_PRODUCT_SCREENING_PARAM_URL = "?method=" + GET_PRODUCT_SCREENING_PARAM_METHOD;
-
+    /**
+     * 获取收藏列表的URL
+     */
+    public static final String GET_COLLECT_URL = "?method=" + GET_COLLECT_METHOD;
+    /**
+     * 删除收藏列表的URL
+     */
+    public static final String DELETE_COLLECT_URL = "?method=" + DELETE_COLLECT_METHOD;
+    /**
+     * 判断是否已收藏
+     */
+    public static final String GET_CHECH_COLLECT_URL = "?method=" + GET_CHECH_COLLECT_METHOD;
+    /**
+     * 收藏
+     */
+    public static final String GET_ADD_COLLECT_URL = "?method=" + GET_ADD_COLLECT_METHOD;
     /**
      * 获取产品sku列表的URL
      */

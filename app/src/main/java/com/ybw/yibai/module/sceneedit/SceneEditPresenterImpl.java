@@ -33,6 +33,7 @@ import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.AlreadyPlaced;
 import com.ybw.yibai.common.bean.BTCBean;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckCollectionBean;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
@@ -1876,5 +1877,40 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
     @Override
     public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
         mSceneEditView.onGetProductDetailsSuccess(skuDetailsBean);
+    }
+
+    @Override
+    public void checkCollect(int productSkuId, int augmentedProductSkuId) {
+        mSceneEditModel.checkCollect(productSkuId,augmentedProductSkuId,this);
+    }
+
+    @Override
+    public void onCheckCollectSuccess(CheckCollectionBean skuDetailsBean) {
+        mSceneEditView.onCheckCollectSuccess(skuDetailsBean);
+    }
+
+    @Override
+    public void addCollection(SimulationData simulationData) {
+        mSceneEditModel.addCollection(simulationData,this);
+    }
+
+    @Override
+    public void addCollection(ProductData productData) {
+        mSceneEditModel.addCollection(productData,this);
+    }
+
+    @Override
+    public void onAddCollectionSuccess() {
+        mSceneEditView.onAddCollectionSuccess();
+    }
+
+    @Override
+    public void deleteCollection(String collectId) {
+        mSceneEditModel.deleteCollection(collectId,this);
+    }
+
+    @Override
+    public void onDeleteCollectionSuccess() {
+        mSceneEditView.onDeleteCollectionSuccess();
     }
 }

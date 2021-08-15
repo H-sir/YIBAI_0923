@@ -34,6 +34,13 @@ public interface StartDesignContract {
         void returnsTheImageReturnedFromTheCameraOrAlbum(File file);
 
         /**
+         * 相册返回的多张图像
+         *
+         * @param file 图像文件
+         */
+        void returnsTheImageReturnedFromTheCameraOrAlbum(List<File> file);
+
+        /**
          * 在显示预设场景名称的RecyclerView的Item被点击时回调
          *
          * @param name 被点击的Item位置的场景名称

@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
-    android:background="#F8F8F8"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#F8F8F8">
 
     <com.ybw.yibai.common.widget.stickerview.StickerView
         android:id="@+id/stickerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:bringToFrontCurrentSticker="true"
         android:background="#F8F8F8"
+        app:bringToFrontCurrentSticker="true"
         app:showBorder="true"
         app:showIcons="true">
 
@@ -183,6 +183,22 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
+    <ImageButton
+        android:id="@+id/productCodeLikeButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="78dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/background_collocatio_sn"
+        android:contentDescription="@null"
+        android:gravity="center"
+        android:src="@mipmap/colliction_img"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:textStyle="bold" />
+
     <com.jude.easyrecyclerview.EasyRecyclerView
         android:id="@+id/plant_recyclerView"
         android:layout_width="@dimen/DM1"
@@ -312,8 +328,8 @@
                     android:background="@drawable/shape_text_view"
                     android:gravity="center"
                     android:text="0"
-                    android:textSize="8dp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="8dp" />
             </FrameLayout>
 
             <TextView
@@ -413,8 +429,8 @@
                     android:background="@drawable/shape_text_view"
                     android:gravity="center"
                     android:text=""
-                    android:textSize="8dp"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@android:color/white"
+                    android:textSize="8dp" />
             </FrameLayout>
 
             <TextView

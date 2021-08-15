@@ -273,11 +273,19 @@ public class ImageUtil {
      */
     public static void openPhotoAlbum(@NonNull Activity activity) {
         try {
-            // 跳转到系统相册界面
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            // 相片类型
+            Intent intent = new Intent();
             intent.setType("image/*");
-            activity.startActivityForResult(intent, REQUEST_OPEN_PHOTOS_CODE);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            //intent.setAction(Intent.ACTION_GET_CONTENT)  //实现相册多选 该方法获得的uri在转化为真实文件路径时Android 4.4以上版本会有问题
+            intent.setAction(Intent.ACTION_PICK);
+            intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);//直接打开系统相册  不设置会有选择相册一步（例：系统相册、QQ浏览器相册）
+            activity.startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_OPEN_PHOTOS_CODE);
+
+//            // 跳转到系统相册界面
+//            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            // 相片类型
+//            intent.setType("image/*");
+//            activity.startActivityForResult(intent, REQUEST_OPEN_PHOTOS_CODE);
         } catch (ActivityNotFoundException e) {
             // 打开相册异常
             MessageUtil.showMessage(activity.getResources().getString(R.string.open_album_exception));
@@ -651,14 +659,14 @@ public class ImageUtil {
     /**
      * 点击放大图片
      */
-    public static void showImage(Activity context, List<String> urls,int position) {
+    public static void showImage(Activity context, List<String> urls, int position) {
         // 全屏显示的方法
         final Dialog dialog = new Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         View view = View.inflate(context, R.layout.show_image_layout, null);
         ViewPager viewPager = view.findViewById(R.id.view_pager);
         dialog.setContentView(view);
         dialog.show();
-        PagerAdapter adapter = new ViewAdapter(dialog,context,urls);
+        PagerAdapter adapter = new ViewAdapter(dialog, context, urls);
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(position);
     }
@@ -667,6 +675,7 @@ public class ImageUtil {
         private List<String> datas;
         private Context context;
         private Dialog dialog;
+
         public ViewAdapter(Dialog dialog, Context context, List<String> list) {
             this.dialog = dialog;
             this.context = context;

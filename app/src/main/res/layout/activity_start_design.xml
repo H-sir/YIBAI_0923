@@ -32,8 +32,9 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_toStartOf="@+id/closeImageView"
+                android:gravity="center"
                 android:text="@string/select_the_background_image_of_the_design"
-                android:textColor="@color/main_text_color"
+                android:textColor="@color/prompt_high_text_color"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -45,7 +46,8 @@
                 android:layout_centerInParent="true"
                 android:contentDescription="@null"
                 android:padding="16dp"
-                android:src="@mipmap/down" />
+                android:src="@mipmap/down"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -70,27 +72,64 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.25" />
 
-            <ImageView
-                android:id="@+id/cameraImageView"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="54dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="@null"
                 android:gravity="center"
-                android:onClick="onClick"
-                android:src="@mipmap/photograph_new" />
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/photoAlbumImageView"
+                <ImageView
+                    android:id="@+id/cameraImageView"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:src="@mipmap/photograph_new" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/photo_create_image"
+                    android:textColor="@color/prompt_high_text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="54dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:contentDescription="@null"
                 android:gravity="center"
-                android:onClick="onClick"
-                android:src="@mipmap/album_new" />
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/photoAlbumImageView"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@null"
+                    android:gravity="center"
+                    android:onClick="onClick"
+                    android:src="@mipmap/album_new" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center"
+                    android:text="@string/photo_more_create_image"
+                    android:textColor="@color/prompt_high_text_color"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="0dp"

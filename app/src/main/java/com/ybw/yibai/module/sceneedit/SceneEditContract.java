@@ -14,6 +14,7 @@ import com.ybw.yibai.base.BaseView;
 import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.BTCBean;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckCollectionBean;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.ProductData;
@@ -167,6 +168,12 @@ public interface SceneEditContract {
         void updateSceneBgSuccess();
 
         void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
+
+        void onCheckCollectSuccess(CheckCollectionBean skuDetailsBean);
+
+        void onAddCollectionSuccess();
+
+        void onDeleteCollectionSuccess();
     }
 
     interface SceneEditPresenter extends BasePresenter<SceneEditView> {
@@ -483,6 +490,13 @@ public interface SceneEditContract {
         void addQuotationData(ProductData productData);
 
         void getProductDetails(int productSkuId);
+
+        void checkCollect(int productSkuId, int augmentedProductSkuId);
+
+        void addCollection(SimulationData simulationData);
+        void addCollection(ProductData productData);
+
+        void deleteCollection(String collectId);
     }
 
     interface SceneEditModel {
@@ -684,6 +698,13 @@ public interface SceneEditContract {
         void addQuotationData(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack);
 
         void getProductDetails(int productSkuId, CallBack callBack);
+
+        void checkCollect(int productSkuId, int augmentedProductSkuId, CallBack callBack);
+
+        void addCollection(SimulationData simulationData, CallBack callBack);
+        void addCollection(ProductData productData, CallBack callBack);
+
+        void deleteCollection(String collectId, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -773,5 +794,11 @@ public interface SceneEditContract {
         void updateSceneBgSuccess();
 
         void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
+
+        void onCheckCollectSuccess(CheckCollectionBean skuDetailsBean);
+
+        void onAddCollectionSuccess();
+
+        void onDeleteCollectionSuccess();
     }
 }

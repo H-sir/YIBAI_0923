@@ -11,6 +11,7 @@ import com.ybw.yibai.common.bean.AddQuotation;
 import com.ybw.yibai.common.bean.BTCBean;
 import com.ybw.yibai.common.bean.BaseBean;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckCollectionBean;
 import com.ybw.yibai.common.bean.CreateSceneData;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.ListBean;
@@ -60,9 +61,12 @@ import okhttp3.RequestBody;
 
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_PURCART_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.ADD_QUOTATION_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.DELETE_COLLECT_URL;
 import static com.ybw.yibai.common.constants.HttpUrls.EDIT_SCHEME_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.FAST_IMPORT_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_ADD_COLLECT_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_CATEGORY_SIMILAR_SUK_METHOD;
+import static com.ybw.yibai.common.constants.HttpUrls.GET_CHECH_COLLECT_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_NEWRECOMMEND_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_PRODUCT_INFO_METHOD;
 import static com.ybw.yibai.common.constants.HttpUrls.GET_RECOMMEND_METHOD;
@@ -616,6 +620,7 @@ public class SceneEditModelImpl implements SceneEditModel {
                 .subscribe(observer);
     }
 
+
     @Override
     public void addQuotationData(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
@@ -661,13 +666,14 @@ public class SceneEditModelImpl implements SceneEditModel {
                 .subscribe(observer);
     }
 
+
     @Override
     public void getProductDetails(int productSkuId, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<SkuDetailsBean> observable = mApiService.getSkuDetails(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_SKU_LIST_IDS_METHOD),
                 YiBaiApplication.getUid(),
-                String.valueOf(productSkuId));
+                String.valueOf(productSkuId), "v2", "no");
         Observer<SkuDetailsBean> observer = new Observer<SkuDetailsBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -680,6 +686,141 @@ public class SceneEditModelImpl implements SceneEditModel {
                     callBack.onGetProductDetailsSuccess(skuDetailsBean);
                 } else {
                     callBack.onRequestFailure(new Throwable(skuDetailsBean.getMsg()));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void checkCollect(int productSkuId, int augmentedProductSkuId, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<CheckCollectionBean> observable = mApiService.getCheckColect(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId, augmentedProductSkuId);
+        Observer<CheckCollectionBean> observer = new Observer<CheckCollectionBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(CheckCollectionBean skuDetailsBean) {
+                if (skuDetailsBean.getCode() == 200) {
+                    callBack.onCheckCollectSuccess(skuDetailsBean);
+                } else {
+                    callBack.onRequestFailure(new Throwable(skuDetailsBean.getMsg()));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void addCollection(SimulationData simulationData, CallBack callBack) {
+        int productSkuId = simulationData.getProductSkuId();
+        int augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
+        String picturePath = simulationData.getPicturePath();
+
+        File file = new File(picturePath);
+        Map<String, RequestBody> params = new HashMap<>();
+        String fileName = file.getName();
+        String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
+        params.put("pic\"; filename=\"" + file.getName(), requestBody);
+
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.addCollection(timeStamp,
+                OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
+                YiBaiApplication.getUid(),
+                productSkuId,
+                augmentedProductSkuId,
+                params);
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onAddCollectionSuccess();
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
+    }
+
+    @Override
+    public void addCollection(ProductData productData, CallBack callBack) {
+
+    }
+
+    @Override
+    public void deleteCollection(String collectId, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable = mApiService.deleteCollection(timeStamp,
+                OtherUtil.getSign(timeStamp, DELETE_COLLECT_URL),
+                YiBaiApplication.getUid(),
+                collectId,"v2", "no");
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
+
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onDeleteCollectionSuccess();
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
                 }
 
             }

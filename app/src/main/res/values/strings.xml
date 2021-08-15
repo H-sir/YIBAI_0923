@@ -61,7 +61,9 @@
     <string name="filter">筛选</string>
 
     <!-- 开始设计 -->
-    <string name="select_the_background_image_of_the_design">选择设计的背景图</string>
+    <string name="select_the_background_image_of_the_design">创建新场景</string>
+    <string name="photo_create_image">拍照快速创建</string>
+    <string name="photo_more_create_image">相册批量创建</string>
     <string name="select_scene">选择场景</string>
     <string name="select_scene_type">选择场景类型</string>
     <string name="please_enter_a_scene_name">请输入场景名称</string>
@@ -130,6 +132,7 @@
     <string name="all_quotation">所有报价</string>
     <string name="quotation_set">报价设置</string>
     <string name="customer_management">客户管理</string>
+    <string name="collection_layout">收藏</string>
     <string name="purchase_order">已进货订单</string>
     <string name="all_orders">所有订单</string>
     <string name="pending_delivery">待配送</string>

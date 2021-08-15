@@ -28,7 +28,6 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -38,7 +37,6 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dyhdyh.widget.loading.bar.LoadingBar;
 import com.google.gson.Gson;
 import com.jaygoo.widget.RangeSeekBar;
 import com.jude.easyrecyclerview.EasyRecyclerView;
@@ -62,6 +60,7 @@ import com.ybw.yibai.common.bean.BTCBean;
 import com.ybw.yibai.common.bean.BarViewSelected;
 import com.ybw.yibai.common.bean.BottomSheetBehaviorState;
 import com.ybw.yibai.common.bean.CategorySimilarSKU;
+import com.ybw.yibai.common.bean.CheckCollectionBean;
 import com.ybw.yibai.common.bean.ExistSimulationData;
 import com.ybw.yibai.common.bean.FastImport;
 import com.ybw.yibai.common.bean.HomeBean;
@@ -72,7 +71,6 @@ import com.ybw.yibai.common.bean.NewMatch;
 import com.ybw.yibai.common.bean.ParamSonBean;
 import com.ybw.yibai.common.bean.PlacementQrQuotationList;
 import com.ybw.yibai.common.bean.ProductData;
-import com.ybw.yibai.common.bean.ProductDetails;
 import com.ybw.yibai.common.bean.QuotationData;
 import com.ybw.yibai.common.bean.Recommend;
 import com.ybw.yibai.common.bean.SaveAddSchemeBean;
@@ -96,10 +94,8 @@ import com.ybw.yibai.common.model.CreateSceneOrPicModel;
 import com.ybw.yibai.common.model.ItemDesignSceneModel;
 import com.ybw.yibai.common.network.response.BaseResponse;
 import com.ybw.yibai.common.network.response.ResponsePage;
-import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.FilterFactoryUtil;
-import com.ybw.yibai.common.utils.GuideUtil;
 import com.ybw.yibai.common.utils.ImageUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.utils.OtherUtil;
@@ -109,7 +105,6 @@ import com.ybw.yibai.common.utils.TimeUtil;
 import com.ybw.yibai.common.widget.HorizontalViewPager;
 import com.ybw.yibai.common.widget.MatchLayout;
 import com.ybw.yibai.common.widget.WaitDialog;
-import com.ybw.yibai.common.widget.loading.CustomLoadingFactory;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.common.widget.stickerview.BitmapStickerIcon;
 import com.ybw.yibai.common.widget.stickerview.StickerView;
@@ -117,7 +112,6 @@ import com.ybw.yibai.common.widget.stickerview.event.StickerIconEvent;
 import com.ybw.yibai.common.widget.stickerview.event.StickerViewEvent;
 import com.ybw.yibai.common.widget.stickerview.event.StickerViewSelectedListener;
 import com.ybw.yibai.common.widget.stickerview.event.ZoomIconEvent;
-import com.ybw.yibai.module.browser.BrowserActivity;
 import com.ybw.yibai.module.filter.FilterActivity;
 import com.ybw.yibai.module.filter.FilterFragment;
 import com.ybw.yibai.module.imagecontrast.ImageContrastActivity;
@@ -144,7 +138,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -170,7 +163,6 @@ import static android.support.v4.view.ViewPager.SCROLL_STATE_DRAGGING;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
 import static com.ybw.yibai.common.constants.Folder.SIMULATION_IMAGE_PREFIX;
-import static com.ybw.yibai.common.constants.HttpUrls.USING_HELP_URL;
 import static com.ybw.yibai.common.constants.Preferences.CATEGORY_CODE;
 import static com.ybw.yibai.common.constants.Preferences.FILE_PATH;
 import static com.ybw.yibai.common.constants.Preferences.OPEN_WATERMARK;
@@ -185,7 +177,6 @@ import static com.ybw.yibai.common.constants.Preferences.PRODUCT_SKU_LIST;
 import static com.ybw.yibai.common.constants.Preferences.PRODUCT_TYPE;
 import static com.ybw.yibai.common.constants.Preferences.SCENE_INFO;
 import static com.ybw.yibai.common.constants.Preferences.SIMULATION_DATA;
-import static com.ybw.yibai.common.constants.Preferences.URL;
 import static com.ybw.yibai.common.constants.Preferences.USER_INFO;
 import static com.ybw.yibai.common.constants.Preferences.VIP_LEVEL;
 import static com.ybw.yibai.common.constants.Preferences.WATERMARK_PIC;
@@ -556,6 +547,10 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      * 查看产品代码的图标
      */
     private ImageButton mProductCodeImageButton;
+    /**
+     * 收藏按钮
+     */
+    private ImageButton mProductCodeLikeButton;
 
     /**
      * 改款
@@ -889,6 +884,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
         mBonsaiEditLayout = view.findViewById(R.id.bonsaiEditLayout);
         mProductCodeImageButton = view.findViewById(R.id.productCodeImageButton);
+        mProductCodeLikeButton = view.findViewById(R.id.productCodeLikeButton);
         mChangeStyleTextView = view.findViewById(R.id.changeStyleTextView);
         mBonsaiInfoTextView = view.findViewById(R.id.bonsaiInfoTextView);
         mJoinPhotoAlbum = view.findViewById(R.id.joinPhotoAlbum);
@@ -1217,6 +1213,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         mAdjustBackgroundTextViewTextView.setOnClickListener(this);
 
         mProductCodeImageButton.setOnClickListener(this);
+        mProductCodeLikeButton.setOnClickListener(this);
         mChangeStyleTextView.setOnClickListener(this);
         mBonsaiInfoTextView.setOnClickListener(this);
         mJoinPhotoAlbum.setOnClickListener(this);
@@ -1303,6 +1300,20 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         if (id == R.id.productCodeImageButton) {
             mSceneEditPresenter.displayProductCodePopupWindow(mProductCodeImageButton, productPriceCode,
                     productTradePriceCode, augmentedPriceCode, augmentedTradePriceCode, productPrice, augmentedProductPrice);
+        }
+
+        // 收藏
+        if (id == R.id.productCodeLikeButton) {
+            if (collectId.isEmpty()) {
+                BaseSticker currentSticker = mStickerView.getCurrentSticker();
+                if (null != currentSticker) {
+                    int position = (int) currentSticker.getTag();
+                    SimulationData simulationData = mSimulationDataList.get(position);
+                    mSceneEditPresenter.addCollection(simulationData);
+                }
+            } else {
+                mSceneEditPresenter.deleteCollection(collectId);
+            }
         }
 
         // 加入该款
@@ -1599,6 +1610,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
     private void hideToolsIsShow() {
         mProductCodeImageButton.setVisibility(View.VISIBLE);
+        mProductCodeLikeButton.setVisibility(View.VISIBLE);
         mBonsaiEditLayout.setVisibility(View.VISIBLE);
         mBtnChangeLocation.setVisibility(View.INVISIBLE);
         mChangeStyleTextView.setVisibility(View.VISIBLE);
@@ -1614,6 +1626,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 //        mBonsaiEditLayout.setVisibility(View.INVISIBLE);
         mBtnChangeLocation.setVisibility(View.INVISIBLE);
         mProductCodeImageButton.setVisibility(View.INVISIBLE);
+        mProductCodeLikeButton.setVisibility(View.INVISIBLE);
 //        mChangeStyleTextView.setVisibility(View.INVISIBLE);
         mPlantRecyclerView.setVisibility(View.INVISIBLE);
         mPotRecyclerView.setVisibility(View.INVISIBLE);
@@ -1629,7 +1642,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void screenHabitTextViewData(HomeBean homeBean) {
-        mSceneEditPresenter.getProductDetails(productSkuId);
+        if (productSkuId > 0)
+            mSceneEditPresenter.getProductDetails(productSkuId);
     }
 
     @Override
@@ -1661,6 +1675,30 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
          * 使其跳转到对应的Fragment
          */
         EventBus.getDefault().postSticky(stickerViewSelected);
+    }
+
+    private String collectId = "";
+
+    @Override
+    public void onCheckCollectSuccess(CheckCollectionBean skuDetailsBean) {
+        if (skuDetailsBean.getData().getCollect_id().equals("0")) {
+            collectId = "";
+            mProductCodeLikeButton.setImageDrawable(getResources().getDrawable(R.mipmap.colliction_img));
+        } else {
+            collectId = skuDetailsBean.getData().getCollect_id();
+            mProductCodeLikeButton.setImageDrawable(getResources().getDrawable(R.mipmap.colliction_img_s));
+        }
+    }
+
+    @Override
+    public void onAddCollectionSuccess() {
+        mSceneEditPresenter.checkCollect(productSkuId, augmentedProductSkuId);
+    }
+
+    @Override
+    public void onDeleteCollectionSuccess() {
+        collectId = "";
+        mProductCodeLikeButton.setImageDrawable(getResources().getDrawable(R.mipmap.colliction_img));
     }
 
     private void onResert() {
@@ -2164,6 +2202,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (View.GONE == mProductCodeImageButton.getVisibility()) {
                 mProductCodeImageButton.setVisibility(View.VISIBLE);
             }
+            if (View.GONE == mProductCodeLikeButton.getVisibility()) {
+                mProductCodeLikeButton.setVisibility(View.VISIBLE);
+            }
             if (View.GONE == mChangeStyleTextView.getVisibility()) {
                 mChangeStyleTextView.setVisibility(View.VISIBLE);
             }
@@ -2187,6 +2228,8 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (mComType != null && mComType.equals("1")) {
                 mSceneContainerTool.setVisibility(View.GONE);
             }
+
+            mSceneEditPresenter.checkCollect(productSkuId, augmentedProductSkuId);
         }
 
         /**
@@ -2197,6 +2240,9 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             if (!addSpec) {
                 if (View.VISIBLE == mProductCodeImageButton.getVisibility()) {
                     mProductCodeImageButton.setVisibility(View.GONE);
+                }
+                if (View.VISIBLE == mProductCodeLikeButton.getVisibility()) {
+                    mProductCodeLikeButton.setVisibility(View.GONE);
                 }
                 if (View.VISIBLE == mChangeStyleTextView.getVisibility()) {
                     mChangeStyleTextView.setVisibility(View.GONE);
@@ -2266,6 +2312,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         } else {
             // 恢复初始页面
             mProductCodeImageButton.setVisibility(View.GONE);
+            mProductCodeLikeButton.setVisibility(View.GONE);
             mChangeStyleTextView.setVisibility(View.GONE);
             mBonsaiEditLayout.setVisibility(View.GONE);
             if (firstTime) {
@@ -2307,7 +2354,63 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
         }
         mAlreadyPlacedAdapter.notifyDataSetChanged();
         if (addSpec) {
-            replaceCollocation(true);
+            BaseSticker currentSticker = mStickerView.getCurrentSticker();
+            if (null != currentSticker) {
+                int position = (int) currentSticker.getTag();
+                mSimulationData = mSimulationDataList.get(position);
+                mComType = String.valueOf(mSimulationData.getAugmentedCombinationType());
+                productPrice = mSimulationData.getProductPrice();
+                augmentedProductPrice = mSimulationData.getAugmentedProductPrice();
+                productPriceCode = mSimulationData.getProductPriceCode();
+                productTradePriceCode = mSimulationData.getProductTradePriceCode();
+                augmentedPriceCode = mSimulationData.getAugmentedPriceCode();
+                augmentedTradePriceCode = mSimulationData.getAugmentedTradePriceCode();
+
+                SimulationData simulationData = mSimulationDataList.get(position);
+                mSimulationData = simulationData;
+                if (null == simulationData) {
+                    return;
+                }
+
+                productSkuId = simulationData.getProductSkuId();
+                augmentedProductSkuId = simulationData.getAugmentedProductSkuId();
+                productPic1 = simulationData.getProductPic1();
+                augmentedProductPic1 = simulationData.getAugmentedProductPic1();
+                productName = simulationData.getProductName();
+                specTypeName = simulationData.getProductSpecText();
+                augmentedProductName = simulationData.getAugmentedProductName();
+            }
+            if (View.GONE == mProductCodeImageButton.getVisibility()) {
+                mProductCodeImageButton.setVisibility(View.VISIBLE);
+            }
+            if (View.GONE == mProductCodeLikeButton.getVisibility()) {
+                mProductCodeLikeButton.setVisibility(View.VISIBLE);
+            }
+            if (View.GONE == mChangeStyleTextView.getVisibility()) {
+                mChangeStyleTextView.setVisibility(View.VISIBLE);
+            }
+            if (View.GONE == mBonsaiEditLayout.getVisibility()) {
+                mBonsaiEditLayout.setVisibility(View.VISIBLE);
+            }
+            if (View.VISIBLE == mBackgroundEditLayout.getVisibility()) {
+                mBackgroundEditLayout.setVisibility(View.GONE);
+            }
+            // 显示第二个引导层
+//            String label = getClass().getSimpleName() + "Two";
+//            GuideUtil.showGuideView(SceneEditFragment.this, R.layout.guide_scene_edit_two_layout, label);
+            StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
+            stickerViewSelected.setBaseSticker(currentSticker);
+
+            /**
+             * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
+             */
+            EventBus.getDefault().postSticky(stickerViewSelected);
+
+            if (mComType != null && mComType.equals("1")) {
+                mSceneContainerTool.setVisibility(View.GONE);
+            }
+
+//            replaceCollocation(true);
         }
     }
 
@@ -3346,6 +3449,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
 
             mChangeStyleTextView.setText(mContext.getResources().getString(R.string.accomplish));
             mProductCodeImageButton.setVisibility(View.VISIBLE);
+            mProductCodeLikeButton.setVisibility(View.VISIBLE);
             mBonsaiEditLayout.setVisibility(View.VISIBLE);
             mCollocationLayout.setVisibility(View.VISIBLE);
             mProductTypeBottomSheetBehavior.setState(STATE_HIDDEN);
@@ -3417,6 +3521,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             isChangeCollocation = false;
             isChangeFlagOne = false;
             mProductCodeImageButton.setVisibility(View.GONE);
+            mProductCodeLikeButton.setVisibility(View.GONE);
             mChangeStyleTextView.setText(mContext.getResources().getString(R.string.change_style));
             mBtnChangeLocation.setVisibility(View.GONE);
             mBottomCatTab.setVisibility(View.GONE);

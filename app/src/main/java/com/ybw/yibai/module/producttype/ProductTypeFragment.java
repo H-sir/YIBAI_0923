@@ -339,10 +339,10 @@ public class ProductTypeFragment extends BaseFragment implements ProductTypeView
             startActivity(intent);
         } else {
             // 说明从"更多"界面打开
-            if(listBean.getComtype() == 2)
-            listBean.setCategoryCode(PLANT);
+            if (listBean.getComtype() == 2)
+                listBean.setCategoryCode(PLANT);
             else
-            listBean.setCategoryCode(POT);
+                listBean.setCategoryCode(POT);
             mProductTypePresenter.saveSimulation(listBean);
         }
     }
@@ -373,6 +373,7 @@ public class ProductTypeFragment extends BaseFragment implements ProductTypeView
     }
 
     ListBean mSelectItem = null;
+
     /**
      * 在保存"模拟"成功/失败时回调
      *
@@ -381,8 +382,8 @@ public class ProductTypeFragment extends BaseFragment implements ProductTypeView
     @Override
     public void onSaveSimulationResult(boolean result) {
         Intent intent = new Intent(mContext, SceneActivity.class);
-        if(mSelectItem != null){
-            intent.putExtra("com_type",String.valueOf(mSelectItem.getComtype()));
+        if (mSelectItem != null) {
+            intent.putExtra("com_type", String.valueOf(mSelectItem.getComtype()));
         }
         startActivity(intent);
         mActivity.finish();

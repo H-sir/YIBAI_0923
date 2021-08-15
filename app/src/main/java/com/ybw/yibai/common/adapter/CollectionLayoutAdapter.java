@@ -148,6 +148,11 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
                         } else {
                             recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.purcart_no_select));
                         }
+                    }else {
+                        if (null != onItemClickListener) {
+                            // holder.getLayoutPosition()方法表示获得当前所点击item的真正位置
+                            onItemClickListener.onItemClick(dataBean);
+                        }
                     }
                 }
             });
@@ -240,5 +245,33 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setLoadState(int loadState) {
         this.loadState = loadState;
         notifyDataSetChanged();
+    }
+
+
+    /**
+     * 1.定义一个接口
+     */
+    public interface OnItemClickListener {
+
+        /**
+         * 在RecyclerView Item 点击时回调
+         *
+         * @param position 被点击的Item位置
+         */
+        void onItemClick(CollectionListBean.DataBean.ListBean listBean);
+    }
+
+    /**
+     * 2.声明一个接口变量
+     */
+    private OnItemClickListener onItemClickListener;
+
+    /**
+     * 3.初始化接口变量
+     *
+     * @param onItemClickListener RecyclerView Item点击的侦听器
+     */
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
     }
 }

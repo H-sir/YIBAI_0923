@@ -160,7 +160,24 @@
             android:textColor="@color/main_text_color"
             android:textSize="10sp"
             android:textStyle="bold"
+            android:visibility="gone"
             tools:ignore="SmallSp" />
+
+        <TextView
+            android:id="@+id/myLikeImageTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/collection_img"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="收藏"
+            android:textColor="@color/main_text_color"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            tools:ignore="SmallSp" />
+
 
         <TextView
             android:id="@+id/backgroundImageTextView"

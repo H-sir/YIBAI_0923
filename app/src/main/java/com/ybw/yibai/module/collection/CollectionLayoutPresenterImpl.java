@@ -1,8 +1,16 @@
 package com.ybw.yibai.module.collection;
 
 
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
+
 import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.CollectionListBean;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
+import com.ybw.yibai.common.utils.ImageUtil;
+import com.ybw.yibai.module.producttype.ProductTypePresenterImpl;
 
 import java.util.List;
 
@@ -61,5 +69,54 @@ public class CollectionLayoutPresenterImpl extends BasePresenterImpl<CollectionL
     @Override
     public void upuseskuCollection(List<String> skuOrCollectId) {
         mCollectionLayoutModel.upuseskuCollection(skuOrCollectId,this);
+    }
+
+    @Override
+    public void getSkuListIds(String sku_id, String pot_sku_id) {
+        mCollectionLayoutModel.getSkuListIds(sku_id,pot_sku_id,this);
+    }
+
+    @Override
+    public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        mCollectionLayoutView.onGetProductDetailsSuccess(skuDetailsBean);
+    }
+
+    @Override
+    public void onSaveSimulationResult(boolean result) {
+        mCollectionLayoutView.onSaveSimulationResult(result);
+    }
+
+    @Override
+    public void saveSimulation(SkuDetailsBean.DataBean.ListBean listBean) {
+        Activity activity = (Activity) mCollectionLayoutView;
+        String productPic2 = listBean.getPic2();
+        if (TextUtils.isEmpty(productPic2)) {
+            return;
+        }
+        ImageUtil.downloadPicture(activity, new ImageUtil.DownloadCallback() {
+            @Override
+            public void onDownloadStarted() {
+
+            }
+
+            @Override
+            public void onDownloadFinished(List<Bitmap> bitmapList) {
+                Bitmap bitmap = bitmapList.get(0);
+                if (null == bitmap) {
+                    // 下载图片失败return
+                    return;
+                }
+                mCollectionLayoutModel.saveSimulation(
+                        listBean,
+                        bitmap,
+                        CollectionLayoutPresenterImpl.this
+                );
+            }
+
+            @Override
+            public void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount) {
+
+            }
+        }, productPic2);
     }
 }

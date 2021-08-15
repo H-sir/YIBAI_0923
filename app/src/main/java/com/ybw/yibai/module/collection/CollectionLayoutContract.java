@@ -1,10 +1,13 @@
 package com.ybw.yibai.module.collection;
 
+import android.graphics.Bitmap;
+
 import com.ybw.yibai.base.BaseCallBack;
 import com.ybw.yibai.base.BasePresenter;
 import com.ybw.yibai.base.BaseView;
 import com.ybw.yibai.common.bean.CollectionListBean;
 import com.ybw.yibai.common.bean.ProductScreeningParam;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 
 import java.util.List;
 
@@ -21,6 +24,10 @@ public interface CollectionLayoutContract {
         void onCollectionListBeanSuccess(CollectionListBean collectionListBean);
 
         void onDeleteCollectionListSuccess(List<String> skuOrCollectId);
+
+        void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
+
+        void onSaveSimulationResult(boolean result);
     }
 
     interface CollectionLayoutPresenter extends BasePresenter<CollectionLayoutView> {
@@ -41,6 +48,10 @@ public interface CollectionLayoutContract {
          * 更新skuid的收藏
          * */
         void upuseskuCollection(List<String> skuOrCollectId);
+
+        void getSkuListIds(String sku_id, String pot_sku_id);
+
+        void saveSimulation(SkuDetailsBean.DataBean.ListBean listBean);
     }
 
     interface CollectionLayoutModel {
@@ -50,6 +61,10 @@ public interface CollectionLayoutContract {
         void deleteCollection(List<String> skuOrCollectId, CallBack callBack);
 
         void upuseskuCollection(List<String> skuOrCollectId, CallBack callBack);
+
+        void getSkuListIds(String sku_id, String pot_sku_id, CallBack callBack);
+
+        void saveSimulation(SkuDetailsBean.DataBean.ListBean listBean, Bitmap bitmap, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {
@@ -57,5 +72,9 @@ public interface CollectionLayoutContract {
         void onCollectionListBeanSuccess(CollectionListBean collectionListBean);
 
         void onDeleteCollectionListSuccess(List<String> skuOrCollectId);
+
+        void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean);
+
+        void onSaveSimulationResult(boolean result);
     }
 }

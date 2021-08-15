@@ -1,6 +1,7 @@
 package com.ybw.yibai.module.collection;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -16,12 +17,15 @@ import com.ybw.yibai.R;
 import com.ybw.yibai.base.BaseActivity;
 import com.ybw.yibai.common.adapter.CollectionLayoutAdapter;
 import com.ybw.yibai.common.bean.CollectionListBean;
+import com.ybw.yibai.common.bean.ListBean;
 import com.ybw.yibai.common.bean.NetworkType;
+import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.utils.ExceptionUtil;
 import com.ybw.yibai.common.utils.MessageUtil;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.xlist.XListView;
 import com.ybw.yibai.common.widget.xlist.recycler.EndlessRecyclerOnScrollListener;
+import com.ybw.yibai.module.scene.SceneActivity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,8 +36,11 @@ import java.util.TimerTask;
 import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static android.support.v7.widget.StaggeredGridLayoutManager.VERTICAL;
 import static com.ybw.yibai.common.constants.Encoded.CODE_SUCCEED;
+import static com.ybw.yibai.common.constants.Preferences.PLANT;
+import static com.ybw.yibai.common.constants.Preferences.POT;
 
-public class CollectionLayoutActivity extends BaseActivity implements CollectionLayoutContract.CollectionLayoutView, View.OnClickListener {
+public class CollectionLayoutActivity extends BaseActivity implements CollectionLayoutAdapter.OnItemClickListener,
+        CollectionLayoutContract.CollectionLayoutView, View.OnClickListener {
 
     /**
      * 指示器框架
@@ -106,6 +113,7 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
             }
         });
 
+        mCollectionLayoutAdapter.setOnItemClickListener(this);
         mCreateDesign.setOnClickListener(this);
         mDeleteCollection.setOnClickListener(this);
         mCompleteCollection.setOnClickListener(this);
@@ -203,6 +211,39 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
             mIndex = 2;
             mCollectionLayoutPresenter.getCollect(mIndex, page);
         }
+    }
+
+    @Override
+    public void onItemClick(CollectionListBean.DataBean.ListBean listBean) {
+        if (mIndex == 1) {
+            mCollectionLayoutPresenter.getSkuListIds(listBean.getSku_id(), "");
+        } else {
+            mCollectionLayoutPresenter.getSkuListIds(listBean.getPlant_sku_id(),"");
+        }
+    }
+
+    @Override
+    public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
+        SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
+        mSelectItem = listBean;
+        // 说明从"更多"界面打开
+        if (mIndex == 1)
+            listBean.setCategoryCode(POT);
+        else
+            listBean.setCategoryCode(PLANT);
+        mCollectionLayoutPresenter.saveSimulation(listBean);
+    }
+
+    SkuDetailsBean.DataBean.ListBean mSelectItem = null;
+
+    @Override
+    public void onSaveSimulationResult(boolean result) {
+        Intent intent = new Intent(mContext, SceneActivity.class);
+        if (mSelectItem != null) {
+            intent.putExtra("com_type", String.valueOf(mSelectItem.getComtype()));
+        }
+        startActivity(intent);
+        finish();
     }
 
     @Override

@@ -107,6 +107,15 @@ public class SkuDetailsBean {
             private int comtype;
             private SourceBean source;
             private String habit_url;
+            private String categoryCode;
+
+            public String getCategoryCode() {
+                return categoryCode;
+            }
+
+            public void setCategoryCode(String categoryCode) {
+                this.categoryCode = categoryCode;
+            }
 
             public int getSku_id() {
                 return sku_id;

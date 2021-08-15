@@ -79,6 +79,7 @@ import com.ybw.yibai.common.widget.ArcMenu;
 import com.ybw.yibai.common.widget.WaitDialog;
 import com.ybw.yibai.common.widget.stickerview.BaseSticker;
 import com.ybw.yibai.module.browser.BrowserActivity;
+import com.ybw.yibai.module.collection.CollectionLayoutActivity;
 import com.ybw.yibai.module.designdetails.DesignDetailsActivity;
 import com.ybw.yibai.module.main.MainActivity;
 import com.ybw.yibai.module.more.MoreActivity;
@@ -237,6 +238,10 @@ public class SceneActivity extends BaseActivity implements SceneView,
      * 我的设计
      */
     private TextView mMyDesignImageTextView;
+    /**
+     * 我的收藏
+     */
+    private TextView mMyLikeImageTextView;
 
     /*----------*/
 
@@ -500,6 +505,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mSaveTextView = findViewById(R.id.saveTextView);
         mSaveTextViewNum = findViewById(R.id.saveTextViewNum);
         mMyDesignImageTextView = findViewById(R.id.myDesignImageTextView);
+        mMyLikeImageTextView = findViewById(R.id.myLikeImageTextView);
 
         mNavigationView = findViewById(R.id.nav_view);
         mEditTextView = findViewById(R.id.editTextView);
@@ -618,6 +624,7 @@ public class SceneActivity extends BaseActivity implements SceneView,
         mJoinQuotationTextView.setOnClickListener(this);
         mSaveTextView.setOnClickListener(this);
         mMyDesignImageTextView.setOnClickListener(this);
+        mMyLikeImageTextView.setOnClickListener(this);
         mPlacementNull.setOnClickListener(this);
 
         mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);//关闭手势滑动
@@ -772,6 +779,11 @@ public class SceneActivity extends BaseActivity implements SceneView,
 
 //            Intent intent = new Intent(this, SimulationDrawingActivity.class);
 //            startActivity(intent);
+        }
+        // 我的收藏
+        if (id == R.id.myLikeImageTextView) {
+            Intent intent = new Intent(this, CollectionLayoutActivity.class);
+            startActivity(intent);
         }
 
         // 编辑

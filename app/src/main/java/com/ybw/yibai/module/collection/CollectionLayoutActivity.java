@@ -218,20 +218,33 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
         if (mIndex == 1) {
             mCollectionLayoutPresenter.getSkuListIds(listBean.getSku_id(), "");
         } else {
-            mCollectionLayoutPresenter.getSkuListIds(listBean.getPlant_sku_id(),"");
+            mCollectionLayoutPresenter.getSkuListIds(listBean.getPlant_sku_id(), listBean.getPot_sku_id());
         }
     }
 
     @Override
     public void onGetProductDetailsSuccess(SkuDetailsBean skuDetailsBean) {
-        SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
-        mSelectItem = listBean;
-        // 说明从"更多"界面打开
-        if (mIndex == 1)
+        if (mIndex == 1) {
+            SkuDetailsBean.DataBean.ListBean listBean = skuDetailsBean.getData().getList().get(0);
+            mSelectItem = listBean;
             listBean.setCategoryCode(POT);
-        else
-            listBean.setCategoryCode(PLANT);
-        mCollectionLayoutPresenter.saveSimulation(listBean);
+            mCollectionLayoutPresenter.saveSimulation(listBean);
+        } else {
+            SkuDetailsBean.DataBean.ListBean plant = null;
+            SkuDetailsBean.DataBean.ListBean pot = null;
+            for (Iterator<SkuDetailsBean.DataBean.ListBean> iterator = skuDetailsBean.getData().getList().iterator(); iterator.hasNext(); ) {
+                SkuDetailsBean.DataBean.ListBean listBean = iterator.next();
+                if (listBean.getComtype() == 3) {
+                    pot = listBean;
+                }
+                if (listBean.getComtype() == 2) {
+                    plant = listBean;
+                }
+            }
+            if(pot != null && plant != null){
+                mCollectionLayoutPresenter.saveSimulation(plant,pot);
+            }
+        }
     }
 
     SkuDetailsBean.DataBean.ListBean mSelectItem = null;

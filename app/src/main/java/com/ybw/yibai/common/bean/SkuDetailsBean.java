@@ -98,7 +98,7 @@ public class SkuDetailsBean {
             private int diameter;
             private int outheight;
             private int height;
-            private int offset_ratio;
+            private double offset_ratio;
             private String pic1;
             private String pic2;
             private String pic3;
@@ -205,11 +205,11 @@ public class SkuDetailsBean {
                 this.height = height;
             }
 
-            public int getOffset_ratio() {
+            public double getOffset_ratio() {
                 return offset_ratio;
             }
 
-            public void setOffset_ratio(int offset_ratio) {
+            public void setOffset_ratio(double offset_ratio) {
                 this.offset_ratio = offset_ratio;
             }
 

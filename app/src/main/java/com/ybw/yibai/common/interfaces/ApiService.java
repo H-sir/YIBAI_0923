@@ -659,6 +659,20 @@ public interface ApiService {
                                                    @Query("second_sku_id") int second_sku_id);
 
     /**
+     * 判断是否已收藏
+     *
+     * @param timestamp 时间搓
+     * @param sign      签名
+     * @param uid       用户的ID
+     * @return 获取产品筛选参数时服务器端返回的数据
+     */
+    @GET(HttpUrls.GET_CHECH_COLLECT_URL)
+    Observable<CheckCollectionBean> getCheckColect(@Header("timestamp") String timestamp,
+                                                   @Header("sign") String sign,
+                                                   @Query("uid") int uid,
+                                                   @Query("first_sku_id") int first_sku_id);
+
+    /**
      * 添加收藏
      *
      * @param timestamp   时间搓
@@ -677,6 +691,24 @@ public interface ApiService {
                                        @Part("first_sku_id") int firstSkuId,
                                        @Part("second_sku_id") int secondSkuId,
                                        @PartMap Map<String, RequestBody> params);
+
+    /**
+     * 添加收藏
+     *
+     * @param timestamp   时间搓
+     * @param sign        签名
+     * @param uid         用户的ID
+     * @param firstSkuId  主skuid
+     * @param secondSkuId 附加产品skuid
+     * @param params      组合图片,单图表单提交formdata 模式   附加产品skuid存在时此为必填项
+     * @return 场景中产品一键创建并导入时服务器端返回的数据
+     */
+    @Multipart
+    @POST(HttpUrls.GET_ADD_COLLECT_URL)
+    Observable<BaseBean> addCollection(@Header("timestamp") String timestamp,
+                                       @Header("sign") String sign,
+                                       @Part("uid") int uid,
+                                       @Part("first_sku_id") int firstSkuId);
 
 
     /**

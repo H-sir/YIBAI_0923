@@ -41,17 +41,19 @@ public interface CollectionLayoutContract {
 
         /**
          * 根据ID删除
-         * */
+         */
         void deleteCollection(List<String> skuOrCollectId);
 
         /**
          * 更新skuid的收藏
-         * */
+         */
         void upuseskuCollection(List<String> skuOrCollectId);
 
         void getSkuListIds(String sku_id, String pot_sku_id);
 
         void saveSimulation(SkuDetailsBean.DataBean.ListBean listBean);
+
+        void saveSimulation(SkuDetailsBean.DataBean.ListBean plant, SkuDetailsBean.DataBean.ListBean pot);
     }
 
     interface CollectionLayoutModel {
@@ -65,6 +67,8 @@ public interface CollectionLayoutContract {
         void getSkuListIds(String sku_id, String pot_sku_id, CallBack callBack);
 
         void saveSimulation(SkuDetailsBean.DataBean.ListBean listBean, Bitmap bitmap, CallBack callBack);
+
+        void saveSimulationData(SkuDetailsBean.DataBean.ListBean plantBean, SkuDetailsBean.DataBean.ListBean potBean, Bitmap bitmap, CallBack callBack);
     }
 
     interface CallBack extends BaseCallBack {

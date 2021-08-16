@@ -10,6 +10,7 @@ import com.ybw.yibai.base.BasePresenterImpl;
 import com.ybw.yibai.common.bean.CollectionListBean;
 import com.ybw.yibai.common.bean.SkuDetailsBean;
 import com.ybw.yibai.common.utils.ImageUtil;
+import com.ybw.yibai.module.hotscheme.HotSchemePresenterImpl;
 import com.ybw.yibai.module.producttype.ProductTypePresenterImpl;
 
 import java.util.List;
@@ -118,5 +119,70 @@ public class CollectionLayoutPresenterImpl extends BasePresenterImpl<CollectionL
 
             }
         }, productPic2);
+    }
+
+    @Override
+    public void saveSimulation(SkuDetailsBean.DataBean.ListBean plantBean, SkuDetailsBean.DataBean.ListBean potBean) {
+        Activity activity = (Activity) mCollectionLayoutView;
+
+        String productPic3 = plantBean.getPic3();
+        double productHeight = plantBean.getHeight();
+        double productOffsetRatio = plantBean.getOffset_ratio();
+
+        String augmentedProductPic3 = potBean.getPic3();
+        double augmentedProductHeight = potBean.getHeight();
+        double augmentedProductOffsetRatio = potBean.getOffset_ratio();
+
+        if (TextUtils.isEmpty(productPic3) || TextUtils.isEmpty(augmentedProductPic3)) {
+            return;
+        }
+        ImageUtil.downloadPicture(activity, new ImageUtil.DownloadCallback() {
+            @Override
+            public void onDownloadStarted() {
+
+            }
+
+            @Override
+            public void onDownloadFinished(List<Bitmap> bitmapList) {
+                // 标记是否存在下载图片失败的情况
+                boolean isFailed = false;
+                Bitmap[] bitmaps = new Bitmap[bitmapList.size()];
+                for (int i = 0; i < bitmapList.size(); i++) {
+                    Bitmap bitmap = bitmapList.get(i);
+                    if (null == bitmap) {
+                        isFailed = true;
+                        break;
+                    } else {
+                        bitmaps[i] = bitmap;
+                    }
+                }
+                if (isFailed) {
+                    //  下载图片失败return
+                    return;
+                }
+                Bitmap bitmap = ImageUtil.pictureSynthesis(
+                        productHeight,
+                        augmentedProductHeight,
+                        productOffsetRatio,
+                        augmentedProductOffsetRatio,
+                        bitmaps
+                );
+                if (null == bitmap) {
+                    // 合成图片失败return
+                    return;
+                }
+                mCollectionLayoutModel.saveSimulationData(
+                        plantBean,
+                        potBean,
+                        bitmap,
+                        CollectionLayoutPresenterImpl.this
+                );
+            }
+
+            @Override
+            public void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount) {
+
+            }
+        }, productPic3, augmentedProductPic3);
     }
 }

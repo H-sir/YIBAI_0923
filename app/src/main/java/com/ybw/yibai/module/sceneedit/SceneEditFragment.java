@@ -2398,6 +2398,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
             // 显示第二个引导层
 //            String label = getClass().getSimpleName() + "Two";
 //            GuideUtil.showGuideView(SceneEditFragment.this, R.layout.guide_scene_edit_two_layout, label);
+
             StickerViewSelected stickerViewSelected = new StickerViewSelected(true);
             stickerViewSelected.setBaseSticker(currentSticker);
 
@@ -2405,11 +2406,14 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
              * 发送数据到{@link SceneActivity#stickerViewSelected(StickerViewSelected)}
              */
             EventBus.getDefault().postSticky(stickerViewSelected);
-
+            /**
+             * 发送数据到{@link SceneActivity#barViewSelected(BarViewSelected)}
+             */
+            EventBus.getDefault().postSticky(new BarViewSelected(false));
             if (mComType != null && mComType.equals("1")) {
                 mSceneContainerTool.setVisibility(View.GONE);
             }
-
+            addSpec = false;
 //            replaceCollocation(true);
         }
     }

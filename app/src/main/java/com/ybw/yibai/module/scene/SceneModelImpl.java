@@ -954,7 +954,12 @@ public class SceneModelImpl implements SceneModel {
 
             @Override
             public void onNext(DesignCreate designCreate) {
-                designNewScheme(designCreate.getData().getDesingNumber(), mCreateSceneDataList, manager, callBack);
+                if (designCreate.getCode() == 200) {
+                    if (designCreate.getData() != null && designCreate.getData().getDesingNumber() != null)
+                        designNewScheme(designCreate.getData().getDesingNumber(), mCreateSceneDataList, manager, callBack);
+                } else {
+                    callBack.onRequestFailure(new Throwable(designCreate.getMsg()));
+                }
             }
 
             @Override

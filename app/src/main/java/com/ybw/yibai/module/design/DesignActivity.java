@@ -151,81 +151,84 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     @Override
     public void onGetDesignListSuccess(DesignList designList) {
-        mNestFullListViewAdapter = new NestFullListViewAdapter<DesignList.DataBean.ListBean>(
-                R.layout.listview_design_list_item_layout, designList.getData().getList()) {
-            @Override
-            public void onBind(int pos, DesignList.DataBean.ListBean dataBean, NestFullViewHolder holder) {
-                TextView mDesignName = holder.getView(R.id.designName);
-                TextView mDesignStats = holder.getView(R.id.designStats);
-                TextView mDesignDelete = holder.getView(R.id.designDelete);
-                TextView mDesignShare = holder.getView(R.id.designShare);
+        if (designList != null && designList.getData() != null && designList.getData().getList() != null) {
+            mNestFullListViewAdapter = new NestFullListViewAdapter<DesignList.DataBean.ListBean>(
+                    R.layout.listview_design_list_item_layout, designList.getData().getList()) {
+                @Override
+                public void onBind(int pos, DesignList.DataBean.ListBean dataBean, NestFullViewHolder holder) {
+                    TextView mDesignName = holder.getView(R.id.designName);
+                    TextView mDesignStats = holder.getView(R.id.designStats);
+                    TextView mDesignDelete = holder.getView(R.id.designDelete);
+                    TextView mDesignShare = holder.getView(R.id.designShare);
 
-                mDesignName.setText(dataBean.getNumber());
-                String twoDay = TimeUtil.getTwoDay(TimeUtil.getStringToday(), dataBean.getLasttime());
+                    mDesignName.setText(dataBean.getNumber());
+                    String twoDay = TimeUtil.getTwoDay(TimeUtil.getStringToday(), dataBean.getLasttime());
 
-                boolean sceneInfoFlag = false;
-                boolean flag = false;
-                for (Iterator<DesignList.DataBean.ListBean.SchemelistBean> iterator = dataBean.getSchemelist().iterator(); iterator.hasNext(); ) {
-                    DesignList.DataBean.ListBean.SchemelistBean schemelistBean = iterator.next();
-                    if (sceneInfo != null && schemelistBean.getSchemeId().equals(sceneInfo.getScheme_id())) {
-                        mDesignStats.setText("正在编辑");
-                        sceneInfoFlag = true;
-                        flag = true;
-                        break;
+                    boolean sceneInfoFlag = false;
+                    boolean flag = false;
+                    for (Iterator<DesignList.DataBean.ListBean.SchemelistBean> iterator = dataBean.getSchemelist().iterator(); iterator.hasNext(); ) {
+                        DesignList.DataBean.ListBean.SchemelistBean schemelistBean = iterator.next();
+                        if (sceneInfo != null && schemelistBean.getSchemeId().equals(sceneInfo.getScheme_id())) {
+                            mDesignStats.setText("正在编辑");
+                            sceneInfoFlag = true;
+                            flag = true;
+                            break;
+                        }
                     }
+                    if (!flag) {
+                        if (twoDay != null && !twoDay.isEmpty() && Integer.parseInt(twoDay) < 5) {
+                            mDesignStats.setText("完成于" + twoDay + "天前");
+                        } else {
+                            mDesignStats.setText(dataBean.getLasttime());
+                        }
+                    }
+                    mDesignDelete.setOnClickListener(view -> {
+                        onDesignDelete(dataBean);
+                    });
+                    mDesignShare.setOnClickListener(view -> {
+                        checkShare(dataBean);
+                    });
+
+                    //第二层
+                    NestFullListView view = (NestFullListView) holder.getView(R.id.designListView);
+                    view.setOrientation(LinearLayout.HORIZONTAL);
+                    boolean finalSceneInfoFlag = sceneInfoFlag;
+                    view.setAdapter(new NestFullListViewAdapter<DesignList.DataBean.ListBean.SchemelistBean>
+                            (R.layout.listview_design_scheme_list_item_layout,
+                                    dataBean.getSchemelist()) {
+                        @RequiresApi(api = Build.VERSION_CODES.N)
+                        @Override
+                        public void onBind(int pos, DesignList.DataBean.ListBean.SchemelistBean schemelistBean, NestFullViewHolder holder) {
+                            ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
+                            TextView mDesignSchemeName = holder.getView(R.id.designSchemeName);
+
+                            mDesignSchemeName.setText(schemelistBean.getSchemeName());
+
+                            ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, schemelistBean.getBgpic());
+                            mDesignSchemeImage.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    onDesignSchemeImage(schemelistBean, finalSceneInfoFlag);
+                                }
+                            });
+                        }
+                    });
                 }
-                if (!flag) {
-                    if (twoDay != null && !twoDay.isEmpty() && Integer.parseInt(twoDay) < 5) {
-                        mDesignStats.setText("完成于" + twoDay + "天前");
-                    } else {
-                        mDesignStats.setText(dataBean.getLasttime());
-                    }
-                }
-                mDesignDelete.setOnClickListener(view -> {
-                    onDesignDelete(dataBean);
-                });
-                mDesignShare.setOnClickListener(view -> {
-                    checkShare(dataBean);
-                });
-
-                //第二层
-                NestFullListView view = (NestFullListView) holder.getView(R.id.designListView);
-                view.setOrientation(LinearLayout.HORIZONTAL);
-                boolean finalSceneInfoFlag = sceneInfoFlag;
-                view.setAdapter(new NestFullListViewAdapter<DesignList.DataBean.ListBean.SchemelistBean>
-                        (R.layout.listview_design_scheme_list_item_layout,
-                                dataBean.getSchemelist()) {
-                    @RequiresApi(api = Build.VERSION_CODES.N)
-                    @Override
-                    public void onBind(int pos, DesignList.DataBean.ListBean.SchemelistBean schemelistBean, NestFullViewHolder holder) {
-                        ImageView mDesignSchemeImage = holder.getView(R.id.designSchemeImage);
-                        TextView mDesignSchemeName = holder.getView(R.id.designSchemeName);
-
-                        mDesignSchemeName.setText(schemelistBean.getSchemeName());
-
-                        ImageUtil.displayImage(getApplicationContext(), mDesignSchemeImage, schemelistBean.getBgpic());
-                        mDesignSchemeImage.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                onDesignSchemeImage(schemelistBean, finalSceneInfoFlag);
-                            }
-                        });
-                    }
-                });
-            }
-        };
-        designListView.setAdapter(mNestFullListViewAdapter);
+            };
+            designListView.setAdapter(mNestFullListViewAdapter);
+        }
     }
 
     /**
      * 查询分享的权限
-     * */
+     */
     private void checkShare(DesignList.DataBean.ListBean dataBean) {
         shareDataBean = dataBean;
         mUserPresenter.checkShare();
     }
 
     private DesignList.DataBean.ListBean shareDataBean;
+
     @Override
     public void checkShareData(CheckShareBean checkShareBean) {
         onDesignShare(shareDataBean);
@@ -305,7 +308,7 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
         if (sceneInfoFlag) {
             mSchemelistBean = schemelistBean;
             mUserPresenter.findUserSceneListInfo();
-        }else{
+        } else {
             MessageUtil.showMessage(getString(R.string.design_two_message));
         }
 //        if (sceneInfo != null) {

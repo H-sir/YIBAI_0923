@@ -709,10 +709,19 @@ public class SceneEditModelImpl implements SceneEditModel {
     @Override
     public void checkCollect(int productSkuId, int augmentedProductSkuId, CallBack callBack) {
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<CheckCollectionBean> observable = mApiService.getCheckColect(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
-                YiBaiApplication.getUid(),
-                productSkuId, augmentedProductSkuId);
+        Observable<CheckCollectionBean> observable;
+        if (productSkuId != 0 && augmentedProductSkuId != 0) {
+            observable = mApiService.getCheckColect(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    productSkuId, augmentedProductSkuId);
+        } else {
+            observable = mApiService.getCheckColect(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    augmentedProductSkuId);
+        }
+
         Observer<CheckCollectionBean> observer = new Observer<CheckCollectionBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -759,12 +768,20 @@ public class SceneEditModelImpl implements SceneEditModel {
         params.put("pic\"; filename=\"" + file.getName(), requestBody);
 
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
-        Observable<BaseBean> observable = mApiService.addCollection(timeStamp,
+        Observable<BaseBean> observable;
+        if (productSkuId != 0) {
+            observable = mApiService.addCollection(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    productSkuId,
+                    augmentedProductSkuId,
+                    params);
+        }else {
+        observable = mApiService.addCollection(timeStamp,
                 OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
                 YiBaiApplication.getUid(),
-                productSkuId,
-                augmentedProductSkuId,
-                params);
+                augmentedProductSkuId);
+        }
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -808,7 +825,7 @@ public class SceneEditModelImpl implements SceneEditModel {
         Observable<BaseBean> observable = mApiService.deleteCollection(timeStamp,
                 OtherUtil.getSign(timeStamp, DELETE_COLLECT_URL),
                 YiBaiApplication.getUid(),
-                collectId,"v2", "no");
+                collectId, "v2", "no");
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
             public void onSubscribe(Disposable d) {

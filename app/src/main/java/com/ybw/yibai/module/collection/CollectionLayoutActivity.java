@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ybw.yibai.R;
@@ -41,15 +43,18 @@ import static com.ybw.yibai.common.constants.Preferences.POT;
 
 public class CollectionLayoutActivity extends BaseActivity implements CollectionLayoutAdapter.OnItemClickListener,
         CollectionLayoutContract.CollectionLayoutView, View.OnClickListener {
-
+    private CollectionLayoutActivity mCollectionLayoutActivity;
     /**
      * 指示器框架
      */
+    private ImageView mBackImageView;
     private TextView mCreateDesign;
     private TextView mDeleteCollection;
     private TextView mCompleteCollection;
     private TextView mCollectionItem;
     private TextView mCollectionCombination;
+    private TextView mCollectionItemColor;
+    private TextView mCollectionCombinationColor;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
 
@@ -77,30 +82,34 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
      */
     private CollectionLayoutContract.CollectionLayoutPresenter mCollectionLayoutPresenter;
     private CollectionLayoutAdapter mCollectionLayoutAdapter;
-    private int mIndex = 0; //0:1 = 单品：组合
+    private int mIndex = 1; //0:1 = 单品：组合
 
     @Override
     protected int setLayout() {
+        mCollectionLayoutActivity = this;
         mContext = getApplicationContext();
         return R.layout.collection_layout;
     }
 
     @Override
     protected void initView() {
+        mBackImageView = findViewById(R.id.backImageView);
         mCreateDesign = findViewById(R.id.createDesign);
         mDeleteCollection = findViewById(R.id.deleteCollection);
         mCompleteCollection = findViewById(R.id.completeCollection);
         mCollectionItem = findViewById(R.id.collection_item);
         mCollectionCombination = findViewById(R.id.collection_combination);
+        mCollectionItemColor = findViewById(R.id.collection_item_color);
+        mCollectionCombinationColor = findViewById(R.id.collection_combination_color);
         mWaitDialog = new WaitDialog(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         // 设置刷新控件颜色
-        swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4DB6AC"));
-
-        mCollectionLayoutAdapter = new CollectionLayoutAdapter(getApplicationContext(), dataBeanList);
+//        swipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4DB6AC"));
+        swipeRefreshLayout.setRefreshing(false);
+        mCollectionLayoutAdapter = new CollectionLayoutAdapter(mCollectionLayoutActivity, dataBeanList);
         recyclerView.setAdapter(mCollectionLayoutAdapter);
 
         // 设置加载更多监听
@@ -112,8 +121,15 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
                 mCollectionLayoutPresenter.getCollect(mIndex, page);
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         mCollectionLayoutAdapter.setOnItemClickListener(this);
+        mBackImageView.setOnClickListener(this);
         mCreateDesign.setOnClickListener(this);
         mDeleteCollection.setOnClickListener(this);
         mCompleteCollection.setOnClickListener(this);
@@ -141,6 +157,9 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
     public void onClick(View view) {
         int id = view.getId();
 
+        if (id == R.id.backImageView) {
+            finish();
+        }
         if (id == R.id.createDesign) {
             mDeleteCollection.setVisibility(View.VISIBLE);
             mCompleteCollection.setVisibility(View.VISIBLE);
@@ -167,19 +186,16 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
             }
         }
         if (id == R.id.completeCollection) {
-            mDeleteCollection.setVisibility(View.GONE);
-            mCompleteCollection.setVisibility(View.GONE);
-            mCreateDesign.setVisibility(View.VISIBLE);
-            for (Iterator<CollectionListBean.DataBean.ListBean> iterator = dataBeanList.iterator(); iterator.hasNext(); ) {
-                CollectionListBean.DataBean.ListBean next = iterator.next();
-                next.setEdit(false);
-            }
-            mCollectionLayoutAdapter.notifyDataSetChanged();
+            completeCollectionSelect();
         }
         if (id == R.id.collection_item) {
             dataBeanList.clear();
-            mCollectionItem.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-            mCollectionItem.setTextColor(getResources().getColor(R.color.black));
+            mCollectionLayoutAdapter.notifyDataSetChanged();
+            completeCollectionSelect();
+//            mCollectionItem.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+//            mCollectionItem.setTextColor(getResources().getColor(R.color.black));
+            mCollectionItemColor.setVisibility(View.VISIBLE);
+            mCollectionCombinationColor.setVisibility(View.GONE);
             //字体大小为16，并且加粗
             mCollectionItem.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             mCollectionItem.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -195,8 +211,13 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
         }
         if (id == R.id.collection_combination) {
             dataBeanList.clear();
-            mCollectionCombination.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-            mCollectionCombination.setTextColor(getResources().getColor(R.color.black));
+            mCollectionLayoutAdapter.notifyDataSetChanged();
+            completeCollectionSelect();
+
+            mCollectionItemColor.setVisibility(View.GONE);
+            mCollectionCombinationColor.setVisibility(View.VISIBLE);
+//            mCollectionCombination.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
+//            mCollectionCombination.setTextColor(getResources().getColor(R.color.black));
             //字体大小为16，并且加粗
             mCollectionCombination.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
             mCollectionCombination.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
@@ -213,11 +234,22 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
         }
     }
 
+    private void completeCollectionSelect() {
+        mDeleteCollection.setVisibility(View.GONE);
+        mCompleteCollection.setVisibility(View.GONE);
+        mCreateDesign.setVisibility(View.VISIBLE);
+        for (Iterator<CollectionListBean.DataBean.ListBean> iterator = dataBeanList.iterator(); iterator.hasNext(); ) {
+            CollectionListBean.DataBean.ListBean next = iterator.next();
+            next.setEdit(false);
+        }
+        mCollectionLayoutAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onItemClick(CollectionListBean.DataBean.ListBean listBean) {
         if (mIndex == 1) {
             mCollectionLayoutPresenter.getSkuListIds(listBean.getSku_id(), "");
-        } else {
+        } else if (mIndex == 2) {
             mCollectionLayoutPresenter.getSkuListIds(listBean.getPlant_sku_id(), listBean.getPot_sku_id());
         }
     }
@@ -241,8 +273,8 @@ public class CollectionLayoutActivity extends BaseActivity implements Collection
                     plant = listBean;
                 }
             }
-            if(pot != null && plant != null){
-                mCollectionLayoutPresenter.saveSimulation(plant,pot);
+            if (pot != null && plant != null) {
+                mCollectionLayoutPresenter.saveSimulation(plant, pot);
             }
         }
     }

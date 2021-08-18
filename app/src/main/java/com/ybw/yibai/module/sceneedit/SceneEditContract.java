@@ -702,7 +702,7 @@ public interface SceneEditContract {
         void checkCollect(int productSkuId, int augmentedProductSkuId, CallBack callBack);
 
         void addCollection(SimulationData simulationData, CallBack callBack);
-        void addCollection(ProductData productData, CallBack callBack);
+        void addCollection(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack);
 
         void deleteCollection(String collectId, CallBack callBack);
     }

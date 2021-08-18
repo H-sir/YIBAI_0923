@@ -24,7 +24,7 @@
 
             <!-- 客户自定义Logo -->
 
-            <ImageView
+            q<ImageView
                 android:id="@+id/sceneBackgroundImageView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

@@ -103,13 +103,14 @@ public class SceneEditModelImpl implements SceneEditModel {
     public void getSimulationData(long sceneId, CallBack callBack) {
         try {
             DbManager dbManager = YiBaiApplication.getDbManager();
-            List<SimulationData> simulationDataList = dbManager.selector(SimulationData.class)
-                    .where("uid", "=", YiBaiApplication.getUid())
-                    .and("sceneId", "=", sceneId)
-                    .findAll();
-            callBack.onGetSimulationDataSuccess(simulationDataList);
-
-            LogUtil.e(TAG, "SimulationDataList: " + new Gson().toJson(simulationDataList));
+            if (dbManager != null) {
+                List<SimulationData> simulationDataList = dbManager.selector(SimulationData.class)
+                        .where("uid", "=", YiBaiApplication.getUid())
+                        .and("sceneId", "=", sceneId)
+                        .findAll();
+                callBack.onGetSimulationDataSuccess(simulationDataList);
+                LogUtil.e(TAG, "SimulationDataList: " + new Gson().toJson(simulationDataList));
+            }
         } catch (DbException e) {
             e.printStackTrace();
         }
@@ -716,10 +717,17 @@ public class SceneEditModelImpl implements SceneEditModel {
                     YiBaiApplication.getUid(),
                     productSkuId, augmentedProductSkuId);
         } else {
-            observable = mApiService.getCheckColect(timeStamp,
-                    OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
-                    YiBaiApplication.getUid(),
-                    augmentedProductSkuId);
+            if (productSkuId != 0) {
+                observable = mApiService.getCheckColect(timeStamp,
+                        OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
+                        YiBaiApplication.getUid(),
+                        productSkuId);
+            } else {
+                observable = mApiService.getCheckColect(timeStamp,
+                        OtherUtil.getSign(timeStamp, GET_CHECH_COLLECT_METHOD),
+                        YiBaiApplication.getUid(),
+                        augmentedProductSkuId);
+            }
         }
 
         Observer<CheckCollectionBean> observer = new Observer<CheckCollectionBean>() {
@@ -776,11 +784,11 @@ public class SceneEditModelImpl implements SceneEditModel {
                     productSkuId,
                     augmentedProductSkuId,
                     params);
-        }else {
-        observable = mApiService.addCollection(timeStamp,
-                OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
-                YiBaiApplication.getUid(),
-                augmentedProductSkuId);
+        } else {
+            observable = mApiService.addCollection(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    augmentedProductSkuId);
         }
         Observer<BaseBean> observer = new Observer<BaseBean>() {
             @Override
@@ -815,8 +823,52 @@ public class SceneEditModelImpl implements SceneEditModel {
     }
 
     @Override
-    public void addCollection(ProductData productData, CallBack callBack) {
+    public void addCollection(int productSkuId, int augmentedProductSkuId, Map<String, RequestBody> params, CallBack callBack) {
+        String timeStamp = String.valueOf(TimeUtil.getTimestamp());
+        Observable<BaseBean> observable;
+        if (productSkuId != 0) {
+            observable = mApiService.addCollection(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    productSkuId,
+                    augmentedProductSkuId,
+                    params);
+        } else {
+            observable = mApiService.addCollection(timeStamp,
+                    OtherUtil.getSign(timeStamp, GET_ADD_COLLECT_METHOD),
+                    YiBaiApplication.getUid(),
+                    augmentedProductSkuId);
+        }
+        Observer<BaseBean> observer = new Observer<BaseBean>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                callBack.onRequestBefore(d);
+            }
 
+            @Override
+            public void onNext(BaseBean baseBean) {
+                if (baseBean.getCode() == 200) {
+                    callBack.onAddCollectionSuccess();
+                } else {
+                    callBack.onRequestFailure(new Throwable(baseBean.getMsg()));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callBack.onRequestFailure(e);
+            }
+
+            @Override
+            public void onComplete() {
+                callBack.onRequestComplete();
+            }
+        };
+        observable
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(observer);
     }
 
     @Override

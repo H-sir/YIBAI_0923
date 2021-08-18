@@ -1896,7 +1896,69 @@ public class SceneEditPresenterImpl extends BasePresenterImpl<SceneEditView>
 
     @Override
     public void addCollection(ProductData productData) {
-        mSceneEditModel.addCollection(productData,this);
+        Fragment fragment = (Fragment) mSceneEditView;
+        Activity activity = fragment.getActivity();
+
+        String productPic3 = productData.getProductPic3();
+        String augmentedProductPic3 = productData.getAugmentedProductPic3();
+
+        ImageUtil.downloadPicture(activity, new ImageUtil.DownloadCallback() {
+            @Override
+            public void onDownloadStarted() {
+
+            }
+
+            @Override
+            public void onDownloadFinished(List<Bitmap> bitmapList) {
+                double productHeight = productData.getProductHeight();
+                double productOffsetRatio = productData.getProductOffsetRatio();
+                double augmentedProductHeight = productData.getAugmentedProductHeight();
+                double augmentedProductOffsetRatio = productData.getAugmentedProductOffsetRatio();
+
+                // 标记是否存在下载图片失败的情况
+                boolean isFailed = false;
+                Bitmap[] bitmaps = new Bitmap[bitmapList.size()];
+                for (int i = 0; i < bitmapList.size(); i++) {
+                    Bitmap bitmap = bitmapList.get(i);
+                    if (null == bitmap) {
+                        isFailed = true;
+                        break;
+                    } else {
+                        bitmaps[i] = bitmap;
+                    }
+                }
+                if (isFailed) {
+                    // 下载图片失败return
+                    return;
+                }
+                Bitmap bitmap = ImageUtil.pictureSynthesis(productHeight, augmentedProductHeight, productOffsetRatio,
+                        augmentedProductOffsetRatio, bitmaps);
+                if (null == bitmap) {
+                    // 合成图片失败return
+                    return;
+                }
+                String picturePath = ImageUtil.saveImage(bitmap, String.valueOf(TimeUtil.getTimeStamp()));
+
+                int productSkuId = productData.getProductSkuId();
+                int augmentedProductSkuId = productData.getAugmentedProductSkuId();
+
+                File file = new File(picturePath);
+                Map<String, RequestBody> params = new HashMap<>();
+                String fileName = file.getName();
+                String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/" + suffix), file);
+                params.put("pic\"; filename=\"" + file.getName(), requestBody);
+
+                mSceneEditModel.addCollection(productSkuId, augmentedProductSkuId, params, SceneEditPresenterImpl.this);
+            }
+
+            @Override
+            public void onDownloading(int sumTotal, int successesAmount, int failuresAmount, int completedAmount) {
+
+            }
+        }, productPic3, augmentedProductPic3);
+
+
     }
 
     @Override

@@ -101,7 +101,7 @@ public class CollectionLayoutModelImpl implements CollectionLayoutContract.Colle
         String collectId = "";
         for (Iterator<String> iterator = skuOrCollectId.iterator(); iterator.hasNext(); ) {
             String next = iterator.next();
-            collectId = next + ",";
+            collectId = collectId + next + ",";
         }
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<BaseBean> observable = mApiService.deleteCollection(timeStamp,
@@ -171,10 +171,10 @@ public class CollectionLayoutModelImpl implements CollectionLayoutContract.Colle
     @Override
     public void getSkuListIds(String sku_id, String pot_sku_id, CollectionLayoutContract.CallBack callBack) {
         String skuIds = "";
-        if (pot_sku_id.isEmpty()) {
-            skuIds = sku_id;
-        } else {
+        if (pot_sku_id != null && !pot_sku_id.isEmpty()) {
             skuIds = sku_id + "," + pot_sku_id;
+        } else {
+            skuIds = sku_id;
         }
         String timeStamp = String.valueOf(TimeUtil.getTimestamp());
         Observable<SkuDetailsBean> observable = mApiService.getSkuDetails(timeStamp,

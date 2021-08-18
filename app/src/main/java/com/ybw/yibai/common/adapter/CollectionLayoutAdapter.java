@@ -1,11 +1,14 @@
 package com.ybw.yibai.common.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import com.ybw.yibai.R;
 import com.ybw.yibai.common.bean.CollectionListBean;
 import com.ybw.yibai.common.bean.ListBean;
+import com.ybw.yibai.common.utils.AndroidUtils;
 import com.ybw.yibai.common.utils.DensityUtil;
 import com.ybw.yibai.common.widget.xlist.BaseListAdapter;
 import com.ybw.yibai.module.producttype.ProductTypeFragment;
@@ -48,9 +52,11 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
     // 加载到底
     public final int LOADING_END = 3;
     private Context mContext;
+    private Activity activity;
 
-    public CollectionLayoutAdapter(Context context, List<CollectionListBean.DataBean.ListBean> dataList) {
-        this.mContext = context;
+    public CollectionLayoutAdapter(Activity activity, List<CollectionListBean.DataBean.ListBean> dataList) {
+        this.mContext = activity.getApplicationContext();
+        this.activity = activity;
         this.dataList = dataList;
     }
 
@@ -105,6 +111,12 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
             //是否组合
             boolean isCombination = dataBean.isCombination();
 
+            if (dataBean.isSelect()) {
+                recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.selected));
+            } else {
+                recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.all_noselectm));
+            }
+
             if (isEdit) {
                 recyclerViewHolder.mIsCollectionSelect.setVisibility(View.VISIBLE);
             } else {
@@ -122,15 +134,23 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
                 } else {
                     recyclerViewHolder.mTextView1.setText(pot_name);
                 }
-                recyclerViewHolder.mTextView1.setVisibility(View.VISIBLE);
+                recyclerViewHolder.mTextView1_s.setVisibility(View.VISIBLE);
             } else {
-                recyclerViewHolder.mTextView1.setVisibility(View.GONE);
+                recyclerViewHolder.mTextView1_s.setVisibility(View.GONE);
                 if (TextUtils.isEmpty(name)) {
                     recyclerViewHolder.mTextView.setText("");
                 } else {
                     recyclerViewHolder.mTextView.setText(name);
                 }
             }
+
+            Display display = activity.getWindowManager().getDefaultDisplay();
+            int width = display.getWidth();
+
+            ViewGroup.LayoutParams params = recyclerViewHolder.mImageView.getLayoutParams();
+            params.width = (width / 2) - 20;
+            params.height = (width / 2) - 20;
+            recyclerViewHolder.mImageView.setLayoutParams(params);
 
             if (!TextUtils.isEmpty(pic)) {
                 Picasso.with(mContext).load(pic).into(recyclerViewHolder.mImageView);
@@ -144,11 +164,11 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
                     if (isEdit) {
                         dataBean.setSelect(!dataBean.isSelect());
                         if (dataBean.isSelect()) {
-                            recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.purcart_select));
+                            recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.selected));
                         } else {
-                            recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.purcart_no_select));
+                            recyclerViewHolder.mIsCollectionSelect.setImageDrawable(mContext.getResources().getDrawable(R.mipmap.all_noselectm));
                         }
-                    }else {
+                    } else {
                         if (null != onItemClickListener) {
                             // holder.getLayoutPosition()方法表示获得当前所点击item的真正位置
                             onItemClickListener.onItemClick(dataBean);
@@ -212,6 +232,7 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
         ImageView mIsCollectionSelect;
         TextView mTextView;
         TextView mTextView1;
+        LinearLayout mTextView1_s;
 
         RecyclerViewHolder(View itemView) {
             super(itemView);
@@ -220,6 +241,7 @@ public class CollectionLayoutAdapter extends RecyclerView.Adapter<RecyclerView.V
             mIsCollectionSelect = itemView.findViewById(R.id.is_collection_select);
             mTextView = itemView.findViewById(R.id.textView);
             mTextView1 = itemView.findViewById(R.id.textView1);
+            mTextView1_s = itemView.findViewById(R.id.textView1_s);
         }
     }
 

@@ -1310,6 +1310,36 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                     int position = (int) currentSticker.getTag();
                     SimulationData simulationData = mSimulationDataList.get(position);
                     mSceneEditPresenter.addCollection(simulationData);
+                }else {
+                    ProductData productData = new ProductData(
+                            productSkuId,
+                            productName,
+                            productPrice,
+                            productMonthRent,
+                            productTradePrice,
+                            productPic1,
+                            productPic2,
+                            productPic3,
+                            productHeight,
+                            productOffsetRatio,
+                            productCombinationType,
+                            productPriceCode,
+                            productTradePriceCode,
+                            augmentedProductSkuId,
+                            augmentedProductName,
+                            augmentedProductPrice,
+                            augmentedProductMonthRent,
+                            augmentedProductTradePrice,
+                            augmentedProductPic1,
+                            augmentedProductPic2,
+                            augmentedProductPic3,
+                            augmentedProductHeight,
+                            augmentedProductOffsetRatio,
+                            augmentedCombinationType,
+                            augmentedPriceCode,
+                            augmentedTradePriceCode
+                    );
+                    mSceneEditPresenter.addCollection(productData);
                 }
             } else {
                 mSceneEditPresenter.deleteCollection(collectId);
@@ -3370,6 +3400,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 SceneHelper.saveSceneProductTime(getActivity(), Integer.parseInt(listBean.getSource().getDelivery_day()));
             }
         }
+        mSceneEditPresenter.checkCollect(productSkuId, augmentedProductSkuId);
     }
 
     /**
@@ -3413,6 +3444,7 @@ public class SceneEditFragment extends BaseFragment implements SceneEditView,
                 SceneHelper.saveSceneProductTime(getActivity(), Integer.parseInt(listBean.getSource().getDelivery_day()));
             }
         }
+        mSceneEditPresenter.checkCollect(productSkuId, augmentedProductSkuId);
     }
 
     private String augmentedProductMarket = "";

@@ -100,4 +100,8 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name = "myTextView" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@color/red</item>
+        <item name="colorControlActivated">@color/blue_s</item>
+    </style>
 </resources>

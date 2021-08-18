@@ -151,7 +151,8 @@ public class DesignActivity extends BaseActivity implements DesignContract.Desig
 
     @Override
     public void onGetDesignListSuccess(DesignList designList) {
-        if (designList != null && designList.getData() != null && designList.getData().getList() != null) {
+        if (designList != null && designList.getData() != null
+                && designList.getData().getList() != null && designList.getData().getList().size() > 0) {
             mNestFullListViewAdapter = new NestFullListViewAdapter<DesignList.DataBean.ListBean>(
                     R.layout.listview_design_list_item_layout, designList.getData().getList()) {
                 @Override
